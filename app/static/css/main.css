@@ -1069,6 +1069,261 @@ a:hover {
 }
 
 /* ============================================================================
+   Utility Classes (Phase 10 - Inline Style Removal)
+   ============================================================================ */
+
+/* Display Utilities */
+.hidden {
+    display: none;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-gap-sm {
+    gap: 0.5rem;
+}
+
+.flex-gap-md {
+    gap: 1rem;
+}
+
+.flex-gap-lg {
+    gap: 1.5rem;
+}
+
+.flex-justify-end {
+    justify-content: flex-end;
+}
+
+.flex-justify-center {
+    justify-content: center;
+}
+
+.flex-align-end {
+    align-items: flex-end;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+/* Spacing Utilities */
+.m-0 {
+    margin: 0;
+}
+
+.mt-0 {
+    margin-top: 0;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mb-sm {
+    margin-bottom: 0.5rem;
+}
+
+.mb-md {
+    margin-bottom: 1rem;
+}
+
+.mb-lg {
+    margin-bottom: 1.5rem;
+}
+
+.mb-xl {
+    margin-bottom: 2rem;
+}
+
+.mt-sm {
+    margin-top: 0.5rem;
+}
+
+.mt-md {
+    margin-top: 1rem;
+}
+
+.mt-lg {
+    margin-top: 1.5rem;
+}
+
+.pt-md {
+    padding-top: 1rem;
+}
+
+.p-md {
+    padding: 1rem;
+}
+
+/* Text Utilities */
+.text-center {
+    text-align: center;
+}
+
+.text-secondary-color {
+    color: var(--text-secondary);
+}
+
+.text-muted-color {
+    color: #666;
+}
+
+.text-danger-color {
+    color: #d32f2f;
+}
+
+.font-size-sm {
+    font-size: 0.7rem;
+}
+
+.font-size-md {
+    font-size: 0.9rem;
+}
+
+.font-size-lg {
+    font-size: 1.2rem;
+}
+
+.font-size-xl {
+    font-size: var(--font-size-3xl);
+}
+
+.font-weight-600 {
+    font-weight: 600;
+}
+
+.pre-wrap {
+    white-space: pre-wrap;
+    font-family: inherit;
+    margin: 0;
+}
+
+/* Cursor Utilities */
+.cursor-move {
+    cursor: move;
+}
+
+/* Background Utilities */
+.bg-light {
+    background: #f8f9fa;
+}
+
+.bg-light-gray {
+    background: #f0f0f0;
+}
+
+/* Border Utilities */
+.border-top {
+    border-top: 1px solid #e0e0e0;
+}
+
+.border-radius-sm {
+    border-radius: 4px;
+}
+
+/* Statistics Card Specific */
+.stat-card-title {
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+}
+
+.stat-card-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Pagination Controls */
+.pagination-controls {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.pagination-info {
+    padding: 0.5rem 1rem;
+    background: #f0f0f0;
+    border-radius: 4px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+.empty-state-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* Filter Form */
+.filter-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+/* Form Group No Margin */
+.form-group-no-margin {
+    margin: 0;
+}
+
+/* Grid Gap Utilities */
+.grid-gap-sm {
+    gap: 0.5rem;
+}
+
+.grid-gap-md {
+    gap: 1rem;
+}
+
+/* Badge Small */
+.badge-sm {
+    font-size: 0.75rem;
+}
+
+/* Upload Form Container */
+.upload-form-container {
+    display: none;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.upload-form-title {
+    margin-top: 0;
+}
+
+/* Table Note */
+.table-note {
+    background: #f8f9fa;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Drag Handle */
+.drag-handle {
+    cursor: move;
+}
+
+/* ============================================================================
    Responsive Design
    ============================================================================ */
 

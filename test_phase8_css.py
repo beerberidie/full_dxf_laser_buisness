@@ -296,43 +296,66 @@ def test_inline_styles_removed():
     print("\n" + "="*70)
     print("TEST 7: INLINE STYLES REMOVED")
     print("="*70)
-    
+
     templates_to_check = [
         ('app/templates/comms/detail.html', 'Communications Detail'),
         ('app/templates/comms/list.html', 'Communications List'),
+        ('app/templates/projects/detail.html', 'Projects Detail'),
+        ('app/templates/queue/index.html', 'Queue Index'),
     ]
-    
+
     all_clean = True
-    
+    total_inline_styles = 0
+
     for template_path, template_name in templates_to_check:
         path = Path(template_path)
-        
+
         if not path.exists():
             print(f"  ⚠ {template_name}: File not found")
             continue
-        
+
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
+
             # Check for <style> tags (should be removed)
             style_tags = re.findall(r'<style[^>]*>.*?</style>', content, re.DOTALL)
-            
+
+            # Check for inline style="" attributes (should be removed)
+            # Match style="..." but exclude JavaScript onclick handlers that contain .style.
+            inline_styles = re.findall(r'<[^>]+\sstyle="[^"]*"[^>]*>', content)
+
+            issues = 0
+
             if style_tags:
                 print(f"  ✗ {template_name}: Found {len(style_tags)} <style> tag(s)")
+                issues += len(style_tags)
                 all_clean = False
-            else:
-                print(f"  ✓ {template_name}: No <style> tags found")
-            
+
+            if inline_styles:
+                print(f"  ✗ {template_name}: Found {len(inline_styles)} inline style attribute(s)")
+                issues += len(inline_styles)
+                total_inline_styles += len(inline_styles)
+                all_clean = False
+                # Show first few examples
+                for i, example in enumerate(inline_styles[:3]):
+                    # Truncate long examples
+                    display = example if len(example) < 80 else example[:77] + '...'
+                    print(f"      Example {i+1}: {display}")
+
+            if issues == 0:
+                print(f"  ✓ {template_name}: Clean (no inline styles)")
+
         except Exception as e:
             print(f"  ✗ {template_name}: Error reading file: {e}")
             all_clean = False
-    
+
     if all_clean:
-        print(f"\n  ✓ All checked templates are clean (no inline <style> tags)")
+        print(f"\n  ✓ All checked templates are clean (no inline styles)")
     else:
-        print(f"\n  ✗ Some templates still have inline styles")
-    
+        print(f"\n  ✗ Found {total_inline_styles} inline style attribute(s) across templates")
+        print(f"     These should be replaced with CSS classes")
+
     return all_clean
 
 

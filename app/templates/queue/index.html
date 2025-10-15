@@ -12,38 +12,38 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-4" style="margin-bottom: 2rem;">
+<div class="grid grid-4 mb-xl">
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Queued</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Queued</h3>
+            <p class="stat-card-value">
                 {{ stats.total_queued }}
             </p>
         </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">In Progress</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">In Progress</h3>
+            <p class="stat-card-value">
                 {{ stats.total_in_progress }}
             </p>
         </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Completed</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Completed</h3>
+            <p class="stat-card-value">
                 {{ stats.total_completed }}
             </p>
         </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Total Active</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Total Active</h3>
+            <p class="stat-card-value">
                 {{ stats.total_active }}
             </p>
         </div>
@@ -51,10 +51,10 @@
 </div>
 
 <!-- Filters -->
-<div class="card" style="margin-bottom: 1.5rem;">
+<div class="card mb-lg">
     <div class="card-body">
-        <form method="GET" style="display: flex; gap: 1rem; align-items: flex-end;">
-            <div class="form-group" style="margin: 0; flex: 1;">
+        <form method="GET" class="filter-form">
+            <div class="form-group form-group-no-margin flex-1">
                 <label for="status">Filter by Status:</label>
                 <select id="status" name="status" class="form-control" onchange="this.form.submit()">
                     <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active (Queued + In Progress)</option>
@@ -94,7 +94,7 @@
                 <tr data-id="{{ item.id }}">
                     <td>
                         {% if item.is_active %}
-                        <span class="drag-handle" style="cursor: move;">☰</span>
+                        <span class="drag-handle cursor-move">☰</span>
                         {% endif %}
                         {{ item.queue_position }}
                     </td>
@@ -110,12 +110,12 @@
                             {% set days_until_deadline = (item.project.pop_deadline - today).days if today else none %}
                             {% if days_until_deadline is not none and days_until_deadline < 0 %}
                                 <br>
-                                <span class="badge badge-danger" style="font-size: 0.75rem;">
+                                <span class="badge badge-danger badge-sm">
                                     ⚠️ POP deadline {{ days_until_deadline|abs }} days overdue
                                 </span>
                             {% elif days_until_deadline is not none and days_until_deadline <= 2 %}
                                 <br>
-                                <span class="badge badge-warning" style="font-size: 0.75rem;">
+                                <span class="badge badge-warning badge-sm">
                                     ⏰ POP deadline in {{ days_until_deadline }} days
                                 </span>
                             {% endif %}
@@ -137,7 +137,7 @@
                     <td>
                         <a href="{{ url_for('queue.detail', id=item.id) }}" class="btn btn-sm btn-secondary">View</a>
                         {% if item.is_active %}
-                        <form action="{{ url_for('queue.remove', id=item.id) }}" method="POST" style="display: inline;" 
+                        <form action="{{ url_for('queue.remove', id=item.id) }}" method="POST" class="inline-form"
                               onsubmit="return confirm('Remove this item from queue?');">
                             <button type="submit" class="btn btn-sm btn-danger">Remove</button>
                         </form>
@@ -147,7 +147,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <p class="text-muted" style="margin-top: 1rem;">
+        <p class="text-muted mt-md">
             Total: {{ queue_items|length }} item(s)
             {% if status_filter == 'active' %}
             <br><small>Drag and drop rows to reorder the queue</small>
@@ -218,8 +218,8 @@ function updateQueueOrder() {
         const id = row.getAttribute('data-id');
         order.push(parseInt(id));
         // Update position display
-        row.querySelector('td:first-child').innerHTML = 
-            '<span class="drag-handle" style="cursor: move;">☰</span> ' + (index + 1);
+        row.querySelector('td:first-child').innerHTML =
+            '<span class="drag-handle cursor-move">☰</span> ' + (index + 1);
     });
     
     // Send to server

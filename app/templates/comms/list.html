@@ -14,38 +14,38 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-4" style="margin-bottom: 2rem;">
+<div class="grid grid-4 mb-xl">
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Total</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Total</h3>
+            <p class="stat-card-value">
                 {{ pagination.total }}
             </p>
         </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Linked</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Linked</h3>
+            <p class="stat-card-value">
                 {{ communications|selectattr('is_linked')|list|length }}
             </p>
         </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Unlinked</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Unlinked</h3>
+            <p class="stat-card-value">
                 {{ communications|rejectattr('is_linked')|list|length }}
             </p>
         </div>
     </div>
-    
+
     <div class="card">
         <div class="card-body">
-            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Pending</h3>
-            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+            <h3 class="stat-card-title">Pending</h3>
+            <p class="stat-card-value">
                 {{ communications|selectattr('status', 'equalto', 'Pending')|list|length }}
             </p>
         </div>
@@ -53,11 +53,11 @@
 </div>
 
 <!-- Filters and Search -->
-<div class="card" style="margin-bottom: 1.5rem;">
+<div class="card mb-lg">
     <div class="card-body">
         <form method="GET">
-            <div class="grid grid-3" style="gap: 1rem; margin-bottom: 1rem;">
-                <div class="form-group" style="margin: 0;">
+            <div class="grid grid-3 grid-gap-md mb-md">
+                <div class="form-group form-group-no-margin">
                     <label for="comm_type">Type:</label>
                     <select id="comm_type" name="comm_type" class="form-control" onchange="this.form.submit()">
                         <option value="">All Types</option>
@@ -67,7 +67,7 @@
                     </select>
                 </div>
 
-                <div class="form-group" style="margin: 0;">
+                <div class="form-group form-group-no-margin">
                     <label for="direction">Direction:</label>
                     <select id="direction" name="direction" class="form-control" onchange="this.form.submit()">
                         <option value="">All Directions</option>
@@ -76,7 +76,7 @@
                     </select>
                 </div>
 
-                <div class="form-group" style="margin: 0;">
+                <div class="form-group form-group-no-margin">
                     <label for="status">Status:</label>
                     <select id="status" name="status" class="form-control" onchange="this.form.submit()">
                         <option value="">All Statuses</option>
@@ -89,8 +89,8 @@
                 </div>
             </div>
 
-            <div class="grid grid-3" style="gap: 1rem;">
-                <div class="form-group" style="margin: 0;">
+            <div class="grid grid-3 grid-gap-md">
+                <div class="form-group form-group-no-margin">
                     <label for="client_id">Client:</label>
                     <select id="client_id" name="client_id" class="form-control" onchange="this.form.submit()">
                         <option value="">All Clients</option>
@@ -102,7 +102,7 @@
                     </select>
                 </div>
 
-                <div class="form-group" style="margin: 0;">
+                <div class="form-group form-group-no-margin">
                     <label for="is_linked">Linked Status:</label>
                     <select id="is_linked" name="is_linked" class="form-control" onchange="this.form.submit()">
                         <option value="">All</option>
@@ -111,15 +111,15 @@
                     </select>
                 </div>
 
-                <div class="form-group" style="margin: 0;">
+                <div class="form-group form-group-no-margin">
                     <label for="search">Search:</label>
-                    <input type="text" id="search" name="search" class="form-control" 
-                           value="{{ request.args.get('search', '') }}" 
+                    <input type="text" id="search" name="search" class="form-control"
+                           value="{{ request.args.get('search', '') }}"
                            placeholder="Search subject, body, addresses...">
                 </div>
             </div>
 
-            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+            <div class="mt-md flex-row flex-gap-sm">
                 <button type="submit" class="btn btn-primary">Apply Filters</button>
                 <a href="{{ url_for('comms.index') }}" class="btn btn-secondary">Clear Filters</a>
             </div>
@@ -196,7 +196,7 @@
                     <td>
                         <a href="{{ url_for('comms.detail', id=comm.id) }}" class="btn btn-sm btn-secondary">View</a>
                         {% if not comm.is_linked %}
-                        <span class="badge badge-warning" style="font-size: 0.7rem;">Unlinked</span>
+                        <span class="badge badge-warning font-size-sm">Unlinked</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -206,15 +206,15 @@
 
         <!-- Pagination -->
         {% if pagination.pages > 1 %}
-        <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 0.5rem;">
+        <div class="pagination-controls">
             {% if pagination.has_prev %}
                 <a href="{{ url_for('comms.index', page=pagination.prev_num, **request.args) }}" class="btn btn-secondary">Previous</a>
             {% endif %}
-            
-            <span style="padding: 0.5rem 1rem; background: #f0f0f0; border-radius: 4px;">
+
+            <span class="pagination-info">
                 Page {{ pagination.page }} of {{ pagination.pages }}
             </span>
-            
+
             {% if pagination.has_next %}
                 <a href="{{ url_for('comms.index', page=pagination.next_num, **request.args) }}" class="btn btn-secondary">Next</a>
             {% endif %}
@@ -222,8 +222,8 @@
         {% endif %}
 
         {% else %}
-        <div style="text-align: center; padding: 3rem; color: #666;">
-            <p style="font-size: 1.2rem; margin-bottom: 1rem;">📭 No communications found</p>
+        <div class="empty-state">
+            <p class="empty-state-title">📭 No communications found</p>
             <p>
                 {% if request.args %}
                     Try adjusting your filters or <a href="{{ url_for('comms.index') }}">clear all filters</a>

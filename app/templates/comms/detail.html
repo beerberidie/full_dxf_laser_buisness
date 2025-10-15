@@ -18,7 +18,7 @@
             🔗 Link to Client/Project
         </button>
         {% else %}
-        <form action="{{ url_for('comms.unlink_communication', id=communication.id) }}" method="POST" style="display: inline;"
+        <form action="{{ url_for('comms.unlink_communication', id=communication.id) }}" method="POST" class="inline-form"
               onsubmit="return confirm('Unlink this communication from client and project?');">
             <button type="submit" class="btn btn-warning">
                 🔓 Unlink
@@ -210,16 +210,9 @@
             </div>
             <div class="card-body">
                 <dl class="detail-list">
-                    <dt>Created</dt>
-                    <dd>{{ communication.created_at|datetime }}</dd>
-                    
-                    <dt>Last Updated</dt>
-                    <dd>{{ communication.updated_at|datetime }}</dd>
-                    
-                    {% if communication.external_id %}
-                    <dt>External ID</dt>
-                    <dd><code>{{ communication.external_id }}</code></dd>
-                    {% endif %}
+                    <dt>Created</dt><dd>{{ communication.created_at|datetime }}</dd>
+                    <dt>Last Updated</dt><dd>{{ communication.updated_at|datetime }}</dd>
+                    {% if communication.external_id %}<dt>External ID</dt><dd><code>{{ communication.external_id }}</code></dd>{% endif %}
                 </dl>
             </div>
         </div>

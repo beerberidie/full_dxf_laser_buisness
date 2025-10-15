@@ -30,7 +30,7 @@
 </div>
 
 <!-- Add to Queue Form (Hidden by default) -->
-<div id="addToQueueForm" style="display: none; margin-bottom: 1.5rem;">
+<div id="addToQueueForm" class="hidden mb-lg">
     <div class="card">
         <div class="card-header">
             <h2>Add to Production Queue</h2>
@@ -67,7 +67,7 @@
                               placeholder="Any special instructions or notes"></textarea>
                 </div>
 
-                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <div class="flex-row flex-gap-md flex-justify-end">
                     <button type="button" onclick="hideAddToQueueForm()" class="btn btn-secondary">Cancel</button>
                     <button type="submit" class="btn btn-primary">Add to Queue</button>
                 </div>
@@ -129,16 +129,16 @@ function hideAddToQueueForm() {
                     <dt>Description</dt>
                     <dd>
                         {% if project.description %}
-                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ project.description }}</pre>
+                            <pre class="pre-wrap">{{ project.description }}</pre>
                         {% else %}
                             -
                         {% endif %}
                     </dd>
-                    
+
                     <dt>Notes</dt>
                     <dd>
                         {% if project.notes %}
-                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ project.notes }}</pre>
+                            <pre class="pre-wrap">{{ project.notes }}</pre>
                         {% else %}
                             -
                         {% endif %}
@@ -267,7 +267,7 @@ function hideAddToQueueForm() {
         </div>
 
         {% if project.scheduled_cut_date %}
-        <dl class="detail-list" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+        <dl class="detail-list mt-md pt-md border-top">
             <dt>Scheduled Cut Date</dt>
             <dd>
                 <strong>{{ project.scheduled_cut_date|date }}</strong>
@@ -296,7 +296,7 @@ function hideAddToQueueForm() {
 <div class="card">
     <div class="card-header">
         <h2>Proof of Payment (POP) Tracking</h2>
-        <form action="{{ url_for('projects.toggle_pop', id=project.id) }}" method="POST" style="display: inline;">
+        <form action="{{ url_for('projects.toggle_pop', id=project.id) }}" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm {% if project.pop_received %}btn-success{% else %}btn-secondary{% endif %}">
                 {% if project.pop_received %}✓ POP Received{% else %}Mark POP Received{% endif %}
             </button>
@@ -343,7 +343,7 @@ function hideAddToQueueForm() {
             <p>
                 <strong>ℹ️ Business Rule:</strong> Projects should be scheduled for cutting within 3 days of POP receipt.
                 {% if project.pop_deadline < today %}
-                    <span style="color: #d32f2f;">This deadline has passed.</span>
+                    <span class="text-danger-color">This deadline has passed.</span>
                 {% endif %}
             </p>
         </div>
@@ -357,7 +357,7 @@ function hideAddToQueueForm() {
     <div class="card">
         <div class="card-header">
             <h2>Client Notification</h2>
-            <form action="{{ url_for('projects.toggle_notified', id=project.id) }}" method="POST" style="display: inline;">
+            <form action="{{ url_for('projects.toggle_notified', id=project.id) }}" method="POST" class="inline-form">
                 <button type="submit" class="btn btn-sm {% if project.client_notified %}btn-success{% else %}btn-secondary{% endif %}">
                     {% if project.client_notified %}✓ Notified{% else %}Mark as Notified{% endif %}
                 </button>
@@ -384,7 +384,7 @@ function hideAddToQueueForm() {
     <div class="card">
         <div class="card-header">
             <h2>Delivery Confirmation</h2>
-            <form action="{{ url_for('projects.toggle_delivery', id=project.id) }}" method="POST" style="display: inline;">
+            <form action="{{ url_for('projects.toggle_delivery', id=project.id) }}" method="POST" class="inline-form">
                 <button type="submit" class="btn btn-sm {% if project.delivery_confirmed %}btn-success{% else %}btn-secondary{% endif %}">
                     {% if project.delivery_confirmed %}✓ Delivered{% else %}Mark as Delivered{% endif %}
                 </button>
@@ -418,8 +418,8 @@ function hideAddToQueueForm() {
     </div>
     <div class="card-body">
         <!-- Upload Form (Hidden by default) -->
-        <div id="uploadDocForm" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 4px;">
-            <h3 style="margin-top: 0;">Upload Project Document</h3>
+        <div id="uploadDocForm" class="upload-form-container">
+            <h3 class="upload-form-title">Upload Project Document</h3>
             <form action="{{ url_for('projects.upload_document', id=project.id) }}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="document_type">Document Type:</label>
@@ -443,7 +443,7 @@ function hideAddToQueueForm() {
                     <textarea id="doc_notes" name="notes" rows="2" class="form-control" placeholder="Add any notes about this document..."></textarea>
                 </div>
 
-                <div style="display: flex; gap: 0.5rem;">
+                <div class="flex-row flex-gap-sm">
                     <button type="submit" class="btn btn-primary">Upload</button>
                     <button type="button" onclick="document.getElementById('uploadDocForm').style.display='none'" class="btn btn-secondary">Cancel</button>
                 </div>
@@ -476,7 +476,7 @@ function hideAddToQueueForm() {
                     <td>{{ doc.uploaded_at|datetime }}</td>
                     <td>{{ doc.uploaded_by or 'N/A' }}</td>
                     <td>
-                        <form action="{{ url_for('projects.delete_document', doc_id=doc.id) }}" method="POST" style="display: inline;"
+                        <form action="{{ url_for('projects.delete_document', doc_id=doc.id) }}" method="POST" class="inline-form"
                               onsubmit="return confirm('Delete document {{ doc.original_filename }}?');">
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>
@@ -484,7 +484,7 @@ function hideAddToQueueForm() {
                 </tr>
                 {% if doc.notes %}
                 <tr>
-                    <td colspan="6" style="background: #f8f9fa; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                    <td colspan="6" class="table-note">
                         <strong>Notes:</strong> {{ doc.notes }}
                     </td>
                 </tr>
@@ -492,7 +492,7 @@ function hideAddToQueueForm() {
                 {% endfor %}
             </tbody>
         </table>
-        <p class="text-muted" style="margin-top: 1rem;">
+        <p class="text-muted mt-md">
             Total: {{ project.documents|length }} document(s)
         </p>
         {% else %}
@@ -511,8 +511,8 @@ function hideAddToQueueForm() {
     </div>
     <div class="card-body">
         <!-- Upload Form (Hidden by default) -->
-        <div id="uploadForm" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 4px;">
-            <h3 style="margin-top: 0;">Upload DXF File</h3>
+        <div id="uploadForm" class="upload-form-container">
+            <h3 class="upload-form-title">Upload DXF File</h3>
             <form action="{{ url_for('files.upload', project_id=project.id) }}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="file">Select File (DXF only):</label>
@@ -525,7 +525,7 @@ function hideAddToQueueForm() {
                     <textarea id="notes" name="notes" rows="2" class="form-control" placeholder="Add any notes about this file..."></textarea>
                 </div>
 
-                <div style="display: flex; gap: 0.5rem;">
+                <div class="flex-row flex-gap-sm">
                     <button type="submit" class="btn btn-primary">Upload</button>
                     <button type="button" onclick="document.getElementById('uploadForm').style.display='none'" class="btn btn-secondary">Cancel</button>
                 </div>
@@ -558,7 +558,7 @@ function hideAddToQueueForm() {
                     <td>
                         <a href="{{ url_for('files.download', file_id=file.id) }}" class="btn btn-sm btn-primary">Download</a>
                         <a href="{{ url_for('files.detail', file_id=file.id) }}" class="btn btn-sm btn-secondary">View</a>
-                        <form action="{{ url_for('files.delete', file_id=file.id) }}" method="POST" style="display: inline;"
+                        <form action="{{ url_for('files.delete', file_id=file.id) }}" method="POST" class="inline-form"
                               onsubmit="return confirm('Delete file {{ file.original_filename }}?');">
                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                         </form>
@@ -567,7 +567,7 @@ function hideAddToQueueForm() {
                 {% endfor %}
             </tbody>
         </table>
-        <p class="text-muted" style="margin-top: 1rem;">
+        <p class="text-muted mt-md">
             Total: {{ project.design_files|length }} file(s)
         </p>
         {% else %}
@@ -631,7 +631,7 @@ function hideAddToQueueForm() {
             </tbody>
         </table>
         {% if project_comms|length > 10 %}
-        <p class="text-muted" style="margin-top: 0.5rem;">
+        <p class="text-muted mt-sm">
             <small>Showing 10 most recent communications ({{ project_comms|length }} total) -
             <a href="{{ url_for('comms.index') }}?project_id={{ project.id }}">View all</a></small>
         </p>
@@ -769,7 +769,7 @@ function confirmDelete() {
                     </tbody>
                 </table>
                 {% if project.laser_runs|length > 5 %}
-                <p class="text-muted" style="margin-top: 0.5rem;">
+                <p class="text-muted mt-sm">
                     <small>Showing 5 most recent runs ({{ project.laser_runs|length }} total)</small>
                 </p>
                 {% endif %}
