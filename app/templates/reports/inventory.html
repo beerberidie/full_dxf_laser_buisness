@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory Report - Reports - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📦 Inventory Report</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('reports.index') }}" class="btn btn-secondary">← Back to Reports</a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4" style="margin-bottom: 2rem;">
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_items }}</div>
+        <div class="stat-label">Total Items</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">${{ "%.2f"|format(stats.total_value) }}</div>
+        <div class="stat-label">Total Stock Value</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value" style="color: var(--warning-color);">{{ stats.low_stock_count }}</div>
+        <div class="stat-label">Low Stock Items</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">${{ "%.2f"|format(stats.total_usage) }}</div>
+        <div class="stat-label">Recent Usage Value</div>
+    </div>
+</div>
+
+<!-- Category Breakdown -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+        <h2>Category Breakdown</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Items</th>
+                    <th>Total Value</th>
+                    <th>Low Stock</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category, data in category_stats.items() %}
+                <tr>
+                    <td><strong>{{ category }}</strong></td>
+                    <td>{{ data.items }}</td>
+                    <td>${{ "%.2f"|format(data.value) }}</td>
+                    <td>
+                        {% if data.low_stock > 0 %}
+                        <span class="badge badge-warning">{{ data.low_stock }}</span>
+                        {% else %}
+                        <span class="badge badge-success">0</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Inventory Items -->
+<div class="card">
+    <div class="card-header">
+        <h2>All Inventory Items</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item Code</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Unit Cost</th>
+                    <th>Stock Value</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr {% if item.is_low_stock %}style="background-color: #fff3cd;"{% endif %}>
+                    <td><a href="{{ url_for('inventory.detail', id=item.id) }}">{{ item.item_code }}</a></td>
+                    <td>{{ item.name }}</td>
+                    <td><span class="badge">{{ item.category }}</span></td>
+                    <td>{{ item.quantity_on_hand }} {{ item.unit }}</td>
+                    <td>{% if item.unit_cost %}${{ "%.2f"|format(item.unit_cost) }}{% else %}-{% endif %}</td>
+                    <td>{% if item.stock_value %}${{ "%.2f"|format(item.stock_value) }}{% else %}-{% endif %}</td>
+                    <td>
+                        {% if item.is_low_stock %}
+                        <span class="badge badge-warning">⚠️ Low</span>
+                        {% else %}
+                        <span class="badge badge-success">✓ OK</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.badge-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+</style>
+{% endblock %}
+

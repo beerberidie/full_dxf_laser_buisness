@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <nav class="breadcrumb">
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <span>/</span>
+            <span>Products</span>
+        </nav>
+        <h1>Products</h1>
+    </div>
+    <div>
+        <a href="{{ url_for('products.new_product') }}" class="btn btn-primary">+ New Product</a>
+    </div>
+</div>
+
+<!-- Search and Filters -->
+<div class="card">
+    <form method="GET" action="{{ url_for('products.index') }}" class="search-form">
+        <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control" 
+                    placeholder="Search products by name, SKU, or description" 
+                    value="{{ search }}"
+                >
+            </div>
+            <div class="form-group">
+                <select name="material" class="form-control">
+                    <option value="">All Materials</option>
+                    {% for material in materials %}
+                    <option value="{{ material }}" {% if material_filter == material %}selected{% endif %}>
+                        {{ material }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Search</button>
+                <a href="{{ url_for('products.index') }}" class="btn btn-secondary">Clear</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Products Table -->
+<div class="card">
+    <div class="card-header">
+        <h2>All Products ({{ pagination.total }})</h2>
+    </div>
+    
+    {% if products %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>SKU Code</th>
+                <th>Name</th>
+                <th>Material</th>
+                <th>Thickness</th>
+                <th>Unit Price</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('products.detail', id=product.id) }}" class="link">
+                        {{ product.sku_code }}
+                    </a>
+                </td>
+                <td>
+                    <strong>{{ product.name }}</strong>
+                    {% if product.description %}
+                    <br><small class="text-muted">{{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}</small>
+                    {% endif %}
+                </td>
+                <td>{{ product.material or '-' }}</td>
+                <td>
+                    {% if product.thickness %}
+                        {{ product.thickness }}mm
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if product.unit_price %}
+                        R{{ "%.2f"|format(product.unit_price) }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ product.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('products.detail', id=product.id) }}" class="btn btn-sm btn-secondary">View</a>
+                    <a href="{{ url_for('products.edit', id=product.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+    <div class="pagination">
+        {% if pagination.has_prev %}
+        <a href="{{ url_for('products.index', page=pagination.prev_num, search=search, material=material_filter) }}" class="btn btn-secondary">Previous</a>
+        {% endif %}
+        
+        <span class="pagination-info">
+            Page {{ pagination.page }} of {{ pagination.pages }} ({{ pagination.total }} total)
+        </span>
+        
+        {% if pagination.has_next %}
+        <a href="{{ url_for('products.index', page=pagination.next_num, search=search, material=material_filter) }}" class="btn btn-secondary">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="empty-state">
+        <p>No products found.</p>
+        {% if search or material_filter %}
+        <p><a href="{{ url_for('products.index') }}">Clear filters</a> to see all products.</p>
+        {% else %}
+        <p><a href="{{ url_for('products.new_product') }}" class="btn btn-primary">Create your first product</a></p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

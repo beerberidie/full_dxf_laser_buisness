@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Efficiency Metrics - Reports - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚡ Efficiency Metrics Report</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('reports.index') }}" class="btn btn-secondary">← Back to Reports</a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4" style="margin-bottom: 2rem;">
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.projects_analyzed }}</div>
+        <div class="stat-label">Projects Analyzed</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.avg_efficiency }}%</div>
+        <div class="stat-label">Avg Efficiency</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_estimated }}</div>
+        <div class="stat-label">Total Estimated (min)</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_actual }}</div>
+        <div class="stat-label">Total Actual (min)</div>
+    </div>
+</div>
+
+<!-- Efficiency Data Table -->
+<div class="card">
+    <div class="card-header">
+        <h2>Project Efficiency Analysis</h2>
+    </div>
+    <div class="card-body">
+        {% if efficiency_data %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Estimated (min)</th>
+                    <th>Actual (min)</th>
+                    <th>Variance (min)</th>
+                    <th>Variance %</th>
+                    <th>Efficiency %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in efficiency_data %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('projects.detail', id=data.project.id) }}">
+                            {{ data.project.project_code }}
+                        </a>
+                    </td>
+                    <td>{{ data.estimated }}</td>
+                    <td>{{ data.actual }}</td>
+                    <td style="color: {% if data.variance > 0 %}var(--danger-color){% else %}var(--success-color){% endif %};">
+                        {{ "%+d"|format(data.variance) }}
+                    </td>
+                    <td style="color: {% if data.variance_pct > 0 %}var(--danger-color){% else %}var(--success-color){% endif %};">
+                        {{ "%+.1f"|format(data.variance_pct) }}%
+                    </td>
+                    <td>
+                        <span class="badge {% if data.efficiency >= 90 %}badge-success{% elif data.efficiency >= 70 %}badge-warning{% else %}badge-danger{% endif %}">
+                            {{ data.efficiency }}%
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No efficiency data available. Complete some projects with estimated cut times to see efficiency metrics.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.badge-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.badge-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+</style>
+{% endblock %}
+

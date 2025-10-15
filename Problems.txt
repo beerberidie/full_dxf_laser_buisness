@@ -1,0 +1,1302 @@
+[{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 21,
+	"startColumn": 10,
+	"endLineNumber": 21,
+	"endColumn": 14,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "axe/structure",
+		"target": {
+			"$mid": 1,
+			"path": "/rules/axe/4.10/definition-list",
+			"scheme": "https",
+			"authority": "dequeuniversity.com",
+			"query": "application=axeAPI"
+		}
+	},
+	"severity": 4,
+	"message": "<dl> elements must only directly contain properly-ordered <dt> and <dd> groups, <script>, <template> or <div> elements: dl element has direct children that are not allowed: #text",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 212,
+	"startColumn": 18,
+	"endLineNumber": 212,
+	"endColumn": 20,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 17,
+	"startColumn": 2,
+	"endLineNumber": 17,
+	"endColumn": 5,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 20,
+	"startColumn": 14,
+	"endLineNumber": 20,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 21,
+	"startColumn": 14,
+	"endLineNumber": 21,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 29,
+	"startColumn": 14,
+	"endLineNumber": 29,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 30,
+	"startColumn": 14,
+	"endLineNumber": 30,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 38,
+	"startColumn": 14,
+	"endLineNumber": 38,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 39,
+	"startColumn": 14,
+	"endLineNumber": 39,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 47,
+	"startColumn": 14,
+	"endLineNumber": 47,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 48,
+	"startColumn": 14,
+	"endLineNumber": 48,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 56,
+	"startColumn": 2,
+	"endLineNumber": 56,
+	"endColumn": 5,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 59,
+	"startColumn": 14,
+	"endLineNumber": 59,
+	"endColumn": 17,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 60,
+	"startColumn": 18,
+	"endLineNumber": 60,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 70,
+	"startColumn": 18,
+	"endLineNumber": 70,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 79,
+	"startColumn": 18,
+	"endLineNumber": 79,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 92,
+	"startColumn": 14,
+	"endLineNumber": 92,
+	"endColumn": 17,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 93,
+	"startColumn": 18,
+	"endLineNumber": 93,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 105,
+	"startColumn": 18,
+	"endLineNumber": 105,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 114,
+	"startColumn": 18,
+	"endLineNumber": 114,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 122,
+	"startColumn": 14,
+	"endLineNumber": 122,
+	"endColumn": 17,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 199,
+	"startColumn": 26,
+	"endLineNumber": 199,
+	"endColumn": 30,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 209,
+	"startColumn": 10,
+	"endLineNumber": 209,
+	"endColumn": 13,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 214,
+	"startColumn": 14,
+	"endLineNumber": 214,
+	"endColumn": 18,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 225,
+	"startColumn": 10,
+	"endLineNumber": 225,
+	"endColumn": 13,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/comms/list.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 226,
+	"startColumn": 14,
+	"endLineNumber": 226,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 33,
+	"startColumn": 2,
+	"endLineNumber": 33,
+	"endColumn": 5,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 70,
+	"startColumn": 18,
+	"endLineNumber": 70,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 132,
+	"startColumn": 30,
+	"endLineNumber": 132,
+	"endColumn": 33,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 141,
+	"startColumn": 30,
+	"endLineNumber": 141,
+	"endColumn": 33,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 270,
+	"startColumn": 10,
+	"endLineNumber": 270,
+	"endColumn": 12,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 299,
+	"startColumn": 10,
+	"endLineNumber": 299,
+	"endColumn": 14,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 346,
+	"startColumn": 22,
+	"endLineNumber": 346,
+	"endColumn": 26,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 360,
+	"startColumn": 14,
+	"endLineNumber": 360,
+	"endColumn": 18,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 387,
+	"startColumn": 14,
+	"endLineNumber": 387,
+	"endColumn": 18,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 421,
+	"startColumn": 10,
+	"endLineNumber": 421,
+	"endColumn": 13,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 422,
+	"startColumn": 14,
+	"endLineNumber": 422,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 446,
+	"startColumn": 18,
+	"endLineNumber": 446,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 479,
+	"startColumn": 26,
+	"endLineNumber": 479,
+	"endColumn": 30,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 487,
+	"startColumn": 22,
+	"endLineNumber": 487,
+	"endColumn": 24,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 495,
+	"startColumn": 10,
+	"endLineNumber": 495,
+	"endColumn": 11,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 514,
+	"startColumn": 10,
+	"endLineNumber": 514,
+	"endColumn": 13,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 515,
+	"startColumn": 14,
+	"endLineNumber": 515,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 528,
+	"startColumn": 18,
+	"endLineNumber": 528,
+	"endColumn": 21,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 561,
+	"startColumn": 26,
+	"endLineNumber": 561,
+	"endColumn": 30,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 570,
+	"startColumn": 10,
+	"endLineNumber": 570,
+	"endColumn": 11,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 634,
+	"startColumn": 10,
+	"endLineNumber": 634,
+	"endColumn": 11,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/projects/detail.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 772,
+	"startColumn": 18,
+	"endLineNumber": 772,
+	"endColumn": 19,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 15,
+	"startColumn": 2,
+	"endLineNumber": 15,
+	"endColumn": 5,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 18,
+	"startColumn": 14,
+	"endLineNumber": 18,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 19,
+	"startColumn": 14,
+	"endLineNumber": 19,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 27,
+	"startColumn": 14,
+	"endLineNumber": 27,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 28,
+	"startColumn": 14,
+	"endLineNumber": 28,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 36,
+	"startColumn": 14,
+	"endLineNumber": 36,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 37,
+	"startColumn": 14,
+	"endLineNumber": 37,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 45,
+	"startColumn": 14,
+	"endLineNumber": 45,
+	"endColumn": 16,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 46,
+	"startColumn": 14,
+	"endLineNumber": 46,
+	"endColumn": 15,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 54,
+	"startColumn": 2,
+	"endLineNumber": 54,
+	"endColumn": 5,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 56,
+	"startColumn": 10,
+	"endLineNumber": 56,
+	"endColumn": 14,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 57,
+	"startColumn": 14,
+	"endLineNumber": 57,
+	"endColumn": 17,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 97,
+	"startColumn": 26,
+	"endLineNumber": 97,
+	"endColumn": 30,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 113,
+	"startColumn": 34,
+	"endLineNumber": 113,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 118,
+	"startColumn": 34,
+	"endLineNumber": 118,
+	"endColumn": 38,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 140,
+	"startColumn": 26,
+	"endLineNumber": 140,
+	"endColumn": 30,
+	"origin": "extHost1"
+},{
+	"resource": "/c:/Users/Garas/Documents/augment-projects/full_dxf_laser_buisness/app/templates/queue/index.html",
+	"owner": "_generated_diagnostic_collection_name_#1",
+	"code": {
+		"value": "no-inline-styles",
+		"target": {
+			"$mid": 1,
+			"path": "/docs/user-guide/hints/hint-no-inline-styles/",
+			"scheme": "https",
+			"authority": "webhint.io"
+		}
+	},
+	"severity": 4,
+	"message": "CSS inline styles should not be used, move styles to an external CSS file",
+	"source": "Microsoft Edge Tools",
+	"startLineNumber": 150,
+	"startColumn": 10,
+	"endLineNumber": 150,
+	"endColumn": 11,
+	"origin": "extHost1"
+}]

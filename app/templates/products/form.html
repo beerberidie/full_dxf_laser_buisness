@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}{% if product %}Edit Product{% else %}New Product{% endif %} - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <nav class="breadcrumb">
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <span>/</span>
+            <a href="{{ url_for('products.index') }}">Products</a>
+            <span>/</span>
+            <span>{% if product %}Edit{% else %}New{% endif %}</span>
+        </nav>
+        <h1>{% if product %}Edit Product{% else %}New Product{% endif %}</h1>
+    </div>
+</div>
+
+<div class="card">
+    <form method="POST" action="{% if product %}{{ url_for('products.edit', id=product.id) }}{% else %}{{ url_for('products.new_product') }}{% endif %}">
+        <div class="card-body">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h3>Basic Information</h3>
+                
+                {% if product %}
+                <div class="form-group">
+                    <label class="form-label">SKU Code</label>
+                    <div class="form-control-static">{{ product.sku_code }}</div>
+                    <small class="form-help">SKU code cannot be changed</small>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <strong>Note:</strong> SKU code will be auto-generated based on material and thickness
+                </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="name" class="form-label">Product Name *</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-control" 
+                        value="{% if product %}{{ product.name }}{% endif %}"
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea 
+                        id="description" 
+                        name="description" 
+                        class="form-control" 
+                        rows="3"
+                    >{% if product %}{{ product.description }}{% endif %}</textarea>
+                </div>
+            </div>
+            
+            <!-- Material Specifications -->
+            <div class="form-section">
+                <h3>Material Specifications</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="material" class="form-label">Material</label>
+                        <select id="material" name="material" class="form-control">
+                            <option value="">Select material</option>
+                            {% for mat in materials %}
+                            <option value="{{ mat }}" {% if product and product.material == mat %}selected{% endif %}>
+                                {{ mat }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <small class="form-help">Or type a custom material name</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="thickness" class="form-label">Thickness (mm)</label>
+                        <select id="thickness" name="thickness" class="form-control">
+                            <option value="">Select thickness</option>
+                            {% for thick in thicknesses %}
+                            <option value="{{ thick }}" {% if product and product.thickness and product.thickness|string == thick %}selected{% endif %}>
+                                {{ thick }}mm
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <small class="form-help">Or type a custom thickness</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pricing -->
+            <div class="form-section">
+                <h3>Pricing</h3>
+                
+                <div class="form-group">
+                    <label for="unit_price" class="form-label">Unit Price (R)</label>
+                    <input 
+                        type="number" 
+                        id="unit_price" 
+                        name="unit_price" 
+                        class="form-control" 
+                        step="0.01" 
+                        min="0"
+                        value="{% if product and product.unit_price %}{{ product.unit_price }}{% endif %}"
+                    >
+                    <small class="form-help">Price per unit in South African Rand</small>
+                </div>
+            </div>
+            
+            <!-- Additional Information -->
+            <div class="form-section">
+                <h3>Additional Information</h3>
+                
+                <div class="form-group">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea 
+                        id="notes" 
+                        name="notes" 
+                        class="form-control" 
+                        rows="4"
+                    >{% if product %}{{ product.notes }}{% endif %}</textarea>
+                    <small class="form-help">Any additional notes or specifications</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                {% if product %}Update Product{% else %}Create Product{% endif %}
+            </button>
+            <a href="{% if product %}{{ url_for('products.detail', id=product.id) }}{% else %}{{ url_for('products.index') }}{% endif %}" class="btn btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+// Allow custom material input
+document.getElementById('material').addEventListener('change', function() {
+    if (this.value === '') {
+        var custom = prompt('Enter custom material name:');
+        if (custom) {
+            var option = document.createElement('option');
+            option.value = custom;
+            option.text = custom;
+            option.selected = true;
+            this.add(option);
+        }
+    }
+});
+
+// Allow custom thickness input
+document.getElementById('thickness').addEventListener('change', function() {
+    if (this.value === '') {
+        var custom = prompt('Enter custom thickness (mm):');
+        if (custom && !isNaN(custom)) {
+            var option = document.createElement('option');
+            option.value = custom;
+            option.text = custom + 'mm';
+            option.selected = true;
+            this.add(option);
+        }
+    }
+});
+</script>
+{% endblock %}
+

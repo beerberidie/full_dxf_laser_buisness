@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>💰 Invoices</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('invoices.new_invoice') }}" class="btn btn-primary">+ New Invoice</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Due Date</th>
+                    <th>Total</th>
+                    <th>Paid</th>
+                    <th>Balance</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                <tr>
+                    <td><a href="{{ url_for('invoices.detail', id=invoice.id) }}">{{ invoice.invoice_number }}</a></td>
+                    <td>{{ invoice.client.name if invoice.client else '-' }}</td>
+                    <td>{{ invoice.invoice_date.strftime('%Y-%m-%d') if invoice.invoice_date else '-' }}</td>
+                    <td>{{ invoice.due_date.strftime('%Y-%m-%d') if invoice.due_date else '-' }}</td>
+                    <td>${{ "%.2f"|format(invoice.total_amount) }}</td>
+                    <td>${{ "%.2f"|format(invoice.amount_paid) }}</td>
+                    <td>${{ "%.2f"|format(invoice.balance_due) }}</td>
+                    <td><span class="badge">{{ invoice.status }}</span></td>
+                    <td>
+                        <a href="{{ url_for('invoices.detail', id=invoice.id) }}" class="btn btn-sm">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

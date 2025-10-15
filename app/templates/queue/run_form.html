@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Log Laser Run - {{ project.project_code }}{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+    <a href="{{ url_for('main.dashboard') }}">Dashboard</a> /
+    <a href="{{ url_for('projects.detail', id=project.id) }}">{{ project.project_code }}</a> /
+    Log Laser Run
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Log Laser Run</h1>
+    <p class="text-muted">Project: {{ project.project_code }} - {{ project.name }}</p>
+</div>
+
+<!-- Run Form -->
+<div class="card">
+    <div class="card-header">
+        <h2>Laser Run Details</h2>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('queue.new_run', project_id=project.id) }}" method="POST">
+            <div class="grid grid-2">
+                <!-- Queue Item -->
+                <div class="form-group">
+                    <label for="queue_item_id">Queue Item (Optional):</label>
+                    <select id="queue_item_id" name="queue_item_id" class="form-control">
+                        <option value="">Not from queue</option>
+                        {% for item in queue_items %}
+                        <option value="{{ item.id }}">
+                            Position {{ item.queue_position }} - {{ item.status }}
+                            {% if item.scheduled_date %}(Scheduled: {{ item.scheduled_date.strftime('%Y-%m-%d') }}){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Operator -->
+                <div class="form-group">
+                    <label for="operator">Operator:</label>
+                    <input type="text" id="operator" name="operator" class="form-control" 
+                           placeholder="Operator name">
+                </div>
+
+                <!-- Cut Time -->
+                <div class="form-group">
+                    <label for="cut_time_minutes">Cut Time (minutes):</label>
+                    <input type="number" id="cut_time_minutes" name="cut_time_minutes" 
+                           class="form-control" min="0" placeholder="e.g., 45">
+                </div>
+
+                <!-- Material Type -->
+                <div class="form-group">
+                    <label for="material_type">Material Type:</label>
+                    <input type="text" id="material_type" name="material_type" 
+                           class="form-control" placeholder="e.g., Mild Steel">
+                </div>
+
+                <!-- Material Thickness -->
+                <div class="form-group">
+                    <label for="material_thickness">Material Thickness (mm):</label>
+                    <input type="number" id="material_thickness" name="material_thickness" 
+                           class="form-control" step="0.001" min="0" placeholder="e.g., 3.0">
+                </div>
+
+                <!-- Sheet Count -->
+                <div class="form-group">
+                    <label for="sheet_count">Sheet Count:</label>
+                    <input type="number" id="sheet_count" name="sheet_count" 
+                           class="form-control" min="1" value="1">
+                </div>
+
+                <!-- Parts Produced -->
+                <div class="form-group">
+                    <label for="parts_produced">Parts Produced:</label>
+                    <input type="number" id="parts_produced" name="parts_produced" 
+                           class="form-control" min="0" placeholder="e.g., 50">
+                </div>
+            </div>
+
+            <!-- Machine Settings -->
+            <div class="form-group">
+                <label for="machine_settings">Machine Settings:</label>
+                <textarea id="machine_settings" name="machine_settings" class="form-control" 
+                          rows="3" placeholder="Power, speed, gas pressure, etc."></textarea>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes" class="form-control" 
+                          rows="3" placeholder="Any additional notes about this run"></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="{{ url_for('projects.detail', id=project.id) }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Log Run</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

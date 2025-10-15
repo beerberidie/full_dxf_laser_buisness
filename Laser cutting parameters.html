@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Laser Cut Parameters</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#151923; --muted:#8b95a7; --text:#e8eefc; --brand:#6aa7ff;
+    --ok:#19c37d; --warn:#ffcc66; --bad:#ff6b6b; --chip:#1b2130; --chip-active:#22324d;
+    --border:#263044; --ring:#2d66ff; --overlay:rgba(8,10,15,.55);
+  }
+  [data-theme="light"]{
+    --bg:#f7f8fb; --panel:#ffffff; --muted:#5a6475; --text:#0b1020; --brand:#2a66ff;
+    --ok:#15a96c; --warn:#b8860b; --bad:#d64545; --chip:#eef2f7; --chip-active:#dce6fb;
+    --border:#d8e0ee; --ring:#2a66ff; --overlay:rgba(0,6,20,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--text);
+  }
+
+  .shell{max-width:1400px; margin:0 auto; padding:16px; display:grid; gap:12px}
+  .header{display:flex; gap:12px; align-items:center; justify-content:space-between}
+  .title{font-weight:700; font-size:20px}
+  .muted{color:var(--muted)}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:10px; cursor:pointer;
+    background:linear-gradient(180deg, color-mix(in srgb, var(--brand) 30%, transparent), transparent);
+    border:1px solid var(--border); color:inherit
+  }
+  .btn.ok{background:var(--ok); color:#00170c; border:none}
+  .btn.bad{background:var(--bad); color:#2a0000; border:none}
+  .btn.ghost{background:transparent}
+  .switch{
+    display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border:1px solid var(--border); border-radius:999px;
+    background:var(--chip); cursor:pointer; user-select:none
+  }
+  .switch input{display:none}
+  .switch .dot{width:16px; height:16px; border-radius:50%; background:var(--muted)}
+  .switch input:checked + .dot{background:var(--ok)}
+
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px;
+    padding:12px; box-shadow:0 10px 30px rgba(0,0,0,.15);
+  }
+  .section-title{font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:8px}
+  .toolbar{display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap}
+  .field{display:flex; flex-direction:column; gap:6px; min-width:160px}
+  label{font-size:12px; color:var(--muted)}
+  select,input{
+    font:inherit; color:inherit; background:var(--panel); border:1px solid var(--border);
+    border-radius:10px; padding:8px 10px; outline:none; min-height:38px;
+  }
+  input:focus,select:focus{box-shadow:0 0 0 3px color-mix(in srgb, var(--ring) 30%, transparent)}
+
+  .grid{overflow:auto; border:1px solid var(--border); border-radius:12px}
+  table{border-collapse:separate; border-spacing:0; width:100%; min-width:1000px}
+  thead th{
+    position:sticky; top:0; background:var(--panel); z-index:1; font-size:12px; color:var(--muted);
+    text-align:left; padding:10px; border-bottom:1px solid var(--border); backdrop-filter:saturate(140%) blur(6px);
+  }
+  tbody td{padding:10px; border-bottom:1px solid var(--border); vertical-align:middle}
+  tbody tr:hover{background:color-mix(in srgb, var(--panel) 80%, var(--ring) 4%)}
+  .nowrap{white-space:nowrap}
+  .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size:12px}
+  .ringed{box-shadow:0 0 0 3px color-mix(in srgb, var(--ring) 35%, transparent)}
+
+  /* Slide-over panel */
+  .overlay{position:fixed; inset:0; background:var(--overlay); display:none; align-items:stretch; justify-content:flex-end; z-index:50}
+  .overlay.open{display:flex}
+  .panel{width:440px; max-width:100%; height:100%; background:var(--panel); border-left:1px solid var(--border); padding:16px; overflow:auto}
+  .panel .h{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px}
+  .stack{display:grid; gap:10px}
+  .two{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  @media (max-width:560px){ .panel{width:100%} .two{grid-template-columns:1fr} }
+  .error{font-size:12px; color:#2a0000; background:color-mix(in srgb, var(--bad) 20%, transparent); border:1px solid var(--bad); padding:8px 10px; border-radius:10px}
+  .hint{font-size:12px; color:var(--muted)}
+  .list{border:1px solid var(--border); border-radius:10px; overflow:hidden}
+  .list input{border:0; border-bottom:1px solid var(--border); border-radius:0}
+  .rowli{display:flex; justify-content:space-between; gap:8px; padding:8px 10px; border-bottom:1px solid var(--border); cursor:pointer}
+  .rowli:hover{background:color-mix(in srgb, var(--panel) 80%, var(--ring) 5%)}
+  .pill{display:inline-block; font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); background:var(--chip)}
+  .empty{padding:10px; color:var(--muted)}
+  .kbd{font:12px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:var(--chip); border:1px solid var(--border); border-radius:6px; padding:2px 6px}
+
+  /* Toast */
+  #toast{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); opacity:0; transition:opacity .2s ease}
+  #toast .inner{padding:10px 14px; border:1px solid var(--border); border-radius:10px; background:var(--panel); color:var(--text); box-shadow:0 10px 30px rgba(0,0,0,.25)}
+</style>
+</head>
+<body data-theme="dark">
+  <div class="shell">
+    <div class="header">
+      <div>
+        <div class="title">Cut Parameter Finder</div>
+        <div class="muted">Seeded: Mild/Stainless/Aluminium/Galvanized × Air/N₂/O₂ × 1.0→16.0 (0.5 steps)</div>
+      </div>
+      <div class="controls">
+        <label class="switch" title="Toggle light/dark">
+          <input id="themeToggle" type="checkbox" />
+          <span class="dot"></span> <span class="muted">Light</span>
+        </label>
+        <button id="resetBtn" class="btn ghost">Reset</button>
+        <input id="importFile" type="file" accept=".csv,.json" style="display:none" />
+        <button id="importBtn" class="btn">Import</button>
+        <button id="exportCsvBtn" class="btn">Export CSV</button>
+        <button id="exportJsonBtn" class="btn">Export JSON</button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card">
+      <div class="section-title">Filters</div>
+      <div class="toolbar">
+        <div class="field">
+          <label for="materialSelect">Material</label>
+          <select id="materialSelect"><option value="">All materials</option></select>
+        </div>
+        <div class="field">
+          <label for="gasSelect">Assist Gas</label>
+          <select id="gasSelect">
+            <option value="">Any</option>
+            <option>Air</option><option>O₂</option><option>N₂</option>
+          </select>
+        </div>
+        <div class="field" style="min-width:140px">
+          <label for="thicknessSelect">Thickness (mm)</label>
+          <select id="thicknessSelect"><option value="">Any</option></select>
+        </div>
+        <div class="field" style="min-width:160px">
+          <label for="quickSelect">Quick Select (mm)</label>
+          <select id="quickSelect"><option value="">—</option></select>
+        </div>
+        <div class="field" style="min-width:200px">
+          <label for="searchInput">Quick search</label>
+          <input id="searchInput" placeholder="Find by nozzle or notes…" />
+        </div>
+        <button id="clearFilters" class="btn">Clear</button>
+        <span class="muted" style="margin-left:auto">Inline edit: <span class="kbd">dbl-click</span> cell • <span class="kbd">Ctrl/Cmd+S</span> save</span>
+        <button id="openPanelBtn" class="btn ok">Add / Edit Parameters</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+      <div class="section-title">Parameters</div>
+      <div class="grid">
+        <table id="grid">
+          <thead>
+            <tr>
+              <th class="nowrap">Material</th>
+              <th class="nowrap">Thickness (mm)</th>
+              <th>Gas</th>
+              <th>Nozzle</th>
+              <th class="nowrap">Speed (mm/min)</th>
+              <th>Power (%)</th>
+              <th>Freq (Hz)</th>
+              <th>Pressure (bar)</th>
+              <th class="nowrap">Focal Off. (mm)</th>
+              <th class="nowrap">Pierce (ms)</th>
+              <th class="nowrap">Pierce Pwr (%)</th>
+              <th>Notes</th>
+              <th class="nowrap">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="gridBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide-over Add/Edit -->
+  <div id="overlay" class="overlay" aria-hidden="true">
+    <div class="panel">
+      <div class="h">
+        <div>
+          <div class="title">Add / Edit Parameters</div>
+          <div class="muted">Choose a preset (Material × Gas × Thickness), then edit and save</div>
+        </div>
+        <button id="closePanelBtn" class="btn ghost">Close</button>
+      </div>
+
+      <div class="stack" style="margin-bottom:10px">
+        <div class="section-title">Presets</div>
+        <div class="list">
+          <input id="presetSearch" placeholder="Search (e.g. Mild Steel O₂ 6, Aluminium Air 2.5)…" />
+          <div id="presetList" style="max-height:260px; overflow:auto"></div>
+        </div>
+        <div class="hint">Presets = unique <b>Material × Gas × Thickness</b> present in your table.</div>
+      </div>
+
+      <div class="stack">
+        <div class="two">
+          <div class="field"><label>Material</label>
+            <select id="qaMaterial">
+              <option>Mild Steel</option>
+              <option>Stainless Steel</option>
+              <option>Aluminium</option>
+              <option>Galvanized</option>
+            </select>
+          </div>
+          <div class="field"><label>Thickness (mm)</label>
+            <select id="qaThk"></select>
+          </div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Gas</label>
+            <select id="qaGas"><option>Air</option><option>O₂</option><option>N₂</option></select>
+          </div>
+          <div class="field"><label>Nozzle</label><input id="qaNozzle" placeholder="e.g. 1.2mm single"/></div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Speed (mm/min)</label><input id="qaSpeed" type="number" step="1" min="0"/></div>
+          <div class="field"><label>Power (%)</label><input id="qaPower" type="number" step="1" min="0" max="100"/></div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Frequency (Hz)</label><input id="qaFreq" type="number" step="1" min="0"/></div>
+          <div class="field"><label>Pressure (bar)</label><input id="qaPressure" type="number" step="0.1" min="0"/></div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Focal Offset (mm)</label><input id="qaFocal" type="number" step="0.01"/></div>
+          <div class="field"><label>Pierce Time (ms)</label><input id="qaPierceMs" type="number" step="10" min="0"/></div>
+        </div>
+        <div class="two">
+          <div class="field"><label>Pierce Power (%)</label><input id="qaPiercePwr" type="number" step="1" min="0" max="100"/></div>
+          <div class="field"><label>Notes</label><input id="qaNotes" placeholder="Any extra detail"/></div>
+        </div>
+
+        <div id="formError" class="error" style="display:none"></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <button id="saveBtn" class="btn ok">Save</button>
+          <button id="cancelBtn" class="btn ghost">Cancel</button>
+          <span id="editingBadge" class="muted" style="display:none">Editing existing row…</span>
+        </div>
+        <div class="hint">Tip: Press <span class="kbd">Ctrl/Cmd + S</span> to save while the panel is open.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast"><div class="inner"></div></div>
+
+<script>
+/* ======= Storage / Theme ======= */
+const STORAGE_KEY = "cutParams.v5"; // bump to force new 1.0–16.0 seed
+const THEME_KEY = "cutParams.theme";
+(function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY) || "dark";
+  document.body.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').checked = (saved === "light");
+})();
+document.getElementById('themeToggle').addEventListener('change', (e)=>{
+  const mode = e.target.checked ? "light" : "dark";
+  document.body.setAttribute('data-theme', mode);
+  localStorage.setItem(THEME_KEY, mode);
+});
+
+/* ======= Seed: Materials × Gases × Thickness 1.0→16.0 (0.5) ======= */
+function buildSeed(){
+  const materials = ["Mild Steel","Stainless Steel","Aluminium","Galvanized"];
+  const gases = ["Air","N₂","O₂"];
+  const seed = [];
+  for (const m of materials){
+    for (const g of gases){
+      for (let t = 1.0; t <= 16.0001; t += 0.5){
+        seed.push({
+          material: m, gas: g, thickness: Number(t.toFixed(1)),
+          nozzle:"", speed: undefined, power: undefined, freq: undefined,
+          pressure: undefined, focal: undefined, pierceMs: undefined,
+          piercePwr: undefined, notes: ""
+        });
+      }
+    }
+  }
+  return seed;
+}
+function load(){
+  try{
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (Array.isArray(stored) && stored.length) return stored;
+  }catch{}
+  return buildSeed();
+}
+function save(v){ localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); }
+let rows = load();
+
+/* ======= Common DOM ======= */
+const materialSelect = document.getElementById('materialSelect');
+const gasSelect = document.getElementById('gasSelect');
+const thicknessSelect = document.getElementById('thicknessSelect');
+const quickSelect = document.getElementById('quickSelect');
+const searchInput = document.getElementById('searchInput');
+const gridBody = document.getElementById('gridBody');
+
+const importBtn = document.getElementById('importBtn');
+const importFile = document.getElementById('importFile');
+const exportCsvBtn = document.getElementById('exportCsvBtn');
+const exportJsonBtn = document.getElementById('exportJsonBtn');
+
+/* ======= Reset ======= */
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(confirm("This will clear saved data and restore Material × Gas × 1.0→16.0 presets. Continue?")){
+    localStorage.removeItem(STORAGE_KEY);
+    rows = load(); // rebuild seed
+    populateMaterialSelect(); populateThicknesses(); renderTable(); refreshPresets();
+    toast('Reset complete');
+  }
+});
+
+/* ======= Thickness dropdowns (1.0 → 16.0) ======= */
+function fillLadder(selectEl){
+  selectEl.innerHTML = `<option value="">${selectEl===quickSelect?'—':'Any'}</option>`;
+  for(let v=1.0; v<=16.0001; v+=0.5){
+    const fixed = (Math.round(v*10)/10).toFixed(1);
+    const opt = document.createElement('option');
+    opt.value = fixed; opt.textContent = fixed;
+    selectEl.appendChild(opt);
+  }
+}
+function populateThicknesses(){
+  fillLadder(thicknessSelect);
+  fillLadder(quickSelect);
+  fillLadder(document.getElementById('qaThk'));
+}
+populateThicknesses();
+
+/* Quick Select mirrors into main thickness */
+quickSelect.addEventListener('change', ()=>{
+  thicknessSelect.value = quickSelect.value;
+  renderTable();
+});
+
+/* ======= Filters ======= */
+function populateMaterialSelect(){
+  const set = new Set(rows.map(r=>r.material).filter(Boolean));
+  const selected = materialSelect.value;
+  materialSelect.innerHTML = `<option value="">All materials</option>` + [...set].sort().map(m=>`<option>${m}</option>`).join('');
+  if([...set].includes(selected)) materialSelect.value = selected;
+}
+populateMaterialSelect();
+
+[materialSelect, gasSelect, thicknessSelect].forEach(el=>el.addEventListener('change', renderTable));
+searchInput.addEventListener('input', renderTable);
+document.getElementById('clearFilters').addEventListener('click', ()=>{
+  materialSelect.value = "";
+  gasSelect.value = "";
+  thicknessSelect.value = "";
+  quickSelect.value = "";
+  searchInput.value = "";
+  renderTable();
+});
+
+/* ======= Table ======= */
+function renderTable(){
+  const mat = (materialSelect.value||"").toLowerCase();
+  const gas = (gasSelect.value||"").toLowerCase();
+  const thk = thicknessSelect.value ? Number(thicknessSelect.value) : null;
+  const q = (searchInput.value||"").toLowerCase();
+
+  const filtered = rows.filter(r=>{
+    if(mat && r.material.toLowerCase()!==mat) return false;
+    if(gas && r.gas.toLowerCase()!==gas) return false;
+    if(thk!=null && Number(r.thickness)!==thk) return false;
+    if(q){
+      const hay = `${r.nozzle||""} ${r.notes||""}`.toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  }).sort((a,b)=>{
+    const m = a.material.localeCompare(b.material);
+    if(m) return m;
+    const g = a.gas.localeCompare(b.gas);
+    if(g) return g;
+    return a.thickness - b.thickness;
+  });
+
+  gridBody.innerHTML = "";
+  filtered.forEach((r)=>{
+    const tr = document.createElement('tr');
+
+    function tdEditable(key, cls=""){
+      const td = document.createElement('td');
+      td.className = cls;
+      td.textContent = (r[key] ?? "");
+      td.contentEditable = true;
+      td.addEventListener('focus', ()=>tr.classList.add('ringed'));
+      td.addEventListener('blur', ()=>{ tr.classList.remove('ringed'); commitEdit(td, key, r); });
+      td.addEventListener('keydown', (e)=>{
+        if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){ e.preventDefault(); td.blur(); }
+      });
+      return td;
+    }
+
+    tr.appendChild(tdEditable('material'));
+    tr.appendChild(tdEditable('thickness','mono'));
+    tr.appendChild(tdEditable('gas'));
+    tr.appendChild(tdEditable('nozzle'));
+    tr.appendChild(tdEditable('speed','mono'));
+    tr.appendChild(tdEditable('power','mono'));
+    tr.appendChild(tdEditable('freq','mono'));
+    tr.appendChild(tdEditable('pressure','mono'));
+    tr.appendChild(tdEditable('focal','mono'));
+    tr.appendChild(tdEditable('pierceMs','mono'));
+    tr.appendChild(tdEditable('piercePwr','mono'));
+    tr.appendChild(tdEditable('notes'));
+
+    const tdAct = document.createElement('td'); tdAct.className='nowrap';
+    const copyBtn = document.createElement('button'); copyBtn.className='btn'; copyBtn.textContent='Copy';
+    copyBtn.title='Copy row as JSON';
+    copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(JSON.stringify(r,null,2)); toast('Row copied'); });
+
+    const selectBtn = document.createElement('button'); selectBtn.className='btn'; selectBtn.textContent='Select';
+    selectBtn.title='Load this row in Add/Edit panel';
+    selectBtn.addEventListener('click', ()=>{ openPanel(); loadIntoForm(r); currentEditIndex = rows.indexOf(r); showEditing(true); highlightRow(tr); });
+
+    const delBtn = document.createElement('button'); delBtn.className='btn bad'; delBtn.textContent='Delete';
+    delBtn.addEventListener('click', ()=>{
+      const i = rows.indexOf(r);
+      if(i>=0){ rows.splice(i,1); save(rows); populateMaterialSelect(); refreshPresets(); renderTable(); toast('Deleted'); if(currentEditIndex===i){ cancelForm(); } }
+    });
+
+    tdAct.append(copyBtn, selectBtn, delBtn);
+    tr.appendChild(tdAct);
+    gridBody.appendChild(tr);
+  });
+}
+
+function commitEdit(cell, key, row){
+  const val = cell.textContent.trim();
+  const numericKeys = ['thickness','speed','power','freq','pressure','focal','pierceMs','piercePwr'];
+  if(numericKeys.includes(key)){
+    const num = Number(val);
+    if(!Number.isFinite(num)){ toast('Enter a valid number', 'bad'); cell.textContent = row[key] ?? ""; return; }
+    row[key] = num;
+  }else{
+    row[key] = val;
+  }
+  save(rows);
+  populateMaterialSelect();
+  refreshPresets();
+}
+
+/* ======= Slide-over Add/Edit with Presets ======= */
+const overlay = document.getElementById('overlay');
+const openPanelBtn = document.getElementById('openPanelBtn');
+const closePanelBtn = document.getElementById('closePanelBtn');
+const presetSearch = document.getElementById('presetSearch');
+const presetList = document.getElementById('presetList');
+
+const qa = {
+  material: document.getElementById('qaMaterial'),
+  thk: document.getElementById('qaThk'),
+  gas: document.getElementById('qaGas'),
+  nozzle: document.getElementById('qaNozzle'),
+  speed: document.getElementById('qaSpeed'),
+  power: document.getElementById('qaPower'),
+  freq: document.getElementById('qaFreq'),
+  pressure: document.getElementById('qaPressure'),
+  focal: document.getElementById('qaFocal'),
+  pierceMs: document.getElementById('qaPierceMs'),
+  piercePwr: document.getElementById('qaPiercePwr'),
+  notes: document.getElementById('qaNotes'),
+};
+const saveBtn = document.getElementById('saveBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const formError = document.getElementById('formError');
+const editingBadge = document.getElementById('editingBadge');
+
+let currentEditIndex = null;
+
+function openPanel(){ overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false'); refreshPresets(); }
+function closePanel(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); }
+openPanelBtn.addEventListener('click', ()=>{ openPanel(); });
+closePanelBtn.addEventListener('click', closePanel);
+overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closePanel(); });
+
+function showEditing(on){ editingBadge.style.display = on? 'inline' : 'none'; }
+function clearError(){ formError.style.display='none'; formError.textContent=''; }
+function showError(msg){ formError.style.display='block'; formError.textContent=msg; }
+
+function loadIntoForm(r){
+  qa.material.value = r.material ?? "Mild Steel";
+  qa.thk.value = isFinite(r.thickness) ? Number(r.thickness).toFixed(1) : "";
+  qa.gas.value = r.gas ?? "Air";
+  qa.nozzle.value = r.nozzle ?? "";
+  qa.speed.value = r.speed ?? "";
+  qa.power.value = r.power ?? "";
+  qa.freq.value = r.freq ?? "";
+  qa.pressure.value = r.pressure ?? "";
+  qa.focal.value = r.focal ?? "";
+  qa.pierceMs.value = r.pierceMs ?? "";
+  qa.piercePwr.value = r.piercePwr ?? "";
+  qa.notes.value = r.notes ?? "";
+}
+
+function getFormObj(){
+  const o = {
+    material: qa.material.value,
+    thickness: Number(qa.thk.value),
+    gas: qa.gas.value,
+    nozzle: qa.nozzle.value.trim(),
+    speed: Number(qa.speed.value),
+    power: Number(qa.power.value),
+    freq: Number(qa.freq.value),
+    pressure: Number(qa.pressure.value),
+    focal: Number(qa.focal.value),
+    pierceMs: Number(qa.pierceMs.value),
+    piercePwr: Number(qa.piercePwr.value),
+    notes: qa.notes.value.trim()
+  };
+  if(!o.material) throw new Error("Material is required");
+  if(!Number.isFinite(o.thickness)) throw new Error("Thickness must be selected (mm)");
+  if(!o.gas) throw new Error("Assist Gas is required");
+  // Optional numerics can be blank → undefined
+  ['speed','power','freq','pressure','focal','pierceMs','piercePwr'].forEach(k=>{ if(!Number.isFinite(o[k])) o[k]=undefined; });
+  return o;
+}
+
+function cancelForm(){
+  currentEditIndex = null; showEditing(false); clearError();
+  Object.values(qa).forEach(el=>{ if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=""; });
+}
+cancelBtn.addEventListener('click', cancelForm);
+
+saveBtn.addEventListener('click', ()=>{
+  try{
+    clearError();
+    const obj = getFormObj();
+    if(currentEditIndex!=null){
+      rows[currentEditIndex] = obj;
+      toast('Updated');
+    }else{
+      rows.push(obj);
+      toast('Added');
+    }
+    save(rows);
+    populateMaterialSelect();
+    renderTable();
+    refreshPresets();
+    cancelForm();
+  }catch(e){ showError(e.message); }
+});
+
+/* Presets = unique Material × Gas × Thickness */
+function refreshPresets(){
+  // ensure QA thickness ladder is filled (1.0–16.0)
+  if (!document.getElementById('qaThk').options.length) fillLadder(document.getElementById('qaThk'));
+
+  const q = (presetSearch.value||"").toLowerCase();
+  const uniq = new Map(); // key "material|||gas|||thickness" -> example row
+  rows.forEach(r=>{
+    const key = `${r.material}|||${r.gas}|||${r.thickness}`;
+    if(!uniq.has(key)) uniq.set(key, r);
+  });
+  const list = [...uniq.values()].sort((a,b)=>{
+    const m = a.material.localeCompare(b.material); if(m) return m;
+    const g = a.gas.localeCompare(b.gas); if(g) return g;
+    return a.thickness - b.thickness;
+  });
+  presetList.innerHTML = "";
+  const searchFiltered = list.filter(r=>{
+    if(!q) return true;
+    const hay = `${r.material} ${r.gas} ${r.thickness}`.toLowerCase();
+    return hay.includes(q);
+  });
+  if(!searchFiltered.length){
+    presetList.innerHTML = `<div class="empty">No presets (unexpected). Try Reset to regenerate.</div>`;
+  }else{
+    searchFiltered.forEach(r=>{
+      const li = document.createElement('div');
+      li.className = 'rowli';
+      li.innerHTML = `<div><strong>${r.material}</strong> <span class="pill">${r.gas}</span> <span class="pill">${Number(r.thickness).toFixed(1)} mm</span></div>
+                      <div class="muted">${r.nozzle||''}</div>`;
+      li.addEventListener('click', ()=>{
+        loadIntoForm(r);
+        currentEditIndex = rows.indexOf(r);
+        showEditing(true);
+      });
+      presetList.appendChild(li);
+    });
+  }
+}
+presetSearch.addEventListener('input', refreshPresets);
+
+/* Keyboard save inside panel */
+document.addEventListener('keydown', (e)=>{
+  if(overlay.classList.contains('open') && (e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='s'){
+    e.preventDefault(); document.getElementById('saveBtn').click();
+  }
+});
+
+/* ======= Import / Export ======= */
+importBtn.addEventListener('click', ()=>importFile.click());
+importFile.addEventListener('change', async (e)=>{
+  const file = e.target.files?.[0];
+  if(!file) return;
+  const text = await file.text();
+  try{
+    let data;
+    if(file.name.toLowerCase().endsWith('.json')){
+      data = JSON.parse(text);
+    }else{
+      data = csvToObjects(text);
+    }
+    if(!Array.isArray(data)) throw new Error("Invalid data format");
+    const norm = data.map(normalizeRow).filter(Boolean);
+    if(!norm.length) throw new Error("No valid rows found");
+    rows = norm;
+    save(rows);
+    populateMaterialSelect();
+    renderTable();
+    refreshPresets();
+    toast(`Imported ${rows.length} rows`);
+  }catch(err){
+    toast("Import failed: " + err.message, 'bad');
+  }finally{
+    importFile.value = "";
+  }
+});
+
+exportCsvBtn.addEventListener('click', ()=>{
+  const csv = objectsToCsv(rows);
+  downloadText(csv, 'cut-parameters.csv', 'text/csv');
+});
+exportJsonBtn.addEventListener('click', ()=>{
+  downloadText(JSON.stringify(rows, null, 2), 'cut-parameters.json', 'application/json');
+});
+
+function downloadText(text, filename, type){
+  const blob = new Blob([text], {type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+
+function csvToObjects(csv){
+  const lines = csv.split(/\r?\n/).filter(Boolean);
+  if(lines.length<2) return [];
+  const headers = lines[0].split(',').map(s=>s.trim());
+  return lines.slice(1).map(line=>{
+    const cols = parseCsvLine(line, headers.length);
+    const obj = {}; headers.forEach((h,i)=>obj[h]=cols[i]);
+    return obj;
+  });
+}
+function parseCsvLine(line, nCols){
+  const out=[], q='"'; let cur="", inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch===q){ if(inQ && line[i+1]===q){cur+=q; i++;} else inQ=!inQ; }
+    else if(ch===',' && !inQ){ out.push(cur); cur=""; }
+    else cur+=ch;
+  }
+  out.push(cur);
+  while(out.length<nCols) out.push("");
+  return out.map(s=>s.trim());
+}
+function objectsToCsv(arr){
+  const headers = ["material","thickness","gas","nozzle","speed","power","freq","pressure","focal","pierceMs","piercePwr","notes"];
+  const lines = [headers.join(',')];
+  arr.forEach(o=>{
+    const row = headers.map(h=>{
+      const v = (o[h]??"").toString();
+      return v.includes(',') || v.includes('"') ? `"${v.replace(/"/g,'""')}"` : v;
+    });
+    lines.push(row.join(','));
+  });
+  return lines.join('\n');
+}
+function normalizeRow(o){
+  if(!o) return null;
+  const map = {}; for(const k in o){ map[k.toLowerCase()] = o[k]; }
+  const row = {
+    material: (map.material ?? map.mat ?? "").toString().trim(),
+    thickness: num(map.thickness ?? map.thk ?? map["thickness (mm)"]),
+    gas: (map.gas ?? map.assist ?? "").toString().trim() || "Air",
+    nozzle: (map.nozzle ?? "").toString().trim(),
+    speed: num(map.speed ?? map["speed (mm/min)"]),
+    power: num(map.power ?? map["power (%)"]),
+    freq: num(map.freq ?? map.frequency ?? map["freq (hz)"]),
+    pressure: num(map.pressure ?? map["pressure (bar)"]),
+    focal: num(map.focal ?? map["focal offset (mm)"]),
+    pierceMs: num(map.piercems ?? map["pierce (ms)"]),
+    piercePwr: num(map.piercepwr ?? map["pierce pwr (%)"]),
+    notes: (map.notes ?? "").toString()
+  };
+  if(!row.material || !isFinite(row.thickness)) return null;
+  return row;
+}
+function num(v){ const n = Number(v); return isFinite(n)? n : undefined; }
+
+/* ======= Toast ======= */
+function toast(msg, type){
+  const el = document.getElementById('toast');
+  const inner = el.querySelector('.inner');
+  inner.textContent = msg;
+  inner.style.background = type==='bad' ? 'var(--bad)' : (type==='warn' ? 'var(--warn)' : 'var(--panel)');
+  inner.style.color = type ? '#0b0f14' : 'var(--text)';
+  el.style.opacity = '1';
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.style.opacity='0'; }, 1600);
+}
+
+/* ======= Init ======= */
+renderTable();
+
+/* ======= Helpers ======= */
+function highlightRow(tr){
+  document.querySelectorAll('#gridBody tr').forEach(r=>r.classList.remove('ringed'));
+  tr.classList.add('ringed');
+}
+</script>
+</body>
+</html>

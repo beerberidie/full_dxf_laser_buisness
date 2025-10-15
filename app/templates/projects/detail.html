@@ -1,0 +1,783 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.project_code }} - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="breadcrumb">
+            <a href="{{ url_for('projects.index') }}">Projects</a>
+            <span>/</span>
+            <span>{{ project.project_code }}</span>
+        </div>
+        <h1>{{ project.name }}</h1>
+        <p class="text-muted">{{ project.project_code }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('queue.new_run', project_id=project.id) }}" class="btn btn-primary">
+            📊 Log Laser Run
+        </a>
+        <button onclick="showAddToQueueForm()" class="btn btn-success">
+            ➕ Add to Queue
+        </button>
+        <a href="{{ url_for('projects.edit', id=project.id) }}" class="btn btn-secondary">
+            Edit Project
+        </a>
+        <button onclick="confirmDelete()" class="btn btn-danger">
+            Delete Project
+        </button>
+    </div>
+</div>
+
+<!-- Add to Queue Form (Hidden by default) -->
+<div id="addToQueueForm" style="display: none; margin-bottom: 1.5rem;">
+    <div class="card">
+        <div class="card-header">
+            <h2>Add to Production Queue</h2>
+            <button onclick="hideAddToQueueForm()" class="btn btn-sm btn-secondary">Cancel</button>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('queue.add_to_queue', project_id=project.id) }}" method="POST">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label for="priority">Priority:</label>
+                        <select id="priority" name="priority" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Normal" selected>Normal</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scheduled_date">Scheduled Date:</label>
+                        <input type="date" id="scheduled_date" name="scheduled_date" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estimated_cut_time">Estimated Cut Time (minutes):</label>
+                        <input type="number" id="estimated_cut_time" name="estimated_cut_time"
+                               class="form-control" min="0" placeholder="e.g., 45">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <textarea id="notes" name="notes" class="form-control" rows="2"
+                              placeholder="Any special instructions or notes"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" onclick="hideAddToQueueForm()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add to Queue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function showAddToQueueForm() {
+    document.getElementById('addToQueueForm').style.display = 'block';
+}
+
+function hideAddToQueueForm() {
+    document.getElementById('addToQueueForm').style.display = 'none';
+}
+</script>
+
+<!-- Status Badge and Alerts -->
+<div class="status-badges">
+    <span class="badge badge-lg badge-{{ project.status|lower|replace(' ', '-') }}">
+        {{ project.status }}
+    </span>
+    {% if project.is_overdue %}
+        <span class="badge badge-lg badge-danger">
+            ⚠️ OVERDUE ({{ project.days_until_due|abs }} days past due)
+        </span>
+    {% elif project.days_until_due is not none and project.days_until_due <= 3 and project.days_until_due > 0 %}
+        <span class="badge badge-lg badge-warning">
+            ⏰ Due in {{ project.days_until_due }} days
+        </span>
+    {% endif %}
+</div>
+
+<!-- Project Information -->
+<div class="grid grid-2">
+    <!-- Left Column -->
+    <div>
+        <!-- Basic Information -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Project Information</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Project Code</dt>
+                    <dd><code>{{ project.project_code }}</code></dd>
+                    
+                    <dt>Project Name</dt>
+                    <dd>{{ project.name }}</dd>
+                    
+                    <dt>Client</dt>
+                    <dd>
+                        <a href="{{ url_for('clients.detail', id=project.client.id) }}" class="link-primary">
+                            {{ project.client.name }} ({{ project.client.client_code }})
+                        </a>
+                    </dd>
+                    
+                    <dt>Description</dt>
+                    <dd>
+                        {% if project.description %}
+                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ project.description }}</pre>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+                    
+                    <dt>Notes</dt>
+                    <dd>
+                        {% if project.notes %}
+                            <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ project.notes }}</pre>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Pricing Information -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Pricing</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Quoted Price</dt>
+                    <dd>
+                        {% if project.quoted_price %}
+                            <strong>R{{ "%.2f"|format(project.quoted_price) }}</strong>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+                    
+                    <dt>Final Price</dt>
+                    <dd>
+                        {% if project.final_price %}
+                            <strong>R{{ "%.2f"|format(project.final_price) }}</strong>
+                            {% if project.quoted_price and project.final_price != project.quoted_price %}
+                                {% set diff = project.final_price - project.quoted_price %}
+                                <small class="{% if diff > 0 %}text-danger{% else %}text-success{% endif %}">
+                                    ({{ "+" if diff > 0 else "" }}R{{ "%.2f"|format(diff) }})
+                                </small>
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div>
+        <!-- Timeline -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Timeline</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Quote Date</dt>
+                    <dd>{{ project.quote_date|date if project.quote_date else '-' }}</dd>
+                    
+                    <dt>Approval Date</dt>
+                    <dd>{{ project.approval_date|date if project.approval_date else '-' }}</dd>
+                    
+                    <dt>Due Date</dt>
+                    <dd>
+                        {% if project.due_date %}
+                            {{ project.due_date|date }}
+                            {% if project.days_until_due is not none %}
+                                <small class="text-muted">({{ project.days_until_due }} days)</small>
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </dd>
+                    
+                    <dt>Completion Date</dt>
+                    <dd>{{ project.completion_date|date if project.completion_date else '-' }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Metadata</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Created</dt>
+                    <dd>{{ project.created_at|datetime }}</dd>
+                    
+                    <dt>Last Updated</dt>
+                    <dd>{{ project.updated_at|datetime }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Phase 9: Material & Production Information -->
+{% if project.material_type or project.material_quantity_sheets or project.parts_quantity or project.estimated_cut_time or project.drawing_creation_time or project.number_of_bins or project.scheduled_cut_date %}
+<div class="card">
+    <div class="card-header">
+        <h2>Material & Production Information</h2>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-3">
+            <dl class="detail-list">
+                <dt>Material Type</dt>
+                <dd>{{ project.material_type or '-' }}</dd>
+
+                <dt>Material Quantity</dt>
+                <dd>{{ project.material_quantity_sheets ~ ' sheets' if project.material_quantity_sheets else '-' }}</dd>
+            </dl>
+
+            <dl class="detail-list">
+                <dt>Parts Quantity</dt>
+                <dd>{{ project.parts_quantity or '-' }}</dd>
+
+                <dt>Number of Bins</dt>
+                <dd>{{ project.number_of_bins or '-' }}</dd>
+            </dl>
+
+            <dl class="detail-list">
+                <dt>Estimated Cut Time</dt>
+                <dd>{{ project.estimated_cut_time ~ ' minutes' if project.estimated_cut_time else '-' }}</dd>
+
+                <dt>Drawing Creation Time</dt>
+                <dd>{{ project.drawing_creation_time ~ ' minutes' if project.drawing_creation_time else '-' }}</dd>
+            </dl>
+        </div>
+
+        {% if project.scheduled_cut_date %}
+        <dl class="detail-list" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e0e0e0;">
+            <dt>Scheduled Cut Date</dt>
+            <dd>
+                <strong>{{ project.scheduled_cut_date|date }}</strong>
+                {% if project.scheduled_cut_date %}
+                    {% set days_until = (project.scheduled_cut_date - today).days if today else none %}
+                    {% if days_until is not none %}
+                        {% if days_until < 0 %}
+                            <span class="badge badge-danger">{{ days_until|abs }} days overdue</span>
+                        {% elif days_until == 0 %}
+                            <span class="badge badge-warning">Today</span>
+                        {% elif days_until <= 3 %}
+                            <span class="badge badge-warning">In {{ days_until }} days</span>
+                        {% else %}
+                            <span class="badge badge-info">In {{ days_until }} days</span>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </dd>
+        </dl>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Phase 9: POP Tracking -->
+<div class="card">
+    <div class="card-header">
+        <h2>Proof of Payment (POP) Tracking</h2>
+        <form action="{{ url_for('projects.toggle_pop', id=project.id) }}" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-sm {% if project.pop_received %}btn-success{% else %}btn-secondary{% endif %}">
+                {% if project.pop_received %}✓ POP Received{% else %}Mark POP Received{% endif %}
+            </button>
+        </form>
+    </div>
+    <div class="card-body">
+        <dl class="detail-list">
+            <dt>POP Received</dt>
+            <dd>
+                {% if project.pop_received %}
+                    <span class="badge badge-success">✓ Yes</span>
+                {% else %}
+                    <span class="badge badge-secondary">✗ No</span>
+                {% endif %}
+            </dd>
+
+            <dt>POP Received Date</dt>
+            <dd>{{ project.pop_received_date|date if project.pop_received_date else '-' }}</dd>
+
+            <dt>POP Deadline (3 days)</dt>
+            <dd>
+                {% if project.pop_deadline %}
+                    <strong>{{ project.pop_deadline|date }}</strong>
+                    {% set days_until_deadline = (project.pop_deadline - today).days if today else none %}
+                    {% if days_until_deadline is not none %}
+                        {% if days_until_deadline < 0 %}
+                            <span class="badge badge-danger">⚠️ {{ days_until_deadline|abs }} days overdue</span>
+                        {% elif days_until_deadline == 0 %}
+                            <span class="badge badge-warning">⏰ Due today</span>
+                        {% elif days_until_deadline <= 2 %}
+                            <span class="badge badge-warning">⏰ {{ days_until_deadline }} days remaining</span>
+                        {% else %}
+                            <span class="badge badge-success">{{ days_until_deadline }} days remaining</span>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    -
+                {% endif %}
+            </dd>
+        </dl>
+
+        {% if project.pop_received and project.pop_deadline %}
+        <div class="info-box {% if project.pop_deadline < today %}info-box-danger{% endif %}">
+            <p>
+                <strong>ℹ️ Business Rule:</strong> Projects should be scheduled for cutting within 3 days of POP receipt.
+                {% if project.pop_deadline < today %}
+                    <span style="color: #d32f2f;">This deadline has passed.</span>
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Phase 9: Client Notification & Delivery -->
+<div class="grid grid-2">
+    <!-- Client Notification -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Client Notification</h2>
+            <form action="{{ url_for('projects.toggle_notified', id=project.id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-sm {% if project.client_notified %}btn-success{% else %}btn-secondary{% endif %}">
+                    {% if project.client_notified %}✓ Notified{% else %}Mark as Notified{% endif %}
+                </button>
+            </form>
+        </div>
+        <div class="card-body">
+            <dl class="detail-list">
+                <dt>Client Notified</dt>
+                <dd>
+                    {% if project.client_notified %}
+                        <span class="badge badge-success">✓ Yes</span>
+                    {% else %}
+                        <span class="badge badge-secondary">✗ No</span>
+                    {% endif %}
+                </dd>
+
+                <dt>Notification Date</dt>
+                <dd>{{ project.client_notified_date|date if project.client_notified_date else '-' }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <!-- Delivery Confirmation -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Delivery Confirmation</h2>
+            <form action="{{ url_for('projects.toggle_delivery', id=project.id) }}" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-sm {% if project.delivery_confirmed %}btn-success{% else %}btn-secondary{% endif %}">
+                    {% if project.delivery_confirmed %}✓ Delivered{% else %}Mark as Delivered{% endif %}
+                </button>
+            </form>
+        </div>
+        <div class="card-body">
+            <dl class="detail-list">
+                <dt>Delivery Confirmed</dt>
+                <dd>
+                    {% if project.delivery_confirmed %}
+                        <span class="badge badge-success">✓ Yes</span>
+                    {% else %}
+                        <span class="badge badge-secondary">✗ No</span>
+                    {% endif %}
+                </dd>
+
+                <dt>Delivery Date</dt>
+                <dd>{{ project.delivery_confirmed_date|date if project.delivery_confirmed_date else '-' }}</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<!-- Phase 9: Project Documents -->
+<div class="card">
+    <div class="card-header">
+        <h2>Project Documents</h2>
+        <button onclick="document.getElementById('uploadDocForm').style.display='block'" class="btn btn-primary btn-sm">
+            📤 Upload Document
+        </button>
+    </div>
+    <div class="card-body">
+        <!-- Upload Form (Hidden by default) -->
+        <div id="uploadDocForm" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 4px;">
+            <h3 style="margin-top: 0;">Upload Project Document</h3>
+            <form action="{{ url_for('projects.upload_document', id=project.id) }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="document_type">Document Type:</label>
+                    <select id="document_type" name="document_type" required class="form-control">
+                        <option value="">Select type...</option>
+                        <option value="Quote">Quote</option>
+                        <option value="Invoice">Invoice</option>
+                        <option value="Proof of Payment">Proof of Payment</option>
+                        <option value="Delivery Note">Delivery Note</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="doc_file">Select File:</label>
+                    <input type="file" id="doc_file" name="file" required class="form-control">
+                    <small class="text-muted">Allowed: PDF, Images, Office documents</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="doc_notes">Notes (optional):</label>
+                    <textarea id="doc_notes" name="notes" rows="2" class="form-control" placeholder="Add any notes about this document..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" onclick="document.getElementById('uploadDocForm').style.display='none'" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Documents List -->
+        {% if project.documents %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Filename</th>
+                    <th>Size</th>
+                    <th>Upload Date</th>
+                    <th>Uploaded By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for doc in project.documents|sort(attribute='uploaded_at', reverse=True) %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{ 'primary' if doc.document_type == 'Quote' else 'success' if doc.document_type == 'Invoice' else 'warning' if doc.document_type == 'Proof of Payment' else 'info' }}">
+                            {{ doc.document_type }}
+                        </span>
+                    </td>
+                    <td>📄 {{ doc.original_filename }}</td>
+                    <td>{{ (doc.file_size / 1024 / 1024)|round(2) }} MB</td>
+                    <td>{{ doc.uploaded_at|datetime }}</td>
+                    <td>{{ doc.uploaded_by or 'N/A' }}</td>
+                    <td>
+                        <form action="{{ url_for('projects.delete_document', doc_id=doc.id) }}" method="POST" style="display: inline;"
+                              onsubmit="return confirm('Delete document {{ doc.original_filename }}?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% if doc.notes %}
+                <tr>
+                    <td colspan="6" style="background: #f8f9fa; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                        <strong>Notes:</strong> {{ doc.notes }}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-muted" style="margin-top: 1rem;">
+            Total: {{ project.documents|length }} document(s)
+        </p>
+        {% else %}
+        <p class="text-muted">No documents uploaded yet. Click "Upload Document" to add quotes, invoices, POPs, or delivery notes.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Design Files Section -->
+<div class="card">
+    <div class="card-header">
+        <h2>Design Files (DXF)</h2>
+        <button onclick="document.getElementById('uploadForm').style.display='block'" class="btn btn-primary btn-sm">
+            📤 Upload File
+        </button>
+    </div>
+    <div class="card-body">
+        <!-- Upload Form (Hidden by default) -->
+        <div id="uploadForm" style="display: none; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 4px;">
+            <h3 style="margin-top: 0;">Upload DXF File</h3>
+            <form action="{{ url_for('files.upload', project_id=project.id) }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select File (DXF only):</label>
+                    <input type="file" id="file" name="file" accept=".dxf,.DXF" required class="form-control">
+                    <small class="text-muted">Maximum file size: 50 MB</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes (optional):</label>
+                    <textarea id="notes" name="notes" rows="2" class="form-control" placeholder="Add any notes about this file..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" onclick="document.getElementById('uploadForm').style.display='none'" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Files List -->
+        {% if project.design_files %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Size</th>
+                    <th>Upload Date</th>
+                    <th>Uploaded By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in project.design_files|sort(attribute='upload_date', reverse=True) %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('files.detail', file_id=file.id) }}">
+                            📄 {{ file.original_filename }}
+                        </a>
+                    </td>
+                    <td>{{ file.file_size_mb }} MB</td>
+                    <td>{{ file.upload_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ file.uploaded_by or 'N/A' }}</td>
+                    <td>
+                        <a href="{{ url_for('files.download', file_id=file.id) }}" class="btn btn-sm btn-primary">Download</a>
+                        <a href="{{ url_for('files.detail', file_id=file.id) }}" class="btn btn-sm btn-secondary">View</a>
+                        <form action="{{ url_for('files.delete', file_id=file.id) }}" method="POST" style="display: inline;"
+                              onsubmit="return confirm('Delete file {{ file.original_filename }}?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-muted" style="margin-top: 1rem;">
+            Total: {{ project.design_files|length }} file(s)
+        </p>
+        {% else %}
+        <p class="text-muted">No files uploaded yet. Click "Upload File" to add DXF files to this project.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Phase 9: Linked Communications -->
+<div class="card">
+    <div class="card-header">
+        <h2>Communications</h2>
+        <a href="{{ url_for('comms.new_communication') }}?project_id={{ project.id }}" class="btn btn-sm btn-primary">
+            ✉️ New Communication
+        </a>
+    </div>
+    <div class="card-body">
+        {% set project_comms = project.communications|sort(attribute='created_at', reverse=True) if project.communications else [] %}
+        {% if project_comms %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Direction</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comm in project_comms[:10] %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{ comm.comm_type|lower }}">
+                            {% if comm.comm_type == 'Email' %}✉️{% elif comm.comm_type == 'WhatsApp' %}💬{% else %}🔔{% endif %}
+                            {{ comm.comm_type }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if comm.direction == 'Inbound' else 'info' }}">
+                            {{ '📥' if comm.direction == 'Inbound' else '📤' }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('comms.detail', id=comm.id) }}" class="link-primary">
+                            {{ comm.subject[:40] }}{% if comm.subject|length > 40 %}...{% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ comm.status|lower }}">{{ comm.status }}</span>
+                    </td>
+                    <td>
+                        <small>{{ comm.comm_date|datetime if comm.comm_date else comm.created_at|datetime }}</small>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('comms.detail', id=comm.id) }}" class="btn btn-sm btn-secondary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if project_comms|length > 10 %}
+        <p class="text-muted" style="margin-top: 0.5rem;">
+            <small>Showing 10 most recent communications ({{ project_comms|length }} total) -
+            <a href="{{ url_for('comms.index') }}?project_id={{ project.id }}">View all</a></small>
+        </p>
+        {% endif %}
+        {% else %}
+        <p class="text-muted">No communications linked to this project yet.
+            <a href="{{ url_for('comms.new_communication') }}?project_id={{ project.id }}">Create one</a> or
+            <a href="{{ url_for('comms.index') }}?is_linked=0">link existing communications</a>.
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Activity Log -->
+<div class="card">
+    <div class="card-header">
+        <h2>Activity Log</h2>
+    </div>
+    <div class="card-body">
+        {% if logs %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>User</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.created_at|datetime }}</td>
+                        <td><span class="badge badge-secondary">{{ log.action }}</span></td>
+                        <td>{{ log.user }}</td>
+                        <td>{{ log.details }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">No activity logged yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Script -->
+<script>
+function confirmDelete() {
+    if (confirm('Are you sure you want to delete this project?\n\nProject: {{ project.project_code }} - {{ project.name }}\n\nThis action cannot be undone.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("projects.delete", id=project.id) }}';
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+
+<!-- Queue Status and Laser Run History -->
+<div class="grid grid-2">
+    <!-- Queue Status -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Queue Status</h2>
+        </div>
+        <div class="card-body">
+            {% set active_queue_items = project.queue_items|selectattr('is_active')|list %}
+            {% if active_queue_items %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Status</th>
+                            <th>Priority</th>
+                            <th>Scheduled</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in active_queue_items %}
+                        <tr>
+                            <td>{{ item.queue_position }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'info' if item.status == 'Queued' else 'primary' }}">
+                                    {{ item.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ 'danger' if item.priority == 'Urgent' else 'warning' if item.priority == 'High' else 'secondary' }}">
+                                    {{ item.priority }}
+                                </span>
+                            </td>
+                            <td>{{ item.scheduled_date.strftime('%Y-%m-%d') if item.scheduled_date else '-' }}</td>
+                            <td>
+                                <a href="{{ url_for('queue.detail', id=item.id) }}" class="btn btn-sm btn-secondary">View</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted">Not currently in queue</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Laser Run History -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Laser Run History</h2>
+            <a href="{{ url_for('queue.new_run', project_id=project.id) }}" class="btn btn-sm btn-primary">Log Run</a>
+        </div>
+        <div class="card-body">
+            {% if project.laser_runs %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Operator</th>
+                            <th>Cut Time</th>
+                            <th>Parts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set sorted_runs = project.laser_runs|sort(attribute='run_date', reverse=True) %}
+                        {% for run in sorted_runs[:5] %}
+                        <tr>
+                            <td>{{ run.run_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ run.operator or 'N/A' }}</td>
+                            <td>{{ run.cut_time_minutes }} min</td>
+                            <td>{{ run.parts_produced or 'N/A' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% if project.laser_runs|length > 5 %}
+                <p class="text-muted" style="margin-top: 0.5rem;">
+                    <small>Showing 5 most recent runs ({{ project.laser_runs|length }} total)</small>
+                </p>
+                {% endif %}
+            {% else %}
+                <p class="text-muted">No laser runs logged yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

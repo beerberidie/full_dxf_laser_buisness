@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Laser OS{% endblock %} - {{ company_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>{{ company_name }}</h1>
+                    <p class="tagline">Laser Cutting Operations System</p>
+                </div>
+                <nav class="nav">
+                    <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
+                        Dashboard
+                    </a>
+                    <a href="{{ url_for('clients.list_clients') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('clients.') %}active{% endif %}">
+                        Clients
+                    </a>
+                    <a href="{{ url_for('projects.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('projects.') %}active{% endif %}">
+                        Projects
+                    </a>
+                    <a href="{{ url_for('products.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('products.') %}active{% endif %}">
+                        Products
+                    </a>
+                    <a href="{{ url_for('queue.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('queue.') %}active{% endif %}">
+                        Queue
+                    </a>
+                    <a href="{{ url_for('inventory.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('inventory.') %}active{% endif %}">
+                        Inventory
+                    </a>
+                    <a href="{{ url_for('reports.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('reports.') %}active{% endif %}">
+                        Reports
+                    </a>
+                    <a href="{{ url_for('quotes.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('quotes.') %}active{% endif %}">
+                        Quotes
+                    </a>
+                    <a href="{{ url_for('invoices.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('invoices.') %}active{% endif %}">
+                        Invoices
+                    </a>
+                    <a href="{{ url_for('comms.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('comms.') %}active{% endif %}">
+                        Communications
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                <div class="container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                            <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+            <p class="footer-meta">Laser OS Tier 1 v1.0</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

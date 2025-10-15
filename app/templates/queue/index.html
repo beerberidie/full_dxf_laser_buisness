@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Production Queue{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Production Queue</h1>
+    <div>
+        <a href="{{ url_for('queue.runs') }}" class="btn btn-secondary">View Run History</a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4" style="margin-bottom: 2rem;">
+    <div class="card">
+        <div class="card-body">
+            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Queued</h3>
+            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+                {{ stats.total_queued }}
+            </p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">In Progress</h3>
+            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+                {{ stats.total_in_progress }}
+            </p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Completed</h3>
+            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+                {{ stats.total_completed }}
+            </p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <h3 style="margin-bottom: var(--spacing-sm); color: var(--text-secondary);">Total Active</h3>
+            <p style="font-size: var(--font-size-3xl); font-weight: 600; margin: 0;">
+                {{ stats.total_active }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-body">
+        <form method="GET" style="display: flex; gap: 1rem; align-items: flex-end;">
+            <div class="form-group" style="margin: 0; flex: 1;">
+                <label for="status">Filter by Status:</label>
+                <select id="status" name="status" class="form-control" onchange="this.form.submit()">
+                    <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active (Queued + In Progress)</option>
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+                    <option value="Queued" {% if status_filter == 'Queued' %}selected{% endif %}>Queued</option>
+                    <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Completed" {% if status_filter == 'Completed' %}selected{% endif %}>Completed</option>
+                    <option value="Cancelled" {% if status_filter == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Queue List -->
+<div class="card">
+    <div class="card-header">
+        <h2>Queue Items</h2>
+    </div>
+    <div class="card-body">
+        {% if queue_items %}
+        <table class="table" id="queueTable">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Project</th>
+                    <th>Priority</th>
+                    <th>Status</th>
+                    <th>Scheduled Date</th>
+                    <th>Est. Time</th>
+                    <th>Added</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="queueBody">
+                {% for item in queue_items %}
+                <tr data-id="{{ item.id }}">
+                    <td>
+                        {% if item.is_active %}
+                        <span class="drag-handle" style="cursor: move;">☰</span>
+                        {% endif %}
+                        {{ item.queue_position }}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('projects.detail', id=item.project_id) }}">
+                            {{ item.project.project_code }}
+                        </a>
+                        <br>
+                        <small class="text-muted">{{ item.project.name }}</small>
+
+                        {# Phase 9: POP Deadline Warning #}
+                        {% if item.project.pop_received and item.project.pop_deadline %}
+                            {% set days_until_deadline = (item.project.pop_deadline - today).days if today else none %}
+                            {% if days_until_deadline is not none and days_until_deadline < 0 %}
+                                <br>
+                                <span class="badge badge-danger" style="font-size: 0.75rem;">
+                                    ⚠️ POP deadline {{ days_until_deadline|abs }} days overdue
+                                </span>
+                            {% elif days_until_deadline is not none and days_until_deadline <= 2 %}
+                                <br>
+                                <span class="badge badge-warning" style="font-size: 0.75rem;">
+                                    ⏰ POP deadline in {{ days_until_deadline }} days
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ 'danger' if item.priority == 'Urgent' else 'warning' if item.priority == 'High' else 'secondary' }}">
+                            {{ item.priority }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ 'info' if item.status == 'Queued' else 'primary' if item.status == 'In Progress' else 'success' if item.status == 'Completed' else 'secondary' }}">
+                            {{ item.status }}
+                        </span>
+                    </td>
+                    <td>{{ item.scheduled_date.strftime('%Y-%m-%d') if item.scheduled_date else '-' }}</td>
+                    <td>{{ item.estimated_cut_time }} min</td>
+                    <td>{{ item.added_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('queue.detail', id=item.id) }}" class="btn btn-sm btn-secondary">View</a>
+                        {% if item.is_active %}
+                        <form action="{{ url_for('queue.remove', id=item.id) }}" method="POST" style="display: inline;" 
+                              onsubmit="return confirm('Remove this item from queue?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-muted" style="margin-top: 1rem;">
+            Total: {{ queue_items|length }} item(s)
+            {% if status_filter == 'active' %}
+            <br><small>Drag and drop rows to reorder the queue</small>
+            {% endif %}
+        </p>
+        {% else %}
+        <p class="text-muted">No items in queue.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Drag and Drop Script -->
+{% if status_filter == 'active' and queue_items %}
+<script>
+// Simple drag and drop implementation
+let draggedRow = null;
+
+document.querySelectorAll('#queueBody tr').forEach(row => {
+    row.draggable = true;
+    
+    row.addEventListener('dragstart', function(e) {
+        draggedRow = this;
+        this.style.opacity = '0.5';
+    });
+    
+    row.addEventListener('dragend', function(e) {
+        this.style.opacity = '';
+    });
+    
+    row.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        if (this !== draggedRow) {
+            this.style.borderTop = '2px solid #007bff';
+        }
+    });
+    
+    row.addEventListener('dragleave', function(e) {
+        this.style.borderTop = '';
+    });
+    
+    row.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderTop = '';
+        
+        if (this !== draggedRow) {
+            const tbody = document.getElementById('queueBody');
+            const allRows = Array.from(tbody.querySelectorAll('tr'));
+            const draggedIndex = allRows.indexOf(draggedRow);
+            const targetIndex = allRows.indexOf(this);
+            
+            if (draggedIndex < targetIndex) {
+                this.parentNode.insertBefore(draggedRow, this.nextSibling);
+            } else {
+                this.parentNode.insertBefore(draggedRow, this);
+            }
+            
+            // Update positions and send to server
+            updateQueueOrder();
+        }
+    });
+});
+
+function updateQueueOrder() {
+    const rows = document.querySelectorAll('#queueBody tr');
+    const order = [];
+    
+    rows.forEach((row, index) => {
+        const id = row.getAttribute('data-id');
+        order.push(parseInt(id));
+        // Update position display
+        row.querySelector('td:first-child').innerHTML = 
+            '<span class="drag-handle" style="cursor: move;">☰</span> ' + (index + 1);
+    });
+    
+    // Send to server
+    fetch('{{ url_for("queue.reorder") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order: order })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Queue reordered successfully');
+        } else {
+            alert('Error reordering queue: ' + data.error);
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error reordering queue');
+        location.reload();
+    });
+}
+</script>
+{% endif %}
+{% endblock %}
+

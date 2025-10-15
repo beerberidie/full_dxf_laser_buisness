@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}403 - Forbidden{% endblock %}
+
+{% block content %}
+<div class="error-page">
+    <div class="error-code">403</div>
+    <h1>Access Forbidden</h1>
+    <p class="error-message">
+        You don't have permission to access this resource.
+    </p>
+    <div class="error-actions">
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+            Go to Dashboard
+        </a>
+        <a href="javascript:history.back()" class="btn btn-ghost">
+            Go Back
+        </a>
+    </div>
+</div>
+
+<style>
+.error-page {
+    text-align: center;
+    padding: var(--spacing-3xl) var(--spacing-md);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.error-code {
+    font-size: 6rem;
+    font-weight: 700;
+    color: var(--color-warning);
+    line-height: 1;
+    margin-bottom: var(--spacing-md);
+}
+
+.error-page h1 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.error-message {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+.error-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+}
+</style>
+{% endblock %}
+

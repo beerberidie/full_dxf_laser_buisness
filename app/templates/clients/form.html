@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}{% if client %}Edit Client{% else %}New Client{% endif %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="breadcrumb">
+            <a href="{{ url_for('clients.list_clients') }}">Clients</a>
+            <span>/</span>
+            {% if client %}
+                <a href="{{ url_for('clients.detail', id=client.id) }}">{{ client.client_code }}</a>
+                <span>/</span>
+                <span>Edit</span>
+            {% else %}
+                <span>New</span>
+            {% endif %}
+        </div>
+        <h1>{% if client %}Edit Client{% else %}New Client{% endif %}</h1>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" class="form">
+            <!-- Client Name -->
+            <div class="form-group">
+                <label for="name" class="form-label required">Client Name</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    class="form-control" 
+                    value="{{ client.name if client else '' }}"
+                    required
+                    placeholder="e.g., ACME Corporation"
+                >
+                <small class="form-help">The company or organization name</small>
+            </div>
+
+            <!-- Contact Person -->
+            <div class="form-group">
+                <label for="contact_person" class="form-label">Contact Person</label>
+                <input 
+                    type="text" 
+                    id="contact_person" 
+                    name="contact_person" 
+                    class="form-control" 
+                    value="{{ client.contact_person if client else '' }}"
+                    placeholder="e.g., John Smith"
+                >
+                <small class="form-help">Primary contact person at the client</small>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-control" 
+                    value="{{ client.email if client else '' }}"
+                    placeholder="e.g., john@acme.com"
+                >
+                <small class="form-help">Contact email address</small>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+                <label for="phone" class="form-label">Phone</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    class="form-control" 
+                    value="{{ client.phone if client else '' }}"
+                    placeholder="e.g., +27 11 123 4567"
+                >
+                <small class="form-help">Contact phone number</small>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address" class="form-label">Address</label>
+                <textarea 
+                    id="address" 
+                    name="address" 
+                    class="form-control" 
+                    rows="4"
+                    placeholder="Street address&#10;City&#10;Postal code"
+                >{{ client.address if client else '' }}</textarea>
+                <small class="form-help">Physical or postal address</small>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+                <label for="notes" class="form-label">Notes</label>
+                <textarea 
+                    id="notes" 
+                    name="notes" 
+                    class="form-control" 
+                    rows="4"
+                    placeholder="Any additional notes or special instructions..."
+                >{{ client.notes if client else '' }}</textarea>
+                <small class="form-help">Internal notes about this client</small>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    {% if client %}Update Client{% else %}Create Client{% endif %}
+                </button>
+                <a href="{% if client %}{{ url_for('clients.detail', id=client.id) }}{% else %}{{ url_for('clients.list_clients') }}{% endif %}" class="btn btn-ghost">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

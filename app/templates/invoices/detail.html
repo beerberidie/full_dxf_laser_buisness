@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>💰 Invoice {{ invoice.invoice_number }}</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('invoices.edit', id=invoice.id) }}" class="btn btn-secondary">Edit</a>
+        <a href="{{ url_for('invoices.index') }}" class="btn btn-secondary">← Back</a>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <div class="card-header">
+            <h2>Invoice Information</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
+            <p><strong>Client:</strong> {{ invoice.client.name if invoice.client else '-' }}</p>
+            <p><strong>Project:</strong> {{ invoice.project.project_code if invoice.project else '-' }}</p>
+            <p><strong>Invoice Date:</strong> {{ invoice.invoice_date.strftime('%Y-%m-%d') if invoice.invoice_date else '-' }}</p>
+            <p><strong>Due Date:</strong> {{ invoice.due_date.strftime('%Y-%m-%d') if invoice.due_date else '-' }}</p>
+            <p><strong>Payment Terms:</strong> {{ invoice.payment_terms or '-' }}</p>
+            <p><strong>Status:</strong> <span class="badge">{{ invoice.status }}</span></p>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-header">
+            <h2>Payment Summary</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Subtotal:</strong> ${{ "%.2f"|format(invoice.subtotal) }}</p>
+            <p><strong>Tax ({{ invoice.tax_rate }}%):</strong> ${{ "%.2f"|format(invoice.tax_amount) }}</p>
+            <p><strong>Total:</strong> <strong>${{ "%.2f"|format(invoice.total_amount) }}</strong></p>
+            <p><strong>Amount Paid:</strong> ${{ "%.2f"|format(invoice.amount_paid) }}</p>
+            <p><strong>Balance Due:</strong> <strong style="color: var(--danger-color);">${{ "%.2f"|format(invoice.balance_due) }}</strong></p>
+        </div>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 1.5rem;">
+    <div class="card-header">
+        <h2>Line Items</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice.items %}
+                <tr>
+                    <td>{{ item.item_number }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ "%.2f"|format(item.unit_price) }}</td>
+                    <td>${{ "%.2f"|format(item.line_total) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
