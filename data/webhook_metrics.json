@@ -1,0 +1,42 @@
+[
+  {
+    "timestamp": "2025-10-21T13:47:20.149797",
+    "event_type": "file.ingested",
+    "ingest_id": 123,
+    "success": true,
+    "attempts": 1,
+    "duration_ms": 123.45,
+    "status_code": 200,
+    "error_message": null
+  },
+  {
+    "timestamp": "2025-10-21T13:47:20.151313",
+    "event_type": "file.processed",
+    "ingest_id": 124,
+    "success": false,
+    "attempts": 3,
+    "duration_ms": 5000.0,
+    "status_code": null,
+    "error_message": "Connection timeout"
+  },
+  {
+    "timestamp": "2025-10-21T13:47:42.816653",
+    "event_type": "file.ingested",
+    "ingest_id": 123,
+    "success": true,
+    "attempts": 1,
+    "duration_ms": 123.45,
+    "status_code": 200,
+    "error_message": null
+  },
+  {
+    "timestamp": "2025-10-21T13:47:42.816653",
+    "event_type": "file.processed",
+    "ingest_id": 124,
+    "success": false,
+    "attempts": 3,
+    "duration_ms": 5000.0,
+    "status_code": null,
+    "error_message": "Connection timeout"
+  }
+]

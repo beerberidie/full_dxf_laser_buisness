@@ -17,7 +17,7 @@
         <div class="stat-label">Total Items</div>
     </div>
     <div class="card stat-card">
-        <div class="stat-value">${{ "%.2f"|format(stats.total_value) }}</div>
+        <div class="stat-value">R{{ "%.2f"|format(stats.total_value) }}</div>
         <div class="stat-label">Total Stock Value</div>
     </div>
     <div class="card stat-card">
@@ -25,7 +25,7 @@
         <div class="stat-label">Low Stock Items</div>
     </div>
     <div class="card stat-card">
-        <div class="stat-value">${{ "%.2f"|format(stats.total_usage) }}</div>
+        <div class="stat-value">R{{ "%.2f"|format(stats.total_usage) }}</div>
         <div class="stat-label">Recent Usage Value</div>
     </div>
 </div>
@@ -50,7 +50,7 @@
                 <tr>
                     <td><strong>{{ category }}</strong></td>
                     <td>{{ data.items }}</td>
-                    <td>${{ "%.2f"|format(data.value) }}</td>
+                    <td>R{{ "%.2f"|format(data.value) }}</td>
                     <td>
                         {% if data.low_stock > 0 %}
                         <span class="badge badge-warning">{{ data.low_stock }}</span>
@@ -90,8 +90,8 @@
                     <td>{{ item.name }}</td>
                     <td><span class="badge">{{ item.category }}</span></td>
                     <td>{{ item.quantity_on_hand }} {{ item.unit }}</td>
-                    <td>{% if item.unit_cost %}${{ "%.2f"|format(item.unit_cost) }}{% else %}-{% endif %}</td>
-                    <td>{% if item.stock_value %}${{ "%.2f"|format(item.stock_value) }}{% else %}-{% endif %}</td>
+                    <td>{% if item.unit_cost %}R{{ "%.2f"|format(item.unit_cost) }}{% else %}-{% endif %}</td>
+                    <td>{% if item.stock_value %}R{{ "%.2f"|format(item.stock_value) }}{% else %}-{% endif %}</td>
                     <td>
                         {% if item.is_low_stock %}
                         <span class="badge badge-warning">⚠️ Low</span>
@@ -115,12 +115,13 @@
 .stat-value {
     font-size: 2rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--color-primary);
 }
 
 .stat-label {
-    color: var(--text-muted);
+    color: var(--text-secondary);
     margin-top: 0.5rem;
+    font-size: 0.875rem;
 }
 
 .badge-success {

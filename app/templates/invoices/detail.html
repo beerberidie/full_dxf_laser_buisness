@@ -6,7 +6,9 @@
 <div class="page-header">
     <h1>💰 Invoice {{ invoice.invoice_number }}</h1>
     <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
         <a href="{{ url_for('invoices.edit', id=invoice.id) }}" class="btn btn-secondary">Edit</a>
+        {% endif %}
         <a href="{{ url_for('invoices.index') }}" class="btn btn-secondary">← Back</a>
     </div>
 </div>
@@ -20,8 +22,8 @@
             <p><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
             <p><strong>Client:</strong> {{ invoice.client.name if invoice.client else '-' }}</p>
             <p><strong>Project:</strong> {{ invoice.project.project_code if invoice.project else '-' }}</p>
-            <p><strong>Invoice Date:</strong> {{ invoice.invoice_date.strftime('%Y-%m-%d') if invoice.invoice_date else '-' }}</p>
-            <p><strong>Due Date:</strong> {{ invoice.due_date.strftime('%Y-%m-%d') if invoice.due_date else '-' }}</p>
+            <p><strong>Invoice Date:</strong> {{ invoice.invoice_date|date if invoice.invoice_date else '-' }}</p>
+            <p><strong>Due Date:</strong> {{ invoice.due_date|date if invoice.due_date else '-' }}</p>
             <p><strong>Payment Terms:</strong> {{ invoice.payment_terms or '-' }}</p>
             <p><strong>Status:</strong> <span class="badge">{{ invoice.status }}</span></p>
         </div>
@@ -32,11 +34,11 @@
             <h2>Payment Summary</h2>
         </div>
         <div class="card-body">
-            <p><strong>Subtotal:</strong> ${{ "%.2f"|format(invoice.subtotal) }}</p>
-            <p><strong>Tax ({{ invoice.tax_rate }}%):</strong> ${{ "%.2f"|format(invoice.tax_amount) }}</p>
-            <p><strong>Total:</strong> <strong>${{ "%.2f"|format(invoice.total_amount) }}</strong></p>
-            <p><strong>Amount Paid:</strong> ${{ "%.2f"|format(invoice.amount_paid) }}</p>
-            <p><strong>Balance Due:</strong> <strong style="color: var(--danger-color);">${{ "%.2f"|format(invoice.balance_due) }}</strong></p>
+            <p><strong>Subtotal:</strong> R{{ "%.2f"|format(invoice.subtotal) }}</p>
+            <p><strong>Tax ({{ invoice.tax_rate }}%):</strong> R{{ "%.2f"|format(invoice.tax_amount) }}</p>
+            <p><strong>Total:</strong> <strong>R{{ "%.2f"|format(invoice.total_amount) }}</strong></p>
+            <p><strong>Amount Paid:</strong> R{{ "%.2f"|format(invoice.amount_paid) }}</p>
+            <p><strong>Balance Due:</strong> <strong style="color: var(--danger-color);">R{{ "%.2f"|format(invoice.balance_due) }}</strong></p>
         </div>
     </div>
 </div>
@@ -62,8 +64,8 @@
                     <td>{{ item.item_number }}</td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>${{ "%.2f"|format(item.unit_price) }}</td>
-                    <td>${{ "%.2f"|format(item.line_total) }}</td>
+                    <td>R{{ "%.2f"|format(item.unit_price) }}</td>
+                    <td>R{{ "%.2f"|format(item.line_total) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

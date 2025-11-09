@@ -1,0 +1,265 @@
+{
+  "base_template": "base.html",
+  "extends_base": [
+    "dashboard.html",
+    "admin\\login_history.html",
+    "admin\\users\\detail.html",
+    "admin\\users\\form.html",
+    "admin\\users\\list.html",
+    "admin\\users\\reset_password.html",
+    "auth\\change_password.html",
+    "auth\\login.html",
+    "auth\\profile.html",
+    "clients\\detail.html",
+    "clients\\form.html",
+    "clients\\list.html",
+    "comms\\detail.html",
+    "comms\\form.html",
+    "comms\\list.html",
+    "errors\\403.html",
+    "errors\\404.html",
+    "errors\\500.html",
+    "files\\detail.html",
+    "inventory\\detail.html",
+    "inventory\\form.html",
+    "inventory\\index.html",
+    "inventory\\low_stock.html",
+    "inventory\\transactions.html",
+    "invoices\\detail.html",
+    "invoices\\form.html",
+    "invoices\\index.html",
+    "presets\\form.html",
+    "presets\\index.html",
+    "products\\detail.html",
+    "products\\form.html",
+    "products\\list.html",
+    "projects\\detail.html",
+    "projects\\form.html",
+    "projects\\list.html",
+    "queue\\detail.html",
+    "queue\\index.html",
+    "queue\\runs.html",
+    "queue\\run_form.html",
+    "quotes\\detail.html",
+    "quotes\\form.html",
+    "quotes\\index.html",
+    "reports\\clients.html",
+    "reports\\efficiency.html",
+    "reports\\index.html",
+    "reports\\inventory.html",
+    "reports\\production.html",
+    "templates\\detail.html",
+    "templates\\form.html",
+    "templates\\list.html"
+  ],
+  "template_blocks": {
+    "base.html": [
+      "title",
+      "extra_css",
+      "content",
+      "extra_js"
+    ],
+    "dashboard.html": [
+      "title",
+      "content"
+    ],
+    "admin\\login_history.html": [
+      "title",
+      "content"
+    ],
+    "admin\\users\\detail.html": [
+      "title",
+      "content"
+    ],
+    "admin\\users\\form.html": [
+      "title",
+      "content"
+    ],
+    "admin\\users\\list.html": [
+      "title",
+      "content"
+    ],
+    "admin\\users\\reset_password.html": [
+      "title",
+      "content"
+    ],
+    "auth\\change_password.html": [
+      "title",
+      "content"
+    ],
+    "auth\\login.html": [
+      "title",
+      "content",
+      "extra_css"
+    ],
+    "auth\\profile.html": [
+      "title",
+      "content"
+    ],
+    "clients\\detail.html": [
+      "title",
+      "content",
+      "extra_js"
+    ],
+    "clients\\form.html": [
+      "title",
+      "content"
+    ],
+    "clients\\list.html": [
+      "title",
+      "content"
+    ],
+    "comms\\detail.html": [
+      "title",
+      "content"
+    ],
+    "comms\\form.html": [
+      "title",
+      "content"
+    ],
+    "comms\\list.html": [
+      "title",
+      "content"
+    ],
+    "errors\\403.html": [
+      "title",
+      "content"
+    ],
+    "errors\\404.html": [
+      "title",
+      "content"
+    ],
+    "errors\\500.html": [
+      "title",
+      "content"
+    ],
+    "files\\detail.html": [
+      "title",
+      "content"
+    ],
+    "inventory\\detail.html": [
+      "title",
+      "content"
+    ],
+    "inventory\\form.html": [
+      "title",
+      "content"
+    ],
+    "inventory\\index.html": [
+      "title",
+      "content"
+    ],
+    "inventory\\low_stock.html": [
+      "title",
+      "content"
+    ],
+    "inventory\\transactions.html": [
+      "title",
+      "content"
+    ],
+    "invoices\\detail.html": [
+      "title",
+      "content"
+    ],
+    "invoices\\form.html": [
+      "title",
+      "content"
+    ],
+    "invoices\\index.html": [
+      "title",
+      "content"
+    ],
+    "presets\\form.html": [
+      "title",
+      "content"
+    ],
+    "presets\\index.html": [
+      "title",
+      "content"
+    ],
+    "products\\detail.html": [
+      "title",
+      "content"
+    ],
+    "products\\form.html": [
+      "title",
+      "content"
+    ],
+    "products\\list.html": [
+      "title",
+      "content"
+    ],
+    "projects\\detail.html": [
+      "title",
+      "content"
+    ],
+    "projects\\form.html": [
+      "title",
+      "content"
+    ],
+    "projects\\list.html": [
+      "title",
+      "content"
+    ],
+    "queue\\detail.html": [
+      "title",
+      "content"
+    ],
+    "queue\\index.html": [
+      "title",
+      "content"
+    ],
+    "queue\\runs.html": [
+      "title",
+      "content"
+    ],
+    "queue\\run_form.html": [
+      "title",
+      "content"
+    ],
+    "quotes\\detail.html": [
+      "title",
+      "content"
+    ],
+    "quotes\\form.html": [
+      "title",
+      "content"
+    ],
+    "quotes\\index.html": [
+      "title",
+      "content"
+    ],
+    "reports\\clients.html": [
+      "title",
+      "content"
+    ],
+    "reports\\efficiency.html": [
+      "title",
+      "content"
+    ],
+    "reports\\index.html": [
+      "title",
+      "content"
+    ],
+    "reports\\inventory.html": [
+      "title",
+      "content"
+    ],
+    "reports\\production.html": [
+      "title",
+      "content"
+    ],
+    "templates\\detail.html": [
+      "title",
+      "content"
+    ],
+    "templates\\form.html": [
+      "title",
+      "content"
+    ],
+    "templates\\list.html": [
+      "title",
+      "content"
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Low Stock Alerts - Inventory - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚠️ Low Stock Alerts</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('inventory.index') }}" class="btn btn-secondary">← Back to Inventory</a>
+    </div>
+</div>
+
+{% if items %}
+<div class="alert alert-warning">
+    <strong>{{ items|length }} item(s)</strong> are currently below their reorder levels.
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Item Code</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Current Qty</th>
+                    <th>Reorder Level</th>
+                    <th>Reorder Qty</th>
+                    <th>Supplier</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr style="background-color: #fff3cd;">
+                    <td><strong>{{ item.item_code }}</strong></td>
+                    <td>{{ item.name }}</td>
+                    <td><span class="badge">{{ item.category }}</span></td>
+                    <td style="color: var(--danger-color);"><strong>{{ item.quantity_on_hand }} {{ item.unit }}</strong></td>
+                    <td>{{ item.reorder_level }} {{ item.unit }}</td>
+                    <td>
+                        {% if item.reorder_quantity %}
+                            {{ item.reorder_quantity }} {{ item.unit }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>{{ item.supplier_name or '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('inventory.detail', id=item.id) }}" class="btn btn-sm btn-primary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-success">
+    ✓ All inventory items are above their reorder levels!
+</div>
+{% endif %}
+{% endblock %}
+

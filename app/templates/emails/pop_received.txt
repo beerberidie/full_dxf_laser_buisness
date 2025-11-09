@@ -1,0 +1,50 @@
+PAYMENT RECEIVED - ORDER CONFIRMED!
+{{ '=' * 60 }}
+
+Dear {{ client.name }},
+
+✅ PAYMENT CONFIRMED!
+
+We have received your proof of payment for "{{ project.name }}". 
+Your order is now confirmed and will be scheduled for production.
+
+PROJECT DETAILS
+{{ '-' * 60 }}
+Project Code:         {{ project.project_code }}
+Project Name:         {{ project.name }}
+Order Amount:         R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}
+Payment Received:     {{ project.pop_received_date.strftime('%d %B %Y') if project.pop_received_date else 'Today' }}
+{% if project.due_date %}
+Expected Completion:  {{ project.due_date.strftime('%d %B %Y') }}
+{% endif %}
+
+WHAT HAPPENS NEXT?
+{{ '-' * 60 }}
+✓ Quote Approved     - Quote accepted and payment received
+→ Scheduling         - Your project will be added to our production queue
+⚙️ Production         - Laser cutting and processing
+✅ Completion         - Quality check and notification
+📦 Collection/Delivery - Ready for pickup or delivery
+
+IMPORTANT INFORMATION
+{{ '-' * 60 }}
+• You will receive updates as your project progresses through production
+• We'll notify you when cutting begins and when the project is completed
+• If you have any questions, feel free to contact us at any time
+
+TRACK YOUR PROJECT
+{{ '-' * 60 }}
+{{ project_url }}
+
+QUESTIONS OR CONCERNS?
+{{ '-' * 60 }}
+Email:          {{ company_email }}
+Phone:          {{ company_phone }}
+Business Hours: Monday - Friday, 8:00 AM - 5:00 PM
+
+Thank you for choosing us for your laser cutting needs!
+
+{{ '-' * 60 }}
+This is an automated confirmation from Laser OS.
+© {{ current_year }} {{ company_name }}. All rights reserved.
+

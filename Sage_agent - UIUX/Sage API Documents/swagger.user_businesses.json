@@ -1,0 +1,605 @@
+{
+  "info": {
+    "title": "Sage Accounting API - User Accounts",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sageonedevelopers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Businesses",
+      "description": "This endpoint holds information about all the businesses the authorized user has access to. The businesses API is must be used to retrieve the business ID before accessing any other API endpoints."
+    },
+    {
+      "name": "User",
+      "description": "This endpoint holds information about the currently authenticated user."
+    }
+  ],
+  "paths": {
+    "/businesses": {
+      "get": {
+        "description": "Returns all businesses available to the user.",
+        "produces": [
+          "application/json"
+        ],
+		"parameters": [
+          {
+            "in": "query",
+            "name": "active_only",
+            "description": "Returns active businesses if set to true",
+            "type": "boolean",
+            "required": false
+          },
+		  {
+            "in": "query",
+            "name": "name",
+            "description": "Use this to filter businesses by business name. A max string length of 255 is permitted",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "product_family",
+            "description": "Use this to filter businesses by product family. Valid values are sbc_payroll and sbc_accounting.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of businesses per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 25,
+            "minimum": 25,
+            "maximum": 500,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of businesses. The first page is 1.",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all businesses",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 8,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$items_per_page": 2147483647,
+				"$items": [
+					{
+						"displayed_as": "Sage Uk ltd",
+						"id": "f99d7e3bdd4ae1b27610e262261e1a53",
+						"$path": "/businesses/f99d7e3bdd4ae1b27610e262261e1a53"
+					},
+					{
+						"displayed_as": "Client 1",
+						"id": "2900655ce8f68e4c799b04d7baa45757",
+						"$path": "/businesses/2900655ce8f68e4c799b04d7baa45757"
+					},
+					{
+						"displayed_as": "Client 2",
+						"id": "64451b501982b4765a0af2aa0a5d8a94",
+						"$path": "/businesses/64451b501982b4765a0af2aa0a5d8a94"
+					},
+					{
+						"displayed_as": "Client 3",
+						"id": "9b2f1c85e976fc1fa7076dbffbbaf57f",
+						"$path": "/businesses/9b2f1c85e976fc1fa7076dbffbbaf57f"
+					},
+					{
+						"displayed_as": "Client 4",
+						"id": "01c93710dac27cab09bc8fd04e44c8fe",
+						"$path": "/businesses/01c93710dac27cab09bc8fd04e44c8fe"
+					},
+					{
+						"displayed_as": "Client 6",
+						"id": "ab8c5540d82e0a067caff67cc2afb43a",
+						"$path": "/businesses/ab8c5540d82e0a067caff67cc2afb43a"
+					},
+					{
+						"displayed_as": "Client 7",
+						"id": "27c4ed51f4a6135d888b8914fbe71d02",
+						"$path": "/businesses/27c4ed51f4a6135d888b8914fbe71d02"
+					},
+					{
+						"displayed_as": "Sage Internal Account",
+						"id": "639f09872db7216ecd5ad6ba692b3cda",
+						"$path": "/businesses/639f09872db7216ecd5ad6ba692b3cda"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Businesses"
+        ]
+      }
+    },
+    "/businesses/{key}": {
+      "get": {
+        "description": "Returns a business",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "type": "string",
+            "required": true,
+            "description": "The ID of the business. Use `lead` to get your lead business."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a business",
+            "schema": {
+              "$ref": "#/definitions/Business"
+            }
+          }
+        },
+        "tags": [
+          "Businesses"
+        ]
+      },
+      "put": {
+        "description": "Updates a Business",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Businesses",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBusinesses"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Business",
+            "examples": {
+              "application/json":
+			  {
+				"created_at": "2016-08-15T15:54:13Z",
+				"updated_at": "2024-02-29T08:07:42Z",
+				"displayed_as": "Sage Internal Account",
+				"id": "639f09872db7216ecd5ad6ba692b3cda",
+				"name": "Sage Internal Account",
+				"address_line_1": "N Park Avenue",
+				"address_line_2": "",
+				"city": "Newcastle Upon Tyne",
+				"postal_code": "NE13 9AA",
+				"country": {
+					"id": "GB",
+					"displayed_as": "United Kingdom"
+				},
+				"region": "Tyne and Wear",
+				"ni_based": false,
+				"telephone": "01912943317",
+				"mobile": "",
+				"website": "",
+				"is_demo": false,
+				"subscriptions": [
+					{
+						"created_at": "2016-08-15T15:54:13Z",
+						"updated_at": "2023-11-07T15:55:49Z",
+						"displayed_as": "Accounting",
+						"id": "ACCOUNTING",
+						"active": true,
+						"status": "expired",
+						"accountant_pays": false
+					},
+					{
+						"created_at": "2017-06-20T10:26:48Z",
+						"updated_at": "2023-11-07T15:55:49Z",
+						"displayed_as": "Payroll 25",
+						"id": "PAYROLL_25",
+						"active": true,
+						"status": "expired",
+						"accountant_pays": false
+					}
+				],
+				"$path": "/businesses/639f09872db7216ecd5ad6ba692b3cda",
+				"user_roles": [],
+				"user_permissions": [
+					{
+						"area": "accounting_sales",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_catalogs",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_journals",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_purchases",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_contacts",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_statutory_reporting",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_bank",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_reporting",
+						"role": "full_access"
+					},
+					{
+						"area": "accounting_settings",
+						"role": "full_access"
+					},
+					{
+						"area": "payroll_access",
+						"role": "full_access"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Businesses"
+        ]
+      }
+    },
+    "/user": {
+      "get": {
+        "description": "Returns the User",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the User",
+            "examples": {
+              "application/json":
+			  {
+				"created_at": "2018-02-16T20:20:09Z",
+				"updated_at": "2018-02-16T20:20:09Z",
+				"displayed_as":"John Doe",
+				"id": "2b486e58632aa6cd6ea8eb5183931ad3",
+				"first_name": "John",
+				"last_name": "Doe",
+				"initials": "JD",
+				"email": "john.doe@somewhere.com",
+				"locale": "en-GB"
+			}
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "description": "Updates the User",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "User",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates the User",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "putBusinesses": {
+      "type": "object",
+      "properties": {
+        "business": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the business"
+            },
+            "address_line_1": {
+              "type": "string",
+              "description": "The first line of the business address"
+            },
+            "address_line_2": {
+              "type": "string",
+              "description": "The second line of the business address"
+            },
+            "city": {
+              "type": "string",
+              "description": "The business address town/city"
+            },
+            "region": {
+              "type": "string",
+              "description": "The business address state/province/region"
+            },
+            "postal_code": {
+              "type": "string",
+              "description": "The business address postal code/zipcode"
+            },
+            "telephone": {
+              "type": "string",
+              "description": "The telephone of the business"
+            },
+            "mobile": {
+              "type": "string",
+              "description": "The mobile of the business"
+            },
+            "website": {
+              "type": "string",
+              "description": "The website of the business"
+            }
+          }
+        }
+      },
+      "description": "Updates a Business"
+    },
+    "Business": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the business"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the business"
+        },
+        "address_line_1": {
+          "type": "string",
+          "description": "The first line of the business address"
+        },
+        "address_line_2": {
+          "type": "string",
+          "description": "The first line of the business address"
+        },
+        "city": {
+          "type": "string",
+          "description": "The business address town/city"
+        },
+        "postal_code": {
+          "type": "string",
+          "description": "The business address postal code/zipcode"
+        },
+        "country": {
+          "$ref": "#/definitions/Country",
+          "description": "The business address country"
+        },
+        "region": {
+          "type": "string",
+          "description": "The business address state/province/region"
+        },
+        "telephone": {
+          "type": "string",
+          "description": "The telephone of the business"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "The mobile of the business"
+        },
+        "website": {
+          "type": "string",
+          "description": "The website of the business"
+        },
+        "is_demo": {
+          "type": "boolean",
+          "description": "Indicates whether the business is for demo purposes"
+        },
+        "ni_based": {
+          "type": "boolean",
+          "description": "Identifies a business as being based in Northern Ireland.\n                  <br><i>only applicable to UK business</i>"
+        },
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subscription"
+          },
+          "description": "The business subscriptions"
+        }
+      },
+      "description": "Returns all Businesses"
+    },
+    "Country": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the country"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the country"
+        }
+      }
+    },
+    "Subscription": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the subscription"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the subscription is active"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "putUser": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "first_name": {
+              "type": "string",
+              "description": "The first name of the user"
+            },
+            "last_name": {
+              "type": "string",
+              "description": "The last name of the user"
+            },
+            "initials": {
+              "type": "string",
+              "description": "The initials of the use"
+            },
+            "locale": {
+              "type": "string",
+              "description": "The locale of the user",
+              "enum": [
+                "en-GB",
+                "en-IE",
+                "en-US",
+                "es-US",
+                "en-CA",
+                "fr-CA",
+                "fr-FR",
+                "de-DE",
+                "es-ES"
+              ]
+            }
+          }
+        }
+      },
+      "description": "Updates the User"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the user"
+        },
+        "first_name": {
+          "type": "string",
+          "description": "The first name of the user"
+        },
+        "last_name": {
+          "type": "string",
+          "description": "The last name of the user"
+        },
+        "initials": {
+          "type": "string",
+          "description": "The initials of the user"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user"
+        },
+        "locale": {
+          "type": "string",
+          "description": "The locale of the user"
+        }
+      },
+      "description": "Returns the User"
+    }
+  }
+}

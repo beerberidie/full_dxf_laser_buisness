@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Contacts - Sage Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Contacts</h1>
+        <p class="page-subtitle">Manage contacts from {{ business.displayed_as or business.name }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('sage.dashboard') }}" class="btn btn-secondary">
+            <span class="icon">←</span> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Filter Tabs -->
+<div class="filter-tabs">
+    <a href="{{ url_for('sage.contacts') }}" class="filter-tab {% if not contact_type %}active{% endif %}">
+        All Contacts
+    </a>
+    <a href="{{ url_for('sage.contacts', type='CUSTOMER') }}" class="filter-tab {% if contact_type == 'CUSTOMER' %}active{% endif %}">
+        Customers
+    </a>
+    <a href="{{ url_for('sage.contacts', type='SUPPLIER') }}" class="filter-tab {% if contact_type == 'SUPPLIER' %}active{% endif %}">
+        Suppliers
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if contacts %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Reference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contacts %}
+                    <tr>
+                        <td><strong>{{ contact.displayed_as or contact.name or '-' }}</strong></td>
+                        <td>
+                            {% if contact.contact_type_ids %}
+                                {% for type_id in contact.contact_type_ids %}
+                                    {% if type_id == 'CUSTOMER' %}
+                                    <span class="badge badge-primary">Customer</span>
+                                    {% elif type_id == 'SUPPLIER' %}
+                                    <span class="badge badge-info">Supplier</span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                            <span class="badge badge-secondary">-</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ contact.email or '-' }}</td>
+                        <td>{{ contact.telephone or contact.mobile or '-' }}</td>
+                        <td>{{ contact.reference or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing {{ contacts|length }} contacts
+            </div>
+            <div class="pagination-controls">
+                {% if page > 1 %}
+                <a href="{{ url_for('sage.contacts', page=page-1, items_per_page=items_per_page, type=contact_type) }}" class="btn btn-sm btn-secondary">
+                    ← Previous
+                </a>
+                {% endif %}
+                <span class="pagination-current">Page {{ page }}</span>
+                {% if contacts|length == items_per_page %}
+                <a href="{{ url_for('sage.contacts', page=page+1, items_per_page=items_per_page, type=contact_type) }}" class="btn btn-sm btn-secondary">
+                    Next →
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">👥</div>
+            <h2 class="empty-state-title">No Contacts Found</h2>
+            <p class="empty-state-description">
+                {% if contact_type %}
+                No {{ contact_type.lower() }}s found in Sage.
+                {% else %}
+                You don't have any contacts in Sage yet.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.filter-tabs {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    border-bottom: 2px solid var(--color-gray-200);
+}
+
+.filter-tab {
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--color-gray-600);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: var(--transition);
+}
+
+.filter-tab:hover {
+    color: var(--color-primary);
+}
+
+.filter-tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.pagination-info {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.pagination-current {
+    padding: 0 var(--spacing-md);
+    color: var(--color-gray-700);
+    font-weight: 600;
+}
+</style>
+{% endblock %}
+

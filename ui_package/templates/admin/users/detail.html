@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.username }} - User Details - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👤 {{ user.username }}</h1>
+    <div class="page-actions">
+        {% if user.id != current_user.id %}
+        <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="btn btn-primary">
+            Edit User
+        </a>
+        <a href="{{ url_for('admin.reset_password', id=user.id) }}" class="btn btn-warning">
+            Reset Password
+        </a>
+        {% if user.is_locked() %}
+        <form method="POST" action="{{ url_for('admin.unlock_user', id=user.id) }}" style="display: inline;">
+            <button type="submit" class="btn btn-success">
+                🔓 Unlock Account
+            </button>
+        </form>
+        {% endif %}
+        <form method="POST" action="{{ url_for('admin.toggle_active', id=user.id) }}" style="display: inline;">
+            <button type="submit" class="btn btn-secondary">
+                {{ '✅ Activate' if not user.is_active else '❌ Deactivate' }}
+            </button>
+        </form>
+        <button onclick="confirmDelete()" class="btn btn-danger">
+            Delete User
+        </button>
+        {% endif %}
+        <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+            ← Back to Users
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Account Information</h2>
+    </div>
+    <div class="card-body">
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Username:</label>
+                <div class="info-value">
+                    <strong>{{ user.username }}</strong>
+                    {% if user.id == current_user.id %}
+                    <span class="badge badge-info">YOU</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <label>Email:</label>
+                <div class="info-value">{{ user.email }}</div>
+            </div>
+            
+            <div class="info-item">
+                <label>Full Name:</label>
+                <div class="info-value">{{ user.full_name or '-' }}</div>
+            </div>
+            
+            <div class="info-item">
+                <label>Account Status:</label>
+                <div class="info-value">
+                    {% if not user.is_active %}
+                        <span class="badge badge-secondary">Inactive</span>
+                    {% elif user.is_locked() %}
+                        <span class="badge badge-warning">Locked until {{ user.locked_until.strftime('%Y-%m-%d %H:%M') }}</span>
+                    {% else %}
+                        <span class="badge badge-success">Active</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <label>Superuser:</label>
+                <div class="info-value">
+                    {% if user.is_superuser %}
+                        <span class="badge badge-danger">YES</span>
+                    {% else %}
+                        <span class="badge badge-secondary">No</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-item">
+                <label>Failed Login Attempts:</label>
+                <div class="info-value">{{ user.failed_login_attempts }}</div>
+            </div>
+            
+            <div class="info-item">
+                <label>Created:</label>
+                <div class="info-value">{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+            </div>
+            
+            <div class="info-item">
+                <label>Last Updated:</label>
+                <div class="info-value">{{ user.updated_at.strftime('%Y-%m-%d %H:%M') }}</div>
+            </div>
+            
+            <div class="info-item">
+                <label>Last Login:</label>
+                <div class="info-value">
+                    {% if user.last_login %}
+                        {{ user.last_login.strftime('%Y-%m-%d %H:%M') }}
+                    {% else %}
+                        <span class="text-muted">Never</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Assigned Roles</h2>
+    </div>
+    <div class="card-body">
+        {% set user_roles = user.roles.all() %}
+        {% if user_roles %}
+        <div class="roles-list">
+            {% for role in user_roles %}
+            <div class="role-card">
+                <h3>{{ role.display_name }}</h3>
+                <p class="role-description">{{ role.description or 'No description available.' }}</p>
+                <div class="role-permissions">
+                    <strong>Permissions:</strong>
+                    {% set permissions = role.get_permissions() %}
+                    {% if permissions %}
+                        <div class="permissions-grid">
+                            {% for permission in permissions %}
+                            <span class="badge badge-primary">{{ permission }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <span class="text-muted">No permissions defined</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No roles assigned to this user.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Recent Login History</h2>
+    </div>
+    <div class="card-body">
+        {% if login_history %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>IP Address</th>
+                    <th>User Agent</th>
+                    <th>Failure Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in login_history %}
+                <tr>
+                    <td>{{ entry.login_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>
+                        {% if entry.success %}
+                            <span class="badge badge-success">Success</span>
+                        {% else %}
+                            <span class="badge badge-danger">Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.ip_address or '-' }}</td>
+                    <td>
+                        <small>{{ entry.user_agent[:50] + '...' if entry.user_agent and entry.user_agent|length > 50 else (entry.user_agent or '-') }}</small>
+                    </td>
+                    <td>
+                        {% if not entry.success %}
+                            <span class="text-danger">{{ entry.failure_reason or 'Unknown' }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No login history available for this user.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function confirmDelete() {
+    if (confirm('Are you sure you want to delete user "{{ user.username }}"? This action cannot be undone.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("admin.delete_user", id=user.id) }}';
+        
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (csrfToken) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'csrf_token';
+            input.value = csrfToken.content;
+            form.appendChild(input);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
+
+<style>
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-item label {
+    font-weight: bold;
+    color: #666;
+    font-size: 14px;
+}
+
+.info-value {
+    font-size: 16px;
+    color: #333;
+}
+
+.roles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.role-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background: #f9f9f9;
+}
+
+.role-card h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.role-description {
+    margin: 0 0 15px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.role-permissions {
+    margin-top: 10px;
+}
+
+.permissions-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+}
+</style>
+{% endblock %}
+

@@ -14,18 +14,41 @@
         <p class="text-muted">{{ project.project_code }}</p>
     </div>
     <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') or current_user.has_role('operator') %}
         <a href="{{ url_for('queue.new_run', project_id=project.id) }}" class="btn btn-primary">
-            📊 Log Laser Run
+            Log Laser Run
         </a>
-        <button onclick="showAddToQueueForm()" class="btn btn-success">
-            ➕ Add to Queue
+        <button type="button" onclick="showAddToQueueForm()" class="btn btn-success">
+            + Add to Queue
         </button>
+        {% endif %}
+
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <!-- V12.0: On-Hold Toggle Button -->
+        {% if project.on_hold %}
+        <button type="button" onclick="confirmResumeFromHold()" class="btn btn-warning">
+            ▶️ Resume from Hold
+        </button>
+        {% else %}
+        <button type="button" onclick="showOnHoldModal()" class="btn btn-warning">
+            ⏸️ Put On Hold
+        </button>
+        {% endif %}
+
+        <!-- V12.0: Reinstate Button (only for cancelled projects) -->
+        {% if project.status == 'Cancelled' and project.can_reinstate %}
+        <button type="button" onclick="confirmReinstate()" class="btn btn-success">
+            ♻️ Reinstate Project
+        </button>
+        {% endif %}
+
         <a href="{{ url_for('projects.edit', id=project.id) }}" class="btn btn-secondary">
             Edit Project
         </a>
-        <button onclick="confirmDelete()" class="btn btn-danger">
+        <button type="button" onclick="confirmDelete()" class="btn btn-danger">
             Delete Project
         </button>
+        {% endif %}
     </div>
 </div>
 
@@ -57,7 +80,8 @@
                     <div class="form-group">
                         <label for="estimated_cut_time">Estimated Cut Time (minutes):</label>
                         <input type="number" id="estimated_cut_time" name="estimated_cut_time"
-                               class="form-control" min="0" placeholder="e.g., 45">
+                               class="form-control" min="0" placeholder="e.g., 45"
+                               value="{{ project.estimated_cut_time if project.estimated_cut_time else '' }}">
                     </div>
                 </div>
 
@@ -91,13 +115,49 @@ function hideAddToQueueForm() {
     <span class="badge badge-lg badge-{{ project.status|lower|replace(' ', '-') }}">
         {{ project.status }}
     </span>
+
+    <!-- V12.0: On-Hold Badge -->
+    {% if project.on_hold %}
+        <span class="badge badge-lg badge-warning" title="On hold since {{ project.on_hold_date|date }}">
+            ⏸️ ON HOLD
+        </span>
+    {% endif %}
+
+    <!-- V12.0: Quote Expiry Badge -->
+    {% if project.status == 'Quote & Approval' and project.quote_expiry_date %}
+        {% if project.is_quote_expired %}
+            <span class="badge badge-lg badge-danger" title="Quote expired on {{ project.quote_expiry_date|date }}">
+                ⚠️ QUOTE EXPIRED
+            </span>
+        {% elif project.quote_expiry_warning_level == 'critical' %}
+            <span class="badge badge-lg badge-danger" title="Quote expires on {{ project.quote_expiry_date|date }}">
+                ⏰ EXPIRES IN {{ project.days_until_quote_expiry }} DAYS
+            </span>
+        {% elif project.quote_expiry_warning_level == 'warning' %}
+            <span class="badge badge-lg badge-warning" title="Quote expires on {{ project.quote_expiry_date|date }}">
+                ⏰ EXPIRES IN {{ project.days_until_quote_expiry }} DAYS
+            </span>
+        {% else %}
+            <span class="badge badge-lg badge-info" title="Quote expires on {{ project.quote_expiry_date|date }}">
+                📅 EXPIRES IN {{ project.days_until_quote_expiry }} DAYS
+            </span>
+        {% endif %}
+    {% endif %}
+
+    <!-- V12.0: Can Reinstate Badge -->
+    {% if project.status == 'Cancelled' and project.can_reinstate %}
+        <span class="badge badge-lg badge-success" title="This project can be reinstated">
+            ♻️ CAN REINSTATE
+        </span>
+    {% endif %}
+
     {% if project.is_overdue %}
         <span class="badge badge-lg badge-danger">
-            ⚠️ OVERDUE ({{ project.days_until_due|abs }} days past due)
+            OVERDUE ({{ project.days_until_due|abs }} days past due)
         </span>
     {% elif project.days_until_due is not none and project.days_until_due <= 3 and project.days_until_due > 0 %}
         <span class="badge badge-lg badge-warning">
-            ⏰ Due in {{ project.days_until_due }} days
+            Due in {{ project.days_until_due }} days
         </span>
     {% endif %}
 </div>
@@ -143,6 +203,31 @@ function hideAddToQueueForm() {
                             -
                         {% endif %}
                     </dd>
+
+                    <!-- V12.0: On-Hold Information -->
+                    {% if project.on_hold %}
+                    <dt>On-Hold Status</dt>
+                    <dd>
+                        <span class="badge badge-warning">⏸️ ON HOLD</span>
+                        <br><small class="text-muted">Since: {{ project.on_hold_date|date }}</small>
+                    </dd>
+
+                    <dt>On-Hold Reason</dt>
+                    <dd>
+                        <pre class="pre-wrap">{{ project.on_hold_reason }}</pre>
+                    </dd>
+                    {% endif %}
+
+                    <!-- V12.0: Cancellation Information -->
+                    {% if project.status == 'Cancelled' and project.cancellation_reason %}
+                    <dt>Cancellation Reason</dt>
+                    <dd>
+                        <pre class="pre-wrap">{{ project.cancellation_reason }}</pre>
+                        {% if project.can_reinstate %}
+                        <br><small class="text-success">✓ This project can be reinstated</small>
+                        {% endif %}
+                    </dd>
+                    {% endif %}
                 </dl>
             </div>
         </div>
@@ -193,10 +278,29 @@ function hideAddToQueueForm() {
                 <dl class="detail-list">
                     <dt>Quote Date</dt>
                     <dd>{{ project.quote_date|date if project.quote_date else '-' }}</dd>
-                    
+
+                    <!-- V12.0: Quote Expiry Date -->
+                    {% if project.quote_expiry_date and project.status == 'Quote & Approval' %}
+                    <dt>Quote Expiry Date</dt>
+                    <dd>
+                        {{ project.quote_expiry_date|date }}
+                        {% if project.is_quote_expired %}
+                            <span class="badge badge-danger">EXPIRED</span>
+                        {% elif project.days_until_quote_expiry is not none %}
+                            {% if project.quote_expiry_warning_level == 'critical' %}
+                                <span class="badge badge-danger">{{ project.days_until_quote_expiry }} days left</span>
+                            {% elif project.quote_expiry_warning_level == 'warning' %}
+                                <span class="badge badge-warning">{{ project.days_until_quote_expiry }} days left</span>
+                            {% else %}
+                                <small class="text-muted">({{ project.days_until_quote_expiry }} days left)</small>
+                            {% endif %}
+                        {% endif %}
+                    </dd>
+                    {% endif %}
+
                     <dt>Approval Date</dt>
                     <dd>{{ project.approval_date|date if project.approval_date else '-' }}</dd>
-                    
+
                     <dt>Due Date</dt>
                     <dd>
                         {% if project.due_date %}
@@ -208,7 +312,7 @@ function hideAddToQueueForm() {
                             -
                         {% endif %}
                     </dd>
-                    
+
                     <dt>Completion Date</dt>
                     <dd>{{ project.completion_date|date if project.completion_date else '-' }}</dd>
                 </dl>
@@ -245,6 +349,9 @@ function hideAddToQueueForm() {
                 <dt>Material Type</dt>
                 <dd>{{ project.material_type or '-' }}</dd>
 
+                <dt>Material Thickness</dt>
+                <dd>{{ project.material_thickness ~ ' mm' if project.material_thickness else '-' }}</dd>
+
                 <dt>Material Quantity</dt>
                 <dd>{{ project.material_quantity_sheets ~ ' sheets' if project.material_quantity_sheets else '-' }}</dd>
             </dl>
@@ -253,7 +360,7 @@ function hideAddToQueueForm() {
                 <dt>Parts Quantity</dt>
                 <dd>{{ project.parts_quantity or '-' }}</dd>
 
-                <dt>Number of Bins</dt>
+                <dt>Number of Bends</dt>
                 <dd>{{ project.number_of_bins or '-' }}</dd>
             </dl>
 
@@ -298,7 +405,7 @@ function hideAddToQueueForm() {
         <h2>Proof of Payment (POP) Tracking</h2>
         <form action="{{ url_for('projects.toggle_pop', id=project.id) }}" method="POST" class="inline-form">
             <button type="submit" class="btn btn-sm {% if project.pop_received %}btn-success{% else %}btn-secondary{% endif %}">
-                {% if project.pop_received %}✓ POP Received{% else %}Mark POP Received{% endif %}
+                {% if project.pop_received %}POP Received{% else %}Mark POP Received{% endif %}
             </button>
         </form>
     </div>
@@ -307,44 +414,42 @@ function hideAddToQueueForm() {
             <dt>POP Received</dt>
             <dd>
                 {% if project.pop_received %}
-                    <span class="badge badge-success">✓ Yes</span>
+                    <span class="badge badge-success">Yes</span>
                 {% else %}
-                    <span class="badge badge-secondary">✗ No</span>
+                    <span class="badge badge-secondary">No</span>
                 {% endif %}
             </dd>
 
             <dt>POP Received Date</dt>
             <dd>{{ project.pop_received_date|date if project.pop_received_date else '-' }}</dd>
 
-            <dt>POP Deadline (3 days)</dt>
+            <dt>POP Status</dt>
             <dd>
-                {% if project.pop_deadline %}
-                    <strong>{{ project.pop_deadline|date }}</strong>
-                    {% set days_until_deadline = (project.pop_deadline - today).days if today else none %}
-                    {% if days_until_deadline is not none %}
-                        {% if days_until_deadline < 0 %}
-                            <span class="badge badge-danger">⚠️ {{ days_until_deadline|abs }} days overdue</span>
-                        {% elif days_until_deadline == 0 %}
-                            <span class="badge badge-warning">⏰ Due today</span>
-                        {% elif days_until_deadline <= 2 %}
-                            <span class="badge badge-warning">⏰ {{ days_until_deadline }} days remaining</span>
-                        {% else %}
-                            <span class="badge badge-success">{{ days_until_deadline }} days remaining</span>
-                        {% endif %}
+                {% if project.pop_received %}
+                    <span class="badge badge-success">✅ POP Received</span>
+                    {% if project.pop_received_date %}
+                        <small class="text-muted">({{ project.pop_received_date|date }})</small>
+                    {% endif %}
+
+                    {# Phase 10: Show auto-scheduling status #}
+                    {% set in_queue = project.queue_items|selectattr('status', 'equalto', 'Pending')|first %}
+                    {% if in_queue %}
+                        <br><small class="text-success">Auto-scheduled for cutting</small>
+                    {% elif not project.material_type or not project.material_thickness %}
+                        <br><small class="text-warning">⚠️ Missing production details</small>
+                    {% else %}
+                        <br><small class="text-muted">Ready for scheduling</small>
                     {% endif %}
                 {% else %}
-                    -
+                    <span class="badge badge-secondary">❌ Awaiting POP</span>
                 {% endif %}
             </dd>
         </dl>
 
-        {% if project.pop_received and project.pop_deadline %}
-        <div class="info-box {% if project.pop_deadline < today %}info-box-danger{% endif %}">
+        {% if project.pop_received %}
+        <div class="info-box info-box-success">
             <p>
-                <strong>ℹ️ Business Rule:</strong> Projects should be scheduled for cutting within 3 days of POP receipt.
-                {% if project.pop_deadline < today %}
-                    <span class="text-danger-color">This deadline has passed.</span>
-                {% endif %}
+                <strong>ℹ️ Auto-Scheduling:</strong> When POP is received, the system automatically schedules projects for cutting if inventory is available and all production details are complete.
             </p>
         </div>
         {% endif %}
@@ -359,7 +464,7 @@ function hideAddToQueueForm() {
             <h2>Client Notification</h2>
             <form action="{{ url_for('projects.toggle_notified', id=project.id) }}" method="POST" class="inline-form">
                 <button type="submit" class="btn btn-sm {% if project.client_notified %}btn-success{% else %}btn-secondary{% endif %}">
-                    {% if project.client_notified %}✓ Notified{% else %}Mark as Notified{% endif %}
+                    {% if project.client_notified %}Notified{% else %}Mark as Notified{% endif %}
                 </button>
             </form>
         </div>
@@ -368,9 +473,9 @@ function hideAddToQueueForm() {
                 <dt>Client Notified</dt>
                 <dd>
                     {% if project.client_notified %}
-                        <span class="badge badge-success">✓ Yes</span>
+                        <span class="badge badge-success">Yes</span>
                     {% else %}
-                        <span class="badge badge-secondary">✗ No</span>
+                        <span class="badge badge-secondary">No</span>
                     {% endif %}
                 </dd>
 
@@ -386,7 +491,7 @@ function hideAddToQueueForm() {
             <h2>Delivery Confirmation</h2>
             <form action="{{ url_for('projects.toggle_delivery', id=project.id) }}" method="POST" class="inline-form">
                 <button type="submit" class="btn btn-sm {% if project.delivery_confirmed %}btn-success{% else %}btn-secondary{% endif %}">
-                    {% if project.delivery_confirmed %}✓ Delivered{% else %}Mark as Delivered{% endif %}
+                    {% if project.delivery_confirmed %}Delivered{% else %}Mark as Delivered{% endif %}
                 </button>
             </form>
         </div>
@@ -395,9 +500,9 @@ function hideAddToQueueForm() {
                 <dt>Delivery Confirmed</dt>
                 <dd>
                     {% if project.delivery_confirmed %}
-                        <span class="badge badge-success">✓ Yes</span>
+                        <span class="badge badge-success">Yes</span>
                     {% else %}
-                        <span class="badge badge-secondary">✗ No</span>
+                        <span class="badge badge-secondary">No</span>
                     {% endif %}
                 </dd>
 
@@ -412,9 +517,18 @@ function hideAddToQueueForm() {
 <div class="card">
     <div class="card-header">
         <h2>Project Documents</h2>
-        <button onclick="document.getElementById('uploadDocForm').style.display='block'" class="btn btn-primary btn-sm">
-            📤 Upload Document
-        </button>
+        <div class="flex-row flex-gap-sm">
+            <button onclick="document.getElementById('uploadDocForm').style.display='block'" class="btn btn-primary btn-sm">
+                Upload Document
+            </button>
+            {% if project.documents %}
+            <a href="{{ url_for('projects.download_all_documents', project_id=project.id) }}"
+               class="btn btn-success btn-sm"
+               onclick="showDownloadProgress({{ project.documents|length }}, {{ (project.documents|sum(attribute='file_size') / 1024 / 1024)|round(2) }}); return true;">
+                📦 Download All ({{ project.documents|length }} document{{ 's' if project.documents|length != 1 else '' }})
+            </a>
+            {% endif %}
+        </div>
     </div>
     <div class="card-body">
         <!-- Upload Form (Hidden by default) -->
@@ -429,13 +543,16 @@ function hideAddToQueueForm() {
                         <option value="Invoice">Invoice</option>
                         <option value="Proof of Payment">Proof of Payment</option>
                         <option value="Delivery Note">Delivery Note</option>
+                        <option value="Other">Other</option>
+                        <option value="Image">Image</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="doc_file">Select File:</label>
-                    <input type="file" id="doc_file" name="file" required class="form-control">
-                    <small class="text-muted">Allowed: PDF, Images, Office documents</small>
+                    <label for="doc_file">Select File(s):</label>
+                    <input type="file" id="doc_file" name="files" multiple class="form-control" onchange="updateFileCount(this, 'docFileCount')">
+                    <small class="text-muted">Allowed: PDF, Images, Office documents | Maximum file size: 50 MB each | You can select multiple files</small>
+                    <div id="docFileCount" class="text-info mt-1" style="display: none;"></div>
                 </div>
 
                 <div class="form-group">
@@ -464,16 +581,16 @@ function hideAddToQueueForm() {
                 </tr>
             </thead>
             <tbody>
-                {% for doc in project.documents|sort(attribute='uploaded_at', reverse=True) %}
+                {% for doc in project.documents|sort(attribute='upload_date', reverse=True) %}
                 <tr>
                     <td>
                         <span class="badge badge-{{ 'primary' if doc.document_type == 'Quote' else 'success' if doc.document_type == 'Invoice' else 'warning' if doc.document_type == 'Proof of Payment' else 'info' }}">
                             {{ doc.document_type }}
                         </span>
                     </td>
-                    <td>📄 {{ doc.original_filename }}</td>
+                    <td>{{ doc.original_filename }}</td>
                     <td>{{ (doc.file_size / 1024 / 1024)|round(2) }} MB</td>
-                    <td>{{ doc.uploaded_at|datetime }}</td>
+                    <td>{{ doc.upload_date|datetime }}</td>
                     <td>{{ doc.uploaded_by or 'N/A' }}</td>
                     <td>
                         <form action="{{ url_for('projects.delete_document', doc_id=doc.id) }}" method="POST" class="inline-form"
@@ -496,7 +613,7 @@ function hideAddToQueueForm() {
             Total: {{ project.documents|length }} document(s)
         </p>
         {% else %}
-        <p class="text-muted">No documents uploaded yet. Click "Upload Document" to add quotes, invoices, POPs, or delivery notes.</p>
+        <p class="text-muted">No documents uploaded yet. Click "Upload Document" to add quotes, invoices, POPs, delivery notes, images, or other documents.</p>
         {% endif %}
     </div>
 </div>
@@ -504,20 +621,30 @@ function hideAddToQueueForm() {
 <!-- Design Files Section -->
 <div class="card">
     <div class="card-header">
-        <h2>Design Files (DXF)</h2>
-        <button onclick="document.getElementById('uploadForm').style.display='block'" class="btn btn-primary btn-sm">
-            📤 Upload File
-        </button>
+        <h2>Design Files (DXF / LightBurn)</h2>
+        <div class="flex-row flex-gap-sm">
+            <button onclick="document.getElementById('uploadForm').style.display='block'" class="btn btn-primary btn-sm">
+                Upload File
+            </button>
+            {% if project.design_files %}
+            <a href="{{ url_for('files.download_all', project_id=project.id) }}"
+               class="btn btn-success btn-sm"
+               onclick="showDownloadProgress({{ project.design_files|length }}, {{ (project.design_files|sum(attribute='file_size') / 1024 / 1024)|round(2) }}); return true;">
+                📦 Download All ({{ project.design_files|length }} file{{ 's' if project.design_files|length != 1 else '' }})
+            </a>
+            {% endif %}
+        </div>
     </div>
     <div class="card-body">
         <!-- Upload Form (Hidden by default) -->
         <div id="uploadForm" class="upload-form-container">
-            <h3 class="upload-form-title">Upload DXF File</h3>
+            <h3 class="upload-form-title">Upload Design File</h3>
             <form action="{{ url_for('files.upload', project_id=project.id) }}" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label for="file">Select File (DXF only):</label>
-                    <input type="file" id="file" name="file" accept=".dxf,.DXF" required class="form-control">
-                    <small class="text-muted">Maximum file size: 50 MB</small>
+                    <label for="file">Select File(s) (DXF or LightBurn):</label>
+                    <input type="file" id="file" name="files" accept=".dxf,.DXF,.lbrn2,.LBRN2" multiple class="form-control" onchange="updateFileCount(this, 'designFileCount')">
+                    <small class="text-muted">Accepted: DXF, LBRN2 | Maximum file size: 50 MB each | You can select multiple files</small>
+                    <div id="designFileCount" class="text-info mt-1" style="display: none;"></div>
                 </div>
 
                 <div class="form-group">
@@ -549,11 +676,11 @@ function hideAddToQueueForm() {
                 <tr>
                     <td>
                         <a href="{{ url_for('files.detail', file_id=file.id) }}">
-                            📄 {{ file.original_filename }}
+                            {{ file.original_filename }}
                         </a>
                     </td>
                     <td>{{ file.file_size_mb }} MB</td>
-                    <td>{{ file.upload_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ file.upload_date|datetime }}</td>
                     <td>{{ file.uploaded_by or 'N/A' }}</td>
                     <td>
                         <a href="{{ url_for('files.download', file_id=file.id) }}" class="btn btn-sm btn-primary">Download</a>
@@ -581,7 +708,7 @@ function hideAddToQueueForm() {
     <div class="card-header">
         <h2>Communications</h2>
         <a href="{{ url_for('comms.new_communication') }}?project_id={{ project.id }}" class="btn btn-sm btn-primary">
-            ✉️ New Communication
+            New Communication
         </a>
     </div>
     <div class="card-body">
@@ -603,13 +730,12 @@ function hideAddToQueueForm() {
                 <tr>
                     <td>
                         <span class="badge badge-{{ comm.comm_type|lower }}">
-                            {% if comm.comm_type == 'Email' %}✉️{% elif comm.comm_type == 'WhatsApp' %}💬{% else %}🔔{% endif %}
                             {{ comm.comm_type }}
                         </span>
                     </td>
                     <td>
                         <span class="badge badge-{{ 'success' if comm.direction == 'Inbound' else 'info' }}">
-                            {{ '📥' if comm.direction == 'Inbound' else '📤' }}
+                            {{ comm.direction }}
                         </span>
                     </td>
                     <td>
@@ -725,7 +851,7 @@ function confirmDelete() {
                                     {{ item.priority }}
                                 </span>
                             </td>
-                            <td>{{ item.scheduled_date.strftime('%Y-%m-%d') if item.scheduled_date else '-' }}</td>
+                            <td>{{ item.scheduled_date|date if item.scheduled_date else '-' }}</td>
                             <td>
                                 <a href="{{ url_for('queue.detail', id=item.id) }}" class="btn btn-sm btn-secondary">View</a>
                             </td>
@@ -760,8 +886,8 @@ function confirmDelete() {
                         {% set sorted_runs = project.laser_runs|sort(attribute='run_date', reverse=True) %}
                         {% for run in sorted_runs[:5] %}
                         <tr>
-                            <td>{{ run.run_date.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ run.operator or 'N/A' }}</td>
+                            <td>{{ run.run_date|date }}</td>
+                            <td>{{ run.operator_display }}</td>
                             <td>{{ run.cut_time_minutes }} min</td>
                             <td>{{ run.parts_produced or 'N/A' }}</td>
                         </tr>
@@ -779,5 +905,149 @@ function confirmDelete() {
         </div>
     </div>
 </div>
+
+<!-- Download Progress Indicator -->
+<div id="downloadProgressOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 2rem; border-radius: 8px; text-align: center; max-width: 400px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <div class="spinner" style="margin: 0 auto 1rem auto; width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <h3 style="margin-bottom: 0.5rem; color: #333;">Creating ZIP Archive</h3>
+        <p id="downloadProgressText" style="color: #666; margin: 0;">Preparing download...</p>
+    </div>
+</div>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+// Download progress indicator
+let downloadProgressTimeout;
+
+function showDownloadProgress(fileCount, totalSizeMB) {
+    const overlay = document.getElementById('downloadProgressOverlay');
+    const progressText = document.getElementById('downloadProgressText');
+
+    // Update text with file count and size
+    const fileText = fileCount === 1 ? '1 file' : `${fileCount} files`;
+    progressText.textContent = `Preparing ${fileText} (${totalSizeMB} MB)...`;
+
+    // Show overlay
+    overlay.style.display = 'flex';
+
+    // Set timeout to hide after 30 seconds (fallback)
+    downloadProgressTimeout = setTimeout(function() {
+        hideDownloadProgress();
+    }, 30000);
+
+    // Hide when download starts (browser download dialog appears)
+    // This is a workaround since we can't directly detect download start
+    setTimeout(function() {
+        hideDownloadProgress();
+    }, 3000); // Hide after 3 seconds (typical time for server to prepare ZIP)
+}
+
+function hideDownloadProgress() {
+    const overlay = document.getElementById('downloadProgressOverlay');
+    overlay.style.display = 'none';
+
+    // Clear timeout
+    if (downloadProgressTimeout) {
+        clearTimeout(downloadProgressTimeout);
+    }
+}
+
+// Hide progress on page visibility change (when user switches tabs)
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        hideDownloadProgress();
+    }
+});
+
+// V12.0: On-Hold Modal Functions
+function showOnHoldModal() {
+    const modal = document.getElementById('onHoldModal');
+    if (modal) {
+        modal.style.display = 'block';
+    }
+}
+
+function hideOnHoldModal() {
+    const modal = document.getElementById('onHoldModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('onHoldReason').value = '';
+    }
+}
+
+function submitOnHold() {
+    const reason = document.getElementById('onHoldReason').value.trim();
+
+    if (!reason) {
+        alert('Please provide a reason for putting the project on hold.');
+        return;
+    }
+
+    // Submit form
+    document.getElementById('onHoldForm').submit();
+}
+
+function confirmResumeFromHold() {
+    if (confirm('Are you sure you want to resume this project from on-hold status?')) {
+        // Submit form to resume
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("projects.toggle_hold", id=project.id) }}';
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function confirmReinstate() {
+    if (confirm('Are you sure you want to reinstate this cancelled project? It will return to "Quote & Approval" status with a new 30-day expiry period.')) {
+        // Submit form to reinstate
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("projects.reinstate", id=project.id) }}';
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('onHoldModal');
+    if (event.target == modal) {
+        hideOnHoldModal();
+    }
+}
+</script>
+
+<!-- V12.0: On-Hold Modal -->
+<div id="onHoldModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Put Project On Hold</h2>
+            <button type="button" class="modal-close" onclick="hideOnHoldModal()">&times;</button>
+        </div>
+        <form id="onHoldForm" action="{{ url_for('projects.toggle_hold', id=project.id) }}" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="onHoldReason">Reason for putting project on hold: <span class="text-danger">*</span></label>
+                    <textarea id="onHoldReason" name="reason" class="form-control" rows="4"
+                              placeholder="e.g., Waiting for client approval, Material out of stock, etc." required></textarea>
+                    <small class="text-muted">This reason will be logged in the project activity.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="hideOnHoldModal()">Cancel</button>
+                <button type="button" class="btn btn-warning" onclick="submitOnHold()">⏸️ Put On Hold</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
 

@@ -5,12 +5,15 @@ This module defines the main routes including the dashboard.
 """
 
 from flask import Blueprint, render_template
-from app.models import Client, Project, Product, DesignFile, QueueItem, LaserRun, InventoryItem
+from flask_login import login_required
+from sqlalchemy.orm import joinedload
+from app.models import Client, Project, Product, DesignFile, QueueItem, LaserRun, InventoryItem, Notification
 
 bp = Blueprint('main', __name__)
 
 
 @bp.route('/')
+@login_required
 def dashboard():
     """
     Display the main dashboard.
@@ -45,19 +48,50 @@ def dashboard():
         Product.created_at.desc()
     ).limit(5).all()
 
-    # Get recent files
-    recent_files = DesignFile.query.order_by(
+    # Get recent files with eager loading to avoid N+1 queries
+    # Template accesses file.project.project_code, so we load the project relationship
+    recent_files = DesignFile.query.options(
+        joinedload(DesignFile.project)
+    ).order_by(
         DesignFile.upload_date.desc()
     ).limit(5).all()
 
-    # Get queue items
-    queue_items = QueueItem.query.filter(
+    # Get queue items with eager loading to avoid N+1 queries
+    # Template accesses item.project.project_code, so we load the project relationship
+    queue_items = QueueItem.query.options(
+        joinedload(QueueItem.project)
+    ).filter(
         QueueItem.status.in_([QueueItem.STATUS_QUEUED, QueueItem.STATUS_IN_PROGRESS])
     ).order_by(QueueItem.queue_position).limit(5).all()
 
     # Get inventory statistics
+    # Optimized: Use database query instead of loading all items into memory
     inventory_count = InventoryItem.query.count()
-    low_stock_count = len([item for item in InventoryItem.query.all() if item.is_low_stock])
+    low_stock_count = InventoryItem.query.filter(
+        InventoryItem.quantity_on_hand <= InventoryItem.reorder_level
+    ).count()
+
+    # Production Automation: Get attention items (unresolved notifications)
+    # Group notifications by type for attention cards
+    low_stock_notifications = Notification.query.filter_by(
+        resolved=False,
+        notif_type='low_stock'
+    ).count()
+
+    approval_wait_notifications = Notification.query.filter_by(
+        resolved=False,
+        notif_type='approval_wait'
+    ).count()
+
+    pickup_wait_notifications = Notification.query.filter_by(
+        resolved=False,
+        notif_type='pickup_wait'
+    ).count()
+
+    material_block_notifications = Notification.query.filter_by(
+        resolved=False,
+        notif_type='material_block'
+    ).count()
 
     # More statistics will be added in later phases
     stats = {
@@ -71,9 +105,18 @@ def dashboard():
         'low_stock_count': low_stock_count,
     }
 
+    # Attention cards data (Production Automation)
+    attention_cards = {
+        'low_stock': low_stock_notifications,
+        'approval_wait': approval_wait_notifications,
+        'pickup_wait': pickup_wait_notifications,
+        'material_block': material_block_notifications,
+    }
+
     return render_template(
         'dashboard.html',
         stats=stats,
+        attention_cards=attention_cards,
         recent_clients=recent_clients,
         recent_projects=recent_projects,
         recent_products=recent_products,

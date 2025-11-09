@@ -54,7 +54,7 @@
                 </tr>
                 <tr>
                     <th>Upload Date:</th>
-                    <td>{{ file.upload_date.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ file.upload_date|datetime }}</td>
                 </tr>
                 <tr>
                     <th>Uploaded By:</th>
@@ -89,11 +89,11 @@
                 </tr>
                 <tr>
                     <th>Created At:</th>
-                    <td>{{ file.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ file.created_at|datetime }}</td>
                 </tr>
                 <tr>
                     <th>Updated At:</th>
-                    <td>{{ file.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ file.updated_at|datetime }}</td>
                 </tr>
             </table>
             
@@ -126,7 +126,7 @@
             <tbody>
                 {% for log in logs %}
                 <tr>
-                    <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ log.created_at|datetime }}</td>
                     <td>
                         <span class="badge badge-{{ 'success' if log.action == 'UPLOADED' else 'info' if log.action == 'DOWNLOADED' else 'danger' }}">
                             {{ log.action }}

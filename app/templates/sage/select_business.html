@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Select Business - Sage Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1 class="page-title">Select Business</h1>
+    <p class="page-subtitle">Choose which Sage business you want to work with</p>
+</div>
+
+<div class="business-selection-container">
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('sage.select_business') }}">
+                <div class="form-group">
+                    <label for="business_id" class="form-label">Available Businesses</label>
+                    <p class="form-help">Select the business you want to manage from Laser OS.</p>
+                    
+                    <div class="business-list">
+                        {% for business in businesses %}
+                        <label class="business-option">
+                            <input type="radio" name="business_id" value="{{ business.id }}" 
+                                   {% if business.is_selected %}checked{% endif %} required>
+                            <div class="business-option-content">
+                                <div class="business-option-icon">🏢</div>
+                                <div class="business-option-details">
+                                    <div class="business-option-name">{{ business.displayed_as or business.name }}</div>
+                                    <div class="business-option-id">ID: {{ business.sage_business_id }}</div>
+                                </div>
+                                {% if business.is_selected %}
+                                <span class="badge badge-success">Currently Selected</span>
+                                {% endif %}
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon">✓</span> Select Business
+                    </button>
+                    <a href="{{ url_for('sage.dashboard') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.business-selection-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.business-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.business-option {
+    display: block;
+    cursor: pointer;
+}
+
+.business-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.business-option-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    border: 2px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+    background: white;
+    transition: var(--transition);
+}
+
+.business-option input[type="radio"]:checked + .business-option-content {
+    border-color: var(--color-primary);
+    background: rgba(37, 99, 235, 0.05);
+}
+
+.business-option:hover .business-option-content {
+    border-color: var(--color-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.business-option-icon {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-gray-100);
+    border-radius: var(--border-radius);
+    flex-shrink: 0;
+}
+
+.business-option-details {
+    flex: 1;
+}
+
+.business-option-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin-bottom: var(--spacing-xs);
+}
+
+.business-option-id {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+</style>
+{% endblock %}
+

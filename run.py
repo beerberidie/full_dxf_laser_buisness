@@ -70,11 +70,56 @@ def reset_db():
     print('✓ Database reset complete')
 
 
+@app.cli.command()
+def import_dxf_library():
+    """Import products from the DXF starter library."""
+    print('Importing DXF Starter Library...')
+
+    from app.services.dxf_library_importer import DXFLibraryImporter
+
+    # Get paths
+    library_path = os.path.join(os.getcwd(), 'dxf_starter_library_v1', 'dxf_library')
+    upload_folder = app.config.get('UPLOAD_FOLDER', 'data/files/products')
+
+    # Check if library exists
+    if not os.path.exists(library_path):
+        print(f'✗ DXF library not found at: {library_path}')
+        return
+
+    # Create importer
+    importer = DXFLibraryImporter(library_path, upload_folder)
+
+    # Run import
+    try:
+        stats = importer.import_products(copy_files=True, skip_existing=True)
+
+        # Print summary
+        print('\n' + '='*60)
+        print('IMPORT SUMMARY')
+        print('='*60)
+        print(f'Total rows processed:  {stats["total"]}')
+        print(f'Products created:      {stats["created"]}')
+        print(f'Products skipped:      {stats["skipped"]}')
+        print(f'DXF files copied:      {stats["files_copied"]}')
+        print(f'Errors:                {stats["errors"]}')
+        print('='*60)
+
+        if stats['created'] > 0:
+            print(f'\n✓ Successfully imported {stats["created"]} products!')
+        else:
+            print('\n⚠ No new products were imported.')
+
+    except Exception as e:
+        print(f'\n✗ Import failed: {str(e)}')
+        import traceback
+        traceback.print_exc()
+
+
 @app.shell_context_processor
 def make_shell_context():
     """Make database and models available in Flask shell."""
     from app.models import Client, ActivityLog, Setting
-    
+
     return {
         'db': db,
         'Client': Client,

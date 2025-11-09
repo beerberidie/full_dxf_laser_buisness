@@ -7,9 +7,11 @@ This module creates and configures the Flask application instance.
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 # Initialize extensions
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 
 def create_app(config_name=None):
@@ -37,12 +39,36 @@ def create_app(config_name=None):
     # Initialize extensions
     db.init_app(app)
 
+    # Initialize Flask-Login
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message = 'Please log in to access this page.'
+    login_manager.login_message_category = 'info'
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        """Load user by ID for Flask-Login."""
+        from app.models.auth import User
+        return User.query.get(int(user_id))
+
     # Phase 9: Initialize Flask-Mail for communication service
     from app.services.communication_service import init_mail
     init_mail(app)
 
+    # V12.0: Initialize background scheduler for status system
+    from app.services.scheduler import init_scheduler, run_catchup_on_startup
+    init_scheduler(app)
+    run_catchup_on_startup(app)  # Run catch-up logic for missed jobs
+
+    # Initialize performance monitoring
+    from app.middleware.performance import init_performance_monitoring, setup_sqlalchemy_listeners
+    init_performance_monitoring(app)
+    setup_sqlalchemy_listeners(db)
+
     # Register blueprints
-    from app.routes import main, clients, projects, products, files, queue, inventory, reports, quotes, invoices, comms
+    from app.routes import auth, admin, main, clients, projects, products, files, queue, inventory, reports, quotes, invoices, comms, presets, templates, operators, webhooks, sage, phone, notifications
+    app.register_blueprint(auth.bp)  # Authentication routes
+    app.register_blueprint(admin.bp)  # Admin routes
     app.register_blueprint(main.bp)
     app.register_blueprint(clients.bp)
     app.register_blueprint(projects.bp)
@@ -54,6 +80,31 @@ def create_app(config_name=None):
     app.register_blueprint(quotes.bp)
     app.register_blueprint(invoices.bp)
     app.register_blueprint(comms.bp)  # Phase 9: Communications module
+    app.register_blueprint(presets.bp)  # Phase 10 Part 5: Presets management
+    app.register_blueprint(operators.bp)  # Phase 10: Operators management
+    app.register_blueprint(templates.bp, url_prefix='/comms/templates')  # Phase 2: Message templates (sub-module of Communications)
+    app.register_blueprint(webhooks.bp)  # Module N Phase 7: Webhook receiver
+    app.register_blueprint(sage.bp)  # Sage Business Cloud Accounting integration
+    app.register_blueprint(phone.bp)  # Production Automation: Phone Mode for operators
+    app.register_blueprint(notifications.bp)  # Production Automation: Notification system
+
+    # Production Automation: Context processor for notifications
+    @app.context_processor
+    def inject_notifications():
+        """Inject notification count and recent notifications into all templates."""
+        from flask_login import current_user
+
+        if current_user.is_authenticated and current_user.role in ['admin', 'manager']:
+            try:
+                from app.services.notification_logic import get_unresolved_notifications
+                notifications = get_unresolved_notifications(limit=5)
+                count = len(notifications)
+                return dict(notifications=notifications, count=count)
+            except Exception as e:
+                print(f"[WARNING] Failed to load notifications: {str(e)}")
+                return dict(notifications=[], count=0)
+        else:
+            return dict(notifications=[], count=0)
 
     # Placeholder blueprints (will be added in later phases)
     # from app.routes import inventory, reports, settings
@@ -66,13 +117,23 @@ def create_app(config_name=None):
     
     # Register template filters
     register_template_filters(app)
-    
+
     # Register context processors
     register_context_processors(app)
-    
+
     # Create placeholder routes for navigation (will be implemented in later phases)
     register_placeholder_routes(app)
-    
+
+    # Production Automation: Initialize scheduler for daily jobs
+    # Only start scheduler if not in debug/testing mode
+    if not app.config.get('TESTING', False):
+        try:
+            from app.scheduler.daily_job import init_scheduler as init_production_scheduler
+            init_production_scheduler(app)
+        except ImportError as e:
+            print(f"[WARNING] Production Automation scheduler not initialized: {str(e)}")
+            print("[WARNING] Install APScheduler: pip install apscheduler pytz")
+
     return app
 
 
@@ -138,13 +199,15 @@ def register_template_filters(app):
 
 def register_context_processors(app):
     """Register context processors to inject variables into templates."""
-    
+
     @app.context_processor
     def inject_settings():
         """Inject common settings into all templates."""
+        from flask_login import current_user
         return {
             'company_name': app.config.get('COMPANY_NAME', 'Laser OS'),
-            'current_year': __import__('datetime').datetime.now().year
+            'current_year': __import__('datetime').datetime.now().year,
+            'current_user': current_user
         }
 
 

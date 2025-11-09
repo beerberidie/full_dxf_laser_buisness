@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% block title %}{% if action == 'new' %}Add New Preset{% else %}Edit Preset{% endif %} - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="breadcrumb">
+            <a href="{{ url_for('presets.index') }}">Presets</a>
+            <span>/</span>
+            <span>{% if action == 'new' %}Add New{% else %}Edit{% endif %}</span>
+        </div>
+        <h1>{% if action == 'new' %}➕ Add New Preset{% else %}✏️ Edit Preset{% endif %}</h1>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('presets.index') }}" class="btn btn-secondary">Cancel</a>
+    </div>
+</div>
+
+<!-- Preset Form -->
+<div class="card">
+    <div class="card-header">
+        <h2>Preset Details</h2>
+    </div>
+    <div class="card-body">
+        <form action="{% if action == 'new' %}{{ url_for('presets.new_preset') }}{% else %}{{ url_for('presets.edit_preset', id=preset.id) }}{% endif %}" 
+              method="POST">
+            
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h3>Basic Information</h3>
+                
+                <div class="grid grid-3">
+                    <!-- Preset Name -->
+                    <div class="form-group">
+                        <label for="preset_name">Preset Name: <span class="required">*</span></label>
+                        <input type="text" id="preset_name" name="preset_name" class="form-control" 
+                               value="{{ preset.preset_name if preset else '' }}" 
+                               placeholder="e.g., Mild Steel 3mm - Standard" required>
+                        <small class="form-text text-muted">Unique name for this preset</small>
+                    </div>
+                    
+                    <!-- Material Type -->
+                    <div class="form-group">
+                        <label for="material_type">Material Type: <span class="required">*</span></label>
+                        <select id="material_type" name="material_type" class="form-control" required>
+                            <option value="">Select material type...</option>
+                            {% for material in material_types %}
+                            <option value="{{ material }}" 
+                                    {% if preset and preset.material_type == material %}selected{% endif %}>
+                                {{ material }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Thickness -->
+                    <div class="form-group">
+                        <label for="thickness">Thickness (mm): <span class="required">*</span></label>
+                        <input type="number" id="thickness" name="thickness" class="form-control" 
+                               value="{{ preset.thickness if preset else '' }}" 
+                               step="0.001" min="0" placeholder="e.g., 3.0" required>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Nozzle & Speed Settings -->
+            <div class="form-section">
+                <h3>Nozzle & Speed Settings</h3>
+                
+                <div class="grid grid-3">
+                    <!-- Nozzle -->
+                    <div class="form-group">
+                        <label for="nozzle">Nozzle:</label>
+                        <input type="text" id="nozzle" name="nozzle" class="form-control" 
+                               value="{{ preset.nozzle if preset else '' }}" 
+                               placeholder="e.g., 1.5mm Single">
+                    </div>
+                    
+                    <!-- Cut Speed -->
+                    <div class="form-group">
+                        <label for="cut_speed">Cut Speed (mm/min):</label>
+                        <input type="number" id="cut_speed" name="cut_speed" class="form-control" 
+                               value="{{ preset.cut_speed if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 3000">
+                    </div>
+                    
+                    <!-- Nozzle Height -->
+                    <div class="form-group">
+                        <label for="nozzle_height">Nozzle Height (mm):</label>
+                        <input type="number" id="nozzle_height" name="nozzle_height" class="form-control" 
+                               value="{{ preset.nozzle_height if preset else '' }}" 
+                               step="0.001" placeholder="e.g., 1.0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gas Settings -->
+            <div class="form-section">
+                <h3>Gas Settings</h3>
+
+                <div class="grid grid-2">
+                    <!-- Gas Type -->
+                    <div class="form-group">
+                        <label for="gas_type">Gas Type:</label>
+                        <select id="gas_type" name="gas_type" class="form-control">
+                            <option value="">Select gas type...</option>
+                            <option value="Oxygen" {% if preset and preset.gas_type == 'Oxygen' %}selected{% endif %}>Oxygen</option>
+                            <option value="Nitrogen" {% if preset and preset.gas_type == 'Nitrogen' %}selected{% endif %}>Nitrogen</option>
+                            <option value="Air" {% if preset and preset.gas_type == 'Air' %}selected{% endif %}>Air</option>
+                        </select>
+                        <small class="form-text text-muted" id="gas_type_hint">
+                            Auto-selected based on material and thickness
+                        </small>
+                    </div>
+
+                    <!-- Gas Pressure -->
+                    <div class="form-group">
+                        <label for="gas_pressure">Gas Pressure (bar):</label>
+                        <input type="number" id="gas_pressure" name="gas_pressure" class="form-control"
+                               value="{{ preset.gas_pressure if preset else '' }}"
+                               step="0.01" placeholder="e.g., 0.8">
+                        <small class="form-text text-muted" id="gas_pressure_hint"></small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Power Settings -->
+            <div class="form-section">
+                <h3>Power Settings</h3>
+                
+                <div class="grid grid-3">
+                    <!-- Peak Power -->
+                    <div class="form-group">
+                        <label for="peak_power">Peak Power (W):</label>
+                        <input type="number" id="peak_power" name="peak_power" class="form-control" 
+                               value="{{ preset.peak_power if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 2000">
+                    </div>
+                    
+                    <!-- Actual Power -->
+                    <div class="form-group">
+                        <label for="actual_power">Actual Power (W):</label>
+                        <input type="number" id="actual_power" name="actual_power" class="form-control" 
+                               value="{{ preset.actual_power if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 1800">
+                    </div>
+                    
+                    <!-- Duty Cycle -->
+                    <div class="form-group">
+                        <label for="duty_cycle">Duty Cycle (%):</label>
+                        <input type="number" id="duty_cycle" name="duty_cycle" class="form-control" 
+                               value="{{ preset.duty_cycle if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 90">
+                    </div>
+                    
+                    <!-- Pulse Frequency -->
+                    <div class="form-group">
+                        <label for="pulse_frequency">Pulse Frequency (Hz):</label>
+                        <input type="number" id="pulse_frequency" name="pulse_frequency" class="form-control" 
+                               value="{{ preset.pulse_frequency if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 5000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Beam Settings -->
+            <div class="form-section">
+                <h3>Beam Settings</h3>
+                
+                <div class="grid grid-3">
+                    <!-- Beam Width -->
+                    <div class="form-group">
+                        <label for="beam_width">Beam Width (mm):</label>
+                        <input type="number" id="beam_width" name="beam_width" class="form-control" 
+                               value="{{ preset.beam_width if preset else '' }}" 
+                               step="0.001" placeholder="e.g., 0.2">
+                    </div>
+                    
+                    <!-- Focus Position -->
+                    <div class="form-group">
+                        <label for="focus_position">Focus Position (mm):</label>
+                        <input type="number" id="focus_position" name="focus_position" class="form-control" 
+                               value="{{ preset.focus_position if preset else '' }}" 
+                               step="0.001" placeholder="e.g., 0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Timing Settings -->
+            <div class="form-section">
+                <h3>Timing Settings</h3>
+                
+                <div class="grid grid-2">
+                    <!-- Laser On Delay -->
+                    <div class="form-group">
+                        <label for="laser_on_delay">Laser On Delay (s):</label>
+                        <input type="number" id="laser_on_delay" name="laser_on_delay" class="form-control" 
+                               value="{{ preset.laser_on_delay if preset else '' }}" 
+                               step="0.001" placeholder="e.g., 0.01">
+                    </div>
+                    
+                    <!-- Laser Off Delay -->
+                    <div class="form-group">
+                        <label for="laser_off_delay">Laser Off Delay (s):</label>
+                        <input type="number" id="laser_off_delay" name="laser_off_delay" class="form-control" 
+                               value="{{ preset.laser_off_delay if preset else '' }}" 
+                               step="0.001" placeholder="e.g., 0.01">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pierce Settings -->
+            <div class="form-section">
+                <h3>Pierce Settings</h3>
+                
+                <div class="grid grid-3">
+                    <!-- Pierce Time -->
+                    <div class="form-group">
+                        <label for="pierce_time">Pierce Time (s):</label>
+                        <input type="number" id="pierce_time" name="pierce_time" class="form-control" 
+                               value="{{ preset.pierce_time if preset else '' }}" 
+                               step="0.001" placeholder="e.g., 0.5">
+                    </div>
+                    
+                    <!-- Pierce Power -->
+                    <div class="form-group">
+                        <label for="pierce_power">Pierce Power (W):</label>
+                        <input type="number" id="pierce_power" name="pierce_power" class="form-control" 
+                               value="{{ preset.pierce_power if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 2200">
+                    </div>
+                    
+                    <!-- Corner Power -->
+                    <div class="form-group">
+                        <label for="corner_power">Corner Power (W):</label>
+                        <input type="number" id="corner_power" name="corner_power" class="form-control" 
+                               value="{{ preset.corner_power if preset else '' }}" 
+                               step="0.01" placeholder="e.g., 1800">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Notes -->
+            <div class="form-section">
+                <h3>Notes</h3>
+                
+                <div class="form-group">
+                    <label for="notes">Notes:</label>
+                    <textarea id="notes" name="notes" class="form-control" rows="3" 
+                              placeholder="Any additional notes about this preset...">{{ preset.notes if preset else '' }}</textarea>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                <a href="{{ url_for('presets.index') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    {% if action == 'new' %}Create Preset{% else %}Update Preset{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Phase 10: Auto-select gas type based on material and thickness
+document.addEventListener('DOMContentLoaded', function() {
+    const materialTypeSelect = document.getElementById('material_type');
+    const thicknessInput = document.getElementById('thickness');
+    const gasTypeSelect = document.getElementById('gas_type');
+    const gasTypeHint = document.getElementById('gas_type_hint');
+    const gasPressureInput = document.getElementById('gas_pressure');
+    const gasPressureHint = document.getElementById('gas_pressure_hint');
+
+    function updateGasType() {
+        const materialType = materialTypeSelect.value;
+        const thickness = parseFloat(thicknessInput.value);
+
+        if (!materialType || !thickness || isNaN(thickness)) {
+            gasTypeHint.textContent = 'Select material and thickness to auto-suggest gas type';
+            gasPressureHint.textContent = '';
+            return;
+        }
+
+        let recommendedGas = '';
+        let hint = '';
+        let suggestedPressure = '';
+
+        // Business Rule: 6mm-16mm = Oxygen
+        if (thickness >= 6.0 && thickness <= 16.0) {
+            recommendedGas = 'Oxygen';
+            hint = '✓ Oxygen recommended for thick materials (6mm-16mm)';
+
+            // Suggest pressure based on thickness
+            if (thickness < 10.0) {
+                suggestedPressure = '1.5';
+            } else {
+                suggestedPressure = '2.0';
+            }
+        }
+        // Business Rule: <6mm Aluminum/Zinc = Nitrogen
+        else if (thickness < 6.0 && (materialType === 'Aluminum' || materialType === 'Zinc')) {
+            recommendedGas = 'Nitrogen';
+            hint = '✓ Nitrogen recommended for ' + materialType + ' (prevents oxidation)';
+
+            // Suggest pressure for Nitrogen
+            if (thickness < 3.0) {
+                suggestedPressure = '8.0';
+            } else {
+                suggestedPressure = '12.0';
+            }
+        }
+        // Business Rule: <6mm other materials = Air
+        else if (thickness < 6.0) {
+            recommendedGas = 'Air';
+            hint = '✓ Air recommended for thin ferrous metals (<6mm)';
+
+            // Suggest pressure for Air
+            if (thickness < 3.0) {
+                suggestedPressure = '4.0';
+            } else {
+                suggestedPressure = '6.0';
+            }
+        }
+
+        // Auto-select gas type
+        if (recommendedGas) {
+            gasTypeSelect.value = recommendedGas;
+            gasTypeHint.textContent = hint;
+            gasTypeHint.style.color = '#28a745';
+
+            // Suggest pressure if not already set
+            if (!gasPressureInput.value) {
+                gasPressureInput.value = suggestedPressure;
+                gasPressureHint.textContent = '✓ Suggested pressure for ' + recommendedGas;
+                gasPressureHint.style.color = '#28a745';
+            }
+        }
+    }
+
+    // Trigger on material or thickness change
+    materialTypeSelect.addEventListener('change', updateGasType);
+    thicknessInput.addEventListener('input', updateGasType);
+
+    // Run on page load if editing existing preset
+    updateGasType();
+});
+</script>
+{% endblock %}
+

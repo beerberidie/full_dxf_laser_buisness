@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Laser Run History{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Laser Run History</h1>
+    <div>
+        <a href="{{ url_for('queue.index') }}" class="btn btn-secondary">Back to Queue</a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-body">
+        <form method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group" style="margin: 0;">
+                <label for="operator">Operator:</label>
+                <select id="operator" name="operator" class="form-control" onchange="this.form.submit()">
+                    <option value="">All Operators</option>
+                    {% for op in operators %}
+                    <option value="{{ op }}" {% if operator_filter == op %}selected{% endif %}>{{ op }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin: 0;">
+                <label for="date_from">Date From:</label>
+                <input type="date" id="date_from" name="date_from" class="form-control" 
+                       value="{{ date_from or '' }}" onchange="this.form.submit()">
+            </div>
+            
+            <div class="form-group" style="margin: 0;">
+                <label for="date_to">Date To:</label>
+                <input type="date" id="date_to" name="date_to" class="form-control" 
+                       value="{{ date_to or '' }}" onchange="this.form.submit()">
+            </div>
+            
+            <div style="display: flex; align-items: flex-end;">
+                <a href="{{ url_for('queue.runs') }}" class="btn btn-secondary" style="width: 100%;">Clear Filters</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Runs List -->
+<div class="card">
+    <div class="card-header">
+        <h2>Laser Runs</h2>
+    </div>
+    <div class="card-body">
+        {% if runs %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Run Date</th>
+                    <th>Project</th>
+                    <th>Operator</th>
+                    <th>Cut Time</th>
+                    <th>Material</th>
+                    <th>Sheets</th>
+                    <th>Parts</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in runs %}
+                <tr>
+                    <td>{{ run.run_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if run.project %}
+                        <a href="{{ url_for('projects.detail', id=run.project_id) }}">
+                            {{ run.project.project_code }}
+                        </a>
+                        <br>
+                        <small class="text-muted">{{ run.project.name }}</small>
+                        {% else %}
+                        <span class="text-muted">[Deleted Project]</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ run.operator_display }}
+                        {% if run.preset %}
+                        <br><small class="text-muted">Preset: {{ run.preset.preset_name }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ run.cut_time_minutes }} min
+                        {% if run.cut_time_hours %}
+                        <br><small class="text-muted">({{ run.cut_time_hours }} hrs)</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ run.material_type or 'N/A' }}
+                        {% if run.material_thickness %}
+                        <br><small class="text-muted">{{ run.material_thickness }}mm</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ run.sheet_count }}</td>
+                    <td>{{ run.parts_produced or 'N/A' }}</td>
+                    <td>
+                        <span class="badge badge-success">{{ run.status }}</span>
+                    </td>
+                </tr>
+                {% if run.notes %}
+                <tr>
+                    <td colspan="8" style="background-color: var(--bg-secondary); padding: 0.5rem 1rem;">
+                        <small><strong>Notes:</strong> {{ run.notes }}</small>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-muted" style="margin-top: 1rem;">
+            Total: {{ runs|length }} run(s)
+            {% if runs|length == 100 %}
+            <br><small>(Showing most recent 100 runs)</small>
+            {% endif %}
+        </p>
+        {% else %}
+        <div class="empty-state">
+            <p>No laser runs found.</p>
+            <p class="text-muted">Laser runs will appear here once you start logging production runs from the queue.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

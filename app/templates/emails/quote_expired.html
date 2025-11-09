@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Expired - {{ project.project_code }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #d9534f;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #d9534f;
+            margin: 0;
+            font-size: 24px;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .alert-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #d9534f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .alert-box h2 {
+            color: #721c24;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .project-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .project-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .project-details td {
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .project-details td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #495057;
+        }
+        .project-details tr:last-child td {
+            border-bottom: none;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background-color: #218838;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .contact-info p {
+            margin: 5px 0;
+        }
+        .info-box {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">⚡ Laser OS</div>
+            <h1>Quote Expired</h1>
+        </div>
+
+        <p>Dear {{ client.name }},</p>
+
+        <div class="alert-box">
+            <h2>⚠️ Your Quote Has Expired</h2>
+            <p>Unfortunately, the quote for <strong>{{ project.name }}</strong> has expired as we did not receive proof of payment within the 30-day validity period.</p>
+        </div>
+
+        <div class="project-details">
+            <table>
+                <tr>
+                    <td>Project Code:</td>
+                    <td><strong>{{ project.project_code }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Project Name:</td>
+                    <td>{{ project.name }}</td>
+                </tr>
+                <tr>
+                    <td>Quote Date:</td>
+                    <td>{{ project.quote_date.strftime('%d %B %Y') if project.quote_date else 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td>Expiry Date:</td>
+                    <td>{{ project.quote_expiry_date.strftime('%d %B %Y') if project.quote_expiry_date else 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td>Original Quoted Price:</td>
+                    <td><strong>R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Still interested in this project?</strong></p>
+            <p>We'd be happy to provide you with a new quote! Please contact us to discuss your requirements and receive updated pricing.</p>
+        </div>
+
+        <p><strong>What you can do:</strong></p>
+        <ul>
+            <li>Contact us to request a new quote for this project</li>
+            <li>Discuss any changes or updates to your requirements</li>
+            <li>Get updated pricing based on current material costs</li>
+        </ul>
+
+        <div style="text-align: center;">
+            <a href="{{ contact_url }}" class="cta-button">Request New Quote</a>
+        </div>
+
+        <div class="contact-info">
+            <p><strong>Get in touch with us:</strong></p>
+            <p>📧 Email: {{ company_email }}</p>
+            <p>📞 Phone: {{ company_phone }}</p>
+            <p>🕒 Business Hours: Monday - Friday, 8:00 AM - 5:00 PM</p>
+        </div>
+
+        <p>We appreciate your interest and look forward to working with you!</p>
+
+        <div class="footer">
+            <p>This is an automated notification from Laser OS.</p>
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

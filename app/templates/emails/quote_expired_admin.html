@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Auto-Cancelled - {{ project.project_code }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #6c757d;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #6c757d;
+            margin: 0;
+            font-size: 24px;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .alert-box {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .alert-box h2 {
+            color: #856404;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .project-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .project-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .project-details td {
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .project-details td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #495057;
+        }
+        .project-details tr:last-child td {
+            border-bottom: none;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+        .stats-box {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .stats-box h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">⚡ Laser OS</div>
+            <h1>Quote Auto-Cancelled (Admin Notice)</h1>
+        </div>
+
+        <p>Hello Admin,</p>
+
+        <div class="alert-box">
+            <h2>🤖 Automated Action Taken</h2>
+            <p>A quote has been automatically cancelled due to expiry. The client has been notified.</p>
+        </div>
+
+        <div class="project-details">
+            <table>
+                <tr>
+                    <td>Project Code:</td>
+                    <td><strong>{{ project.project_code }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Project Name:</td>
+                    <td>{{ project.name }}</td>
+                </tr>
+                <tr>
+                    <td>Client:</td>
+                    <td>{{ client.name }} ({{ client.client_code }})</td>
+                </tr>
+                <tr>
+                    <td>Client Email:</td>
+                    <td>{{ client.email }}</td>
+                </tr>
+                <tr>
+                    <td>Quote Date:</td>
+                    <td>{{ project.quote_date.strftime('%d %B %Y') if project.quote_date else 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td>Expiry Date:</td>
+                    <td>{{ project.quote_expiry_date.strftime('%d %B %Y') if project.quote_expiry_date else 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <td>Quoted Price:</td>
+                    <td><strong>R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}</strong></td>
+                </tr>
+                <tr>
+                    <td>New Status:</td>
+                    <td><strong>Cancelled</strong></td>
+                </tr>
+                <tr>
+                    <td>Cancellation Reason:</td>
+                    <td>Quote expired - no POP received within 30 days</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="stats-box">
+            <h3>📊 Summary</h3>
+            <p><strong>Reminder Sent:</strong> {{ 'Yes' if project.quote_reminder_sent else 'No' }} (25-day reminder)</p>
+            <p><strong>Days Since Quote:</strong> {{ days_since_quote }} days</p>
+            <p><strong>Client Notified:</strong> Yes (quote_expired email sent)</p>
+        </div>
+
+        <p><strong>Recommended Actions:</strong></p>
+        <ul>
+            <li>Review if client has been in contact recently</li>
+            <li>Consider following up if this was a high-value project</li>
+            <li>Project can be reinstated if client contacts you</li>
+        </ul>
+
+        <div style="text-align: center;">
+            <a href="{{ project_url }}" class="cta-button">View Project in Laser OS</a>
+        </div>
+
+        <p><em>Note: This project has been marked as "can_reinstate=True" and can be easily reinstated if the client contacts you.</em></p>
+
+        <div class="footer">
+            <p>This is an automated admin notification from Laser OS.</p>
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

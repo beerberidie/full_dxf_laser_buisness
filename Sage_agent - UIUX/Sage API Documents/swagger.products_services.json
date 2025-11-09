@@ -1,0 +1,4320 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Products & Services",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Catalog Item Types",
+      "description": "Services, stock items, and products count as 'catalog items'. The resource at this endpoint is a formal ID of each of these types. It is used e.g. in the /products endpoint to tag resources in a response as product or stock item, given that both types are returned and cannot be told apart in that response other than by the type information. Only SHOW and INDEX actions are allowed. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    },
+    {
+      "name": "Product Sales Price Types",
+      "description": "A product can have several different types of sales prices. You can define your own price types and use them in the prices listed at the attribute 'sales_prices' when creating a product, or just use one of the preconfigured sales price types; in UK these are 'Sales Price', 'Trade', and 'Wholesale', they will differ in other countries/languages. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    },
+    {
+      "name": "Products",
+      "description": "Together with services and stock items, products count as 'catalog items'. The resource at this endpoint is a physical product you sell, but without stock keeping information, i.e. items you can create in the UI via 'Products & Services' -> 'New Item', and then select 'Non-Stock - Quantities are not tracked'. Products can be referenced in invoices' line items for example. This endpoint returns stock items alongside with products, though the stock items returned here do not contain their stock-keeping information, thus looking like products. You can tell them apart only by the attribute 'catalog_item_type'. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    },
+    {
+      "name": "Services",
+      "description": "Together with products and stock items, services count as 'catalog items'. They can be referenced in invoices' line items, for example. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    },
+    {
+      "name": "Service Rate Types",
+      "description": "A service can have several different types of rates. You can define your own rate types and use them in the rates listed at the attribute 'sales_rates' when creating a service, or just use one of the preconfigured service rate types; in UK these are 'Rate' and 'Discounted', they will differ in other countries/languages. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    },
+    {
+      "name": "Stock Items",
+      "description": "Together with services and products, stock_items count as 'catalog items'. The resource at this endpoint is a physical product in your stock, i.e. items you can create in the UI via 'Products & Services' -> 'New Item', and then select 'Stock - Quantities in and out are tracked'. As a result of the quantity tracking, stock_items contain more attributes than a single item returned by /products, as they contain quantity tracking and other warehousing information. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    },
+    {
+      "name": "Stock Movements",
+      "description": "Stock movements are meta information about stock items both inwards and outwards. An outward stock movement is triggered e.g. when a stock item figures in a sales invoice, an inward stock movement occurs e.g. in opening balances, purchase invoices or when you register a stock increase manually. This endpoint allows you to both view your stock movements as well as adjust stock levels. The reason why the stock movement was triggered can only by inferred from the optional reference attribute, which may contain an invoice's reference code, for example. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/inventory\" target=\"_blank\">Key Concepts: Inventory</a>"
+    }
+  ],
+  "paths": {
+    "/catalog_item_types": {
+      "get": {
+        "summary": "Returns all Catalog Item Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Catalog Item Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Catalog Item Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Catalog Item Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Catalog Item Types",
+            "examples": {
+				"application/json":
+				{
+					"$total": 3,
+					"$page": 1,
+					"$next": null,
+					"$back": null,
+					"$itemsPerPage": 20,
+					"$items": [
+						{
+							"id": "STOCK_ITEM",
+							"displayed_as": "Stock",
+							"$path": "/catalog_item_types/STOCK_ITEM"
+						},
+						{
+							"id": "PRODUCT",
+							"displayed_as": "Non-stock",
+							"$path": "/catalog_item_types/PRODUCT"
+						},
+						{
+							"id": "SERVICE",
+							"displayed_as": "Service",
+							"$path": "/catalog_item_types/SERVICE"
+						}
+					]
+				}
+            }
+          }
+        },
+        "tags": [
+          "Catalog Item Types"
+        ],
+        "operationId": "getCatalogItemTypes"
+      },
+      "x-sage-pathtitle": "Catalog Item Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/catalog_item_types/{key}": {
+      "get": {
+        "summary": "Returns a Catalog Item Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Catalog Item Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Catalog Item Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Catalog Item Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "STOCK_ITEM",
+				"displayed_as": "Stock",
+				"$path": "/catalog_item_types/STOCK_ITEM"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Catalog Item Types"
+        ],
+        "operationId": "getCatalogItemTypesKey"
+      },
+      "x-sage-pathtitle": "single Catalog Item Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/product_sales_price_types": {
+      "get": {
+        "summary": "Returns all Product Sales Price Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Use this to only return active or inactive items",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Product Prices per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Product Prices",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Product Prices (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Product Sales Price Types",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 3,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "26024c3e7357462897edb896cc7084e9",
+						"displayed_as": "Sales Price",
+						"$path": "/product_sales_price_types/26024c3e7357462897edb896cc7084e9"
+					},
+					{
+						"id": "1d0fee218bcc425f803dc1bca63c3666",
+						"displayed_as": "Trade",
+						"$path": "/product_sales_price_types/1d0fee218bcc425f803dc1bca63c3666"
+					},
+					{
+						"id": "2c424fdefbe944aaa69cd1ce0c7277a3",
+						"displayed_as": "Wholesale",
+						"$path": "/product_sales_price_types/2c424fdefbe944aaa69cd1ce0c7277a3"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Product Sales Price Types"
+        ],
+        "operationId": "getProductSalesPriceTypes"
+      },
+      "x-sage-pathtitle": "Product Sales Price Type collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Product Sales Price Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ProductSalesPriceTypes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postProductSalesPriceTypes"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Product Sales Price Type",
+            "schema": {
+              "$ref": "#/definitions/ProductSalesPriceType"
+            }
+          }
+        },
+        "tags": [
+          "Product Sales Price Types"
+        ],
+        "operationId": "postProductSalesPriceTypes"
+      }
+    },
+    "/product_sales_price_types/{key}": {
+      "get": {
+        "summary": "Returns a Product Sales Price Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Product Sales Price Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Product Price (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Product Sales Price Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "26024c3e7357462897edb896cc7084e9",
+				"displayed_as": "Sales Price",
+				"$path": "/product_sales_price_types/26024c3e7357462897edb896cc7084e9",
+				"created_at": "2022-12-30T13:54:28Z",
+				"updated_at": "2022-12-30T13:54:28Z",
+				"name": "Sales Price",
+				"active": true
+			}
+            }
+          }
+        },
+        "tags": [
+          "Product Sales Price Types"
+        ],
+        "operationId": "getProductSalesPriceTypesKey"
+      },
+      "x-sage-pathtitle": "single Product Sales Price Type resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Product Sales Price Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Product Sales Price Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "ProductSalesPriceTypes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putProductSalesPriceTypes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Product Sales Price Type",
+            "schema": {
+              "$ref": "#/definitions/ProductSalesPriceType"
+            }
+          }
+        },
+        "tags": [
+          "Product Sales Price Types"
+        ],
+        "operationId": "putProductSalesPriceTypesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Product Sales Price Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Product Sales Price Type Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Product Sales Price Type"
+          }
+        },
+        "tags": [
+          "Product Sales Price Types"
+        ],
+        "operationId": "deleteProductSalesPriceTypesKey"
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Returns all Products",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the item code or description.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Products changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Products deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Use this to only return active or inactive items",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Products per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Products",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Products (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Products",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 108,
+				"$page": 1,
+				"$next": "/products?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "cf7e4478b34748ef95756e93a79e4059",
+						"displayed_as": "Whiteboard - Drywipe (900 x 1200)",
+						"$path": "/products/cf7e4478b34748ef95756e93a79e4059"
+					},
+					{
+						"id": "22e9e0f4b53c4512ace0af975795b46a",
+						"displayed_as": "Whiteboard - Drywipe (1000 x 1500)",
+						"$path": "/products/22e9e0f4b53c4512ace0af975795b46a"
+					},
+					{
+						"id": "9d1a5ae4c0d844f6a9d8336ddb2f3432",
+						"displayed_as": "A4 Ledger Book - 5 Column",
+						"$path": "/products/9d1a5ae4c0d844f6a9d8336ddb2f3432"
+					},
+					{
+						"id": "a4aacfc4ef3f46a2a6193b50f0fb6b07",
+						"displayed_as": "A4 Carbon Copy Book - Triplicate",
+						"$path": "/products/a4aacfc4ef3f46a2a6193b50f0fb6b07"
+					},
+					{
+						"id": "b86f251ec16e4697a8c22cb40d0d9f69",
+						"displayed_as": "Shorthand Notebook - 80 Sheets",
+						"$path": "/products/b86f251ec16e4697a8c22cb40d0d9f69"
+					},
+					{
+						"id": "b5b7ace2b80342aa9fcc26c90d8421ce",
+						"displayed_as": "Calculator - Desktop",
+						"$path": "/products/b5b7ace2b80342aa9fcc26c90d8421ce"
+					},
+					{
+						"id": "ccfb1cfc728e4f07839ce356bfca2ef2",
+						"displayed_as": "Calculator - Pocket",
+						"$path": "/products/ccfb1cfc728e4f07839ce356bfca2ef2"
+					},
+					{
+						"id": "aa56dfd1c4f144e38ddd450cb8b98e9a",
+						"displayed_as": "Calculator - Desktop (Printing)",
+						"$path": "/products/aa56dfd1c4f144e38ddd450cb8b98e9a"
+					},
+					{
+						"id": "04309417033d4bcc96e67ce21a304217",
+						"displayed_as": "Calculator - Printing Rolls",
+						"$path": "/products/04309417033d4bcc96e67ce21a304217"
+					},
+					{
+						"id": "3fff912ee06c44808b7395eb74f8a24e",
+						"displayed_as": "AT Mini Tower Case",
+						"$path": "/products/3fff912ee06c44808b7395eb74f8a24e"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "getProducts"
+      },
+      "x-sage-pathtitle": "Product collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Product",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Products",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postProducts"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Product",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "postProducts"
+      }
+    },
+    "/products/{key}": {
+      "get": {
+        "summary": "Returns a Product",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Product Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Product (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Product",
+            "examples": {
+              "application/json":
+			  {
+				"id": "aa56dfd1c4f144e38ddd450cb8b98e9a",
+				"displayed_as": "Calculator - Desktop (Printing)",
+				"$path": "/products/aa56dfd1c4f144e38ddd450cb8b98e9a",
+				"created_at": "2022-12-30T14:22:52Z",
+				"updated_at": "2022-12-30T14:22:52Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/advanced_uk/products_services/15652647",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"deletable": false,
+				"deactivatable": true,
+				"used_on_recurring_invoice": false,
+				"item_code": "CALC003",
+				"description": "Calculator - Desktop (Printing)",
+				"notes": null,
+				"sales_ledger_account": {
+					"id": "7a5e37b4884911ed84fa0252b90cda0d",
+					"displayed_as": "Sales - Products (4000)",
+					"$path": "/ledger_accounts/7a5e37b4884911ed84fa0252b90cda0d"
+				},
+				"sales_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"purchase_ledger_account": {
+					"id": "7a5f27a2884911ed84fa0252b90cda0d",
+					"displayed_as": "Cost of Sales - Goods (5000)",
+					"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d"
+				},
+				"usual_supplier": {
+					"id": "5b5384e03d9f40609d3afbbf0d44cbb0",
+					"displayed_as": "Wallace Office Equipment (WAL001)",
+					"$path": "/usual_suppliers/5b5384e03d9f40609d3afbbf0d44cbb0"
+				},
+				"purchase_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"cost_price": "11.0",
+				"sales_prices": [
+					{
+						"id": "86ad9d5e93b14d17868bd5d0dca2ced7",
+						"displayed_as": "Sales Price",
+						"created_at": "2022-12-30T14:22:52Z",
+						"updated_at": "2022-12-30T14:22:52Z",
+						"price_name": "Sales Price",
+						"price": "17.0",
+						"price_includes_tax": false,
+						"product_sales_price_type": {
+							"id": "26024c3e7357462897edb896cc7084e9",
+							"displayed_as": "Sales Price",
+							"$path": "/product_sales_price_types/26024c3e7357462897edb896cc7084e9"
+						}
+					},
+					{
+						"id": "475155baea544af9ab70975db3fc360d",
+						"displayed_as": "Trade",
+						"created_at": "2022-12-30T14:22:52Z",
+						"updated_at": "2022-12-30T14:22:52Z",
+						"price_name": "Trade",
+						"price": "0.0",
+						"price_includes_tax": false,
+						"product_sales_price_type": {
+							"id": "1d0fee218bcc425f803dc1bca63c3666",
+							"displayed_as": "Trade",
+							"$path": "/product_sales_price_types/1d0fee218bcc425f803dc1bca63c3666"
+						}
+					},
+					{
+						"id": "2581fb3a4261444d89446b1285b8597d",
+						"displayed_as": "Wholesale",
+						"created_at": "2022-12-30T14:22:52Z",
+						"updated_at": "2022-12-30T14:22:52Z",
+						"price_name": "Wholesale",
+						"price": "0.0",
+						"price_includes_tax": false,
+						"product_sales_price_type": {
+							"id": "2c424fdefbe944aaa69cd1ce0c7277a3",
+							"displayed_as": "Wholesale",
+							"$path": "/product_sales_price_types/2c424fdefbe944aaa69cd1ce0c7277a3"
+						}
+					}
+				],
+				"source_guid": null,
+				"purchase_description": null,
+				"active": true,
+				"catalog_item_type": {
+					"id": "PRODUCT",
+					"displayed_as": "Non-stock",
+					"$path": "/catalog_item_types/PRODUCT"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "getProductsKey"
+      },
+      "x-sage-pathtitle": "single Product resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Product",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Product Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Products",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putProducts"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Product",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "putProductsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Product",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Product Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Product"
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "operationId": "deleteProductsKey"
+      }
+    },
+    "/services": {
+      "get": {
+        "summary": "Returns all Services",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the item code or description.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Services changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Services deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Use this to only return active or inactive items",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Services per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Services",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Services (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Services",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 2,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "2c7c2b660e38470bb160c80eeb1e0fad",
+						"displayed_as": "Test service",
+						"$path": "/services/2c7c2b660e38470bb160c80eeb1e0fad"
+					},
+					{
+						"id": "9019ad6d8341424ba81296df4b0ea45f",
+						"displayed_as": "Free Text",
+						"$path": "/services/9019ad6d8341424ba81296df4b0ea45f"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "operationId": "getServices"
+      },
+      "x-sage-pathtitle": "Service collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Service",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Services",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postServices"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Service",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "operationId": "postServices"
+      }
+    },
+    "/services/{key}": {
+      "get": {
+        "summary": "Returns a Service",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Service Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Service (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Service",
+            "examples": {
+              "application/json":
+			  {
+				"id": "2c7c2b660e38470bb160c80eeb1e0fad",
+				"displayed_as": "Test service",
+				"$path": "/services/2c7c2b660e38470bb160c80eeb1e0fad",
+				"created_at": "2023-01-16T12:26:40Z",
+				"updated_at": "2023-01-16T12:26:40Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/advanced_uk/products_services/15716499",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"deletable": false,
+				"deactivatable": true,
+				"used_on_recurring_invoice": false,
+				"item_code": "SER001",
+				"description": "Test service",
+				"notes": "",
+				"sales_ledger_account": {
+					"id": "7a639255884911ed84fa0252b90cda0d",
+					"displayed_as": "Sales - Services (4010)",
+					"$path": "/ledger_accounts/7a639255884911ed84fa0252b90cda0d"
+				},
+				"purchase_ledger_account": {
+					"id": "7a5f27a2884911ed84fa0252b90cda0d",
+					"displayed_as": "Cost of Sales - Goods (5000)",
+					"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d"
+				},
+				"sales_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"purchase_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"sales_rates": [
+					{
+						"id": "112003bd9c974dc2b62b7bcef03b28df",
+						"displayed_as": "Rate",
+						"created_at": "2023-01-16T12:26:40Z",
+						"updated_at": "2023-01-16T12:26:40Z",
+						"rate_name": "Rate",
+						"rate": "1002.0",
+						"rate_includes_tax": false,
+						"service_rate_type": {
+							"id": "923df5f576dc46559977f7997e14b08f",
+							"displayed_as": "Rate",
+							"$path": "/service_rate_types/923df5f576dc46559977f7997e14b08f"
+						}
+					}
+				],
+				"source_guid": null,
+				"purchase_description": "",
+				"usual_supplier": null,
+				"active": true,
+				"cost_price": "0.0",
+				"oss_service": false
+			}
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "operationId": "getServicesKey"
+      },
+      "x-sage-pathtitle": "single Service resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Service",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Service Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Services",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putServices"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Service",
+            "schema": {
+              "$ref": "#/definitions/Service"
+            }
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "operationId": "putServicesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Service",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Service Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Service"
+          }
+        },
+        "tags": [
+          "Services"
+        ],
+        "operationId": "deleteServicesKey"
+      }
+    },
+    "/service_rate_types": {
+      "get": {
+        "summary": "Returns all Service Rate Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Service Rates changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Use this to only return active or inactive items",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Service Rates per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Service Rates",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Service Rates (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Service Rate Types",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 1,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "923df5f576dc46559977f7997e14b08f",
+						"displayed_as": "Rate",
+						"$path": "/service_rate_types/923df5f576dc46559977f7997e14b08f"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Service Rate Types"
+        ],
+        "operationId": "getServiceRateTypes"
+      },
+      "x-sage-pathtitle": "Service Rate Type collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Service Rate Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ServiceRateTypes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postServiceRateTypes"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Service Rate Type",
+            "schema": {
+              "$ref": "#/definitions/ServiceRateType"
+            }
+          }
+        },
+        "tags": [
+          "Service Rate Types"
+        ],
+        "operationId": "postServiceRateTypes"
+      }
+    },
+    "/service_rate_types/{key}": {
+      "get": {
+        "summary": "Returns a Service Rate Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Service Rate Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Service Rate (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Service Rate Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "923df5f576dc46559977f7997e14b08f",
+				"displayed_as": "Rate",
+				"$path": "/service_rate_types/923df5f576dc46559977f7997e14b08f",
+				"created_at": "2022-12-30T13:54:28Z",
+				"updated_at": "2022-12-30T13:54:28Z",
+				"name": "Rate",
+				"active": true
+			}
+            }
+          }
+        },
+        "tags": [
+          "Service Rate Types"
+        ],
+        "operationId": "getServiceRateTypesKey"
+      },
+      "x-sage-pathtitle": "single Service Rate Type resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Service Rate Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Service Rate Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "ServiceRateTypes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putServiceRateTypes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Service Rate Type",
+            "schema": {
+              "$ref": "#/definitions/ServiceRateType"
+            }
+          }
+        },
+        "tags": [
+          "Service Rate Types"
+        ],
+        "operationId": "putServiceRateTypesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Service Rate Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Service Rate Type Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Service Rate Type"
+          }
+        },
+        "tags": [
+          "Service Rate Types"
+        ],
+        "operationId": "deleteServiceRateTypesKey"
+      }
+    },
+    "/stock_items": {
+      "get": {
+        "summary": "Returns all Stock Items",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the item code or description.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Stock Items changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Stock Items deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Use this to only return active or inactive items",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "out_of_stock",
+            "description": "Use this to filter by the Stock Items that are out of stock",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "below_reorder_level",
+            "description": "Use this to filter by the Stock Items that are below the reorder level",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Stock Items per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Stock Items",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Stock Items (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Stock Items",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 3,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "08d49f8a63d54c73b42490e2a3c8f454",
+						"displayed_as": "test stock product",
+						"$path": "/stock_items/08d49f8a63d54c73b42490e2a3c8f454"
+					},
+					{
+						"id": "568191f2d6b240a3b9cf672e6ebf6a21",
+						"displayed_as": "glasses",
+						"$path": "/stock_items/568191f2d6b240a3b9cf672e6ebf6a21"
+					},
+					{
+						"id": "788b755081ee474fa7bf044c559e9957",
+						"displayed_as": "1",
+						"$path": "/stock_items/788b755081ee474fa7bf044c559e9957"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Stock Items"
+        ],
+        "operationId": "getStockItems"
+      },
+      "x-sage-pathtitle": "Stock Item collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Stock Item",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "StockItems",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postStockItems"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Stock Item",
+            "schema": {
+              "$ref": "#/definitions/StockItem"
+            }
+          }
+        },
+        "tags": [
+          "Stock Items"
+        ],
+        "operationId": "postStockItems"
+      }
+    },
+    "/stock_items/{key}": {
+      "get": {
+        "summary": "Returns a Stock Item",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Stock Item Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Stock Item (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Stock Item",
+            "examples": {
+              "application/json":
+			  {
+				"id": "568191f2d6b240a3b9cf672e6ebf6a21",
+				"displayed_as": "glasses",
+				"$path": "/stock_items/568191f2d6b240a3b9cf672e6ebf6a21",
+				"created_at": "2024-05-03T09:59:42Z",
+				"updated_at": "2024-05-13T08:04:15Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/advanced_uk/products_services/18209136",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"deletable": false,
+				"deactivatable": true,
+				"used_on_recurring_invoice": false,
+				"item_code": "glasses",
+				"description": "glasses",
+				"notes": "",
+				"sales_ledger_account": {
+					"id": "7a5e37b4884911ed84fa0252b90cda0d",
+					"displayed_as": "Sales - Products (4000)",
+					"$path": "/ledger_accounts/7a5e37b4884911ed84fa0252b90cda0d"
+				},
+				"sales_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"purchase_ledger_account": {
+					"id": "7a5ab138884911ed84fa0252b90cda0d",
+					"displayed_as": "Stock - Raw Materials (1000)",
+					"$path": "/ledger_accounts/7a5ab138884911ed84fa0252b90cda0d"
+				},
+				"usual_supplier": {
+					"id": "975c76ff2d3b4cd6b8d0faf37004ca73",
+					"displayed_as": "McNally Computer Supplies (MCN001)",
+					"$path": "/usual_suppliers/975c76ff2d3b4cd6b8d0faf37004ca73"
+				},
+				"purchase_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"cost_price": "10.0",
+				"sales_prices": [
+					{
+						"id": "1e5e182c1ffb4bfe9bf6715fb9a2951c",
+						"displayed_as": "Sales Price",
+						"created_at": "2024-05-03T09:59:42Z",
+						"updated_at": "2024-05-03T09:59:42Z",
+						"price_name": "Sales Price",
+						"price": "0.0",
+						"price_includes_tax": false,
+						"product_sales_price_type": {
+							"id": "26024c3e7357462897edb896cc7084e9",
+							"displayed_as": "Sales Price",
+							"$path": "/product_sales_price_types/26024c3e7357462897edb896cc7084e9"
+						}
+					},
+					{
+						"id": "63f3d2d4e3a2454fbb54ca92b05c9122",
+						"displayed_as": "Trade",
+						"created_at": "2024-05-03T09:59:42Z",
+						"updated_at": "2024-05-03T09:59:42Z",
+						"price_name": "Trade",
+						"price": "0.0",
+						"price_includes_tax": false,
+						"product_sales_price_type": {
+							"id": "1d0fee218bcc425f803dc1bca63c3666",
+							"displayed_as": "Trade",
+							"$path": "/product_sales_price_types/1d0fee218bcc425f803dc1bca63c3666"
+						}
+					},
+					{
+						"id": "b76b365b2aca4a00832371d5c7264728",
+						"displayed_as": "Wholesale",
+						"created_at": "2024-05-03T09:59:42Z",
+						"updated_at": "2024-05-03T09:59:42Z",
+						"price_name": "Wholesale",
+						"price": "0.0",
+						"price_includes_tax": false,
+						"product_sales_price_type": {
+							"id": "2c424fdefbe944aaa69cd1ce0c7277a3",
+							"displayed_as": "Wholesale",
+							"$path": "/product_sales_price_types/2c424fdefbe944aaa69cd1ce0c7277a3"
+						}
+					}
+				],
+				"source_guid": null,
+				"purchase_description": "",
+				"reorder_level": "0.0",
+				"reorder_quantity": "0.0",
+				"location": "",
+				"barcode": "",
+				"supplier_part_number": "",
+				"weight": 0,
+				"measurement_unit": "kg",
+				"weight_converted": "0.0",
+				"active": true,
+				"quantity_in_stock": "0.0",
+				"last_cost_price": "5.0",
+				"last_cost_price_stock_value": "0.0",
+				"average_cost_price": "8.33",
+				"average_cost_price_stock_value": "0.0",
+				"cost_price_last_updated": "2024-05-13T08:02:03.000Z"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Stock Items"
+        ],
+        "operationId": "getStockItemsKey"
+      },
+      "x-sage-pathtitle": "single Stock Item resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Stock Item",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Stock Item Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "StockItems",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putStockItems"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Stock Item",
+            "schema": {
+              "$ref": "#/definitions/StockItem"
+            }
+          }
+        },
+        "tags": [
+          "Stock Items"
+        ],
+        "operationId": "putStockItemsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Stock Item",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Stock Item Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Stock Item"
+          }
+        },
+        "tags": [
+          "Stock Items"
+        ],
+        "operationId": "deleteStockItemsKey"
+      }
+    },
+    "/stock_movements": {
+      "get": {
+        "summary": "Returns all Stock Movements",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the details",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "stock_item_id",
+            "description": "Use this to filter  by stock_item_id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Stock Movements dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Stock Movements dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Stock Movements per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Stock Movements",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Stock Movements (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Stock Movements",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 10,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "9d8236e736aa4e57990a1554525295c8",
+						"displayed_as": "Opening Balance",
+						"$path": "/stock_movements/9d8236e736aa4e57990a1554525295c8"
+					},
+					{
+						"id": "f786042df3d7434d8c4d4de2d3739327",
+						"displayed_as": "Compton Packaging (Ref: SI-252)",
+						"$path": "/stock_movements/f786042df3d7434d8c4d4de2d3739327"
+					},
+					{
+						"id": "75a320e0561e4b6999fb084a0acda641",
+						"displayed_as": "Compton Packaging (Ref: SI-253)",
+						"$path": "/stock_movements/75a320e0561e4b6999fb084a0acda641"
+					},
+					{
+						"id": "345fd8762d4e4a13b3029e8a2238b9a2",
+						"displayed_as": "Compton Packaging (Ref: SCN-28)",
+						"$path": "/stock_movements/345fd8762d4e4a13b3029e8a2238b9a2"
+					},
+					{
+						"id": "7d1c801683f946d78d22ebde46ae8031",
+						"displayed_as": "Stock take adjustment",
+						"$path": "/stock_movements/7d1c801683f946d78d22ebde46ae8031"
+					},
+					{
+						"id": "dd6069e53f114a4584b29bbb33cd9666",
+						"displayed_as": "Windsor (Ref: SCN-47)",
+						"$path": "/stock_movements/dd6069e53f114a4584b29bbb33cd9666"
+					},
+					{
+						"id": "3d9d82e51ed44046991a4ed0f863bafa",
+						"displayed_as": "Opening Balance",
+						"$path": "/stock_movements/3d9d82e51ed44046991a4ed0f863bafa"
+					},
+					{
+						"id": "af7458c2ca1d4722b0d7384c02b994c1",
+						"displayed_as": "Stock take adjustment",
+						"$path": "/stock_movements/af7458c2ca1d4722b0d7384c02b994c1"
+					},
+					{
+						"id": "ab298f9c429d44b09510da84620543c0",
+						"displayed_as": "Stock take adjustment",
+						"$path": "/stock_movements/ab298f9c429d44b09510da84620543c0"
+					},
+					{
+						"id": "db7d38a5bf7246eeb7f7ff89b313b0e0",
+						"displayed_as": "ABS Garages Ltd (Ref: SI-367)",
+						"$path": "/stock_movements/db7d38a5bf7246eeb7f7ff89b313b0e0"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Stock Movements"
+        ],
+        "operationId": "getStockMovements"
+      },
+      "x-sage-pathtitle": "Stock Movement collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Stock Movement",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "StockMovements",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postStockMovements"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Stock Movement",
+            "schema": {
+              "$ref": "#/definitions/StockMovement"
+            }
+          }
+        },
+        "tags": [
+          "Stock Movements"
+        ],
+        "operationId": "postStockMovements"
+      }
+    },
+    "/stock_movements/{key}": {
+      "get": {
+        "summary": "Returns a Stock Movement",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Stock Movement Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Stock Movement (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Stock Movement",
+            "examples": {
+              "application/json":
+			  {
+				"id": "af7458c2ca1d4722b0d7384c02b994c1",
+				"displayed_as": "Stock take adjustment",
+				"$path": "/stock_movements/af7458c2ca1d4722b0d7384c02b994c1",
+				"links": [
+					{
+						"href": null,
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"created_at": "2024-05-13T08:01:32Z",
+				"updated_at": "2024-05-13T08:01:32Z",
+				"movement_number": 8,
+				"date": "2024-05-13T08:01:32.000Z",
+				"cost_price": "10.0",
+				"quantity": "10.0",
+				"details": "Stock take adjustment",
+				"reference": "",
+				"stock_item": {
+					"id": "568191f2d6b240a3b9cf672e6ebf6a21",
+					"displayed_as": "glasses",
+					"$path": "/stock_items/568191f2d6b240a3b9cf672e6ebf6a21",
+					"created_at": "2024-05-03T09:59:42Z",
+					"updated_at": "2024-05-13T08:04:15Z",
+					"links": [
+						{
+							"href": "https://accounts-extra.sageone.com/advanced_uk/products_services/18209136",
+							"rel": "alternate",
+							"type": "text/html"
+						}
+					],
+					"deletable": false,
+					"deactivatable": true,
+					"used_on_recurring_invoice": false,
+					"item_code": "glasses",
+					"description": "glasses",
+					"notes": "",
+					"sales_ledger_account": {
+						"id": "7a5e37b4884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales - Products (4000)",
+						"$path": "/ledger_accounts/7a5e37b4884911ed84fa0252b90cda0d"
+					},
+					"sales_tax_rate": {
+						"id": "GB_STANDARD",
+						"displayed_as": "Standard 20.00%",
+						"$path": "/tax_rates/GB_STANDARD"
+					},
+					"purchase_ledger_account": {
+						"id": "7a5ab138884911ed84fa0252b90cda0d",
+						"displayed_as": "Stock - Raw Materials (1000)",
+						"$path": "/ledger_accounts/7a5ab138884911ed84fa0252b90cda0d"
+					},
+					"usual_supplier": {
+						"id": "975c76ff2d3b4cd6b8d0faf37004ca73",
+						"displayed_as": "McNally Computer Supplies (MCN001)",
+						"$path": "/usual_suppliers/975c76ff2d3b4cd6b8d0faf37004ca73"
+					},
+					"purchase_tax_rate": {
+						"id": "GB_STANDARD",
+						"displayed_as": "Standard 20.00%",
+						"$path": "/tax_rates/GB_STANDARD"
+					},
+					"cost_price": "10.0",
+					"sales_prices": [
+						{
+							"id": "1e5e182c1ffb4bfe9bf6715fb9a2951c",
+							"displayed_as": "Sales Price",
+							"created_at": "2024-05-03T09:59:42Z",
+							"updated_at": "2024-05-03T09:59:42Z",
+							"price_name": "Sales Price",
+							"price": "0.0",
+							"price_includes_tax": false,
+							"product_sales_price_type": {
+								"id": "26024c3e7357462897edb896cc7084e9",
+								"displayed_as": "Sales Price",
+								"$path": "/product_sales_price_types/26024c3e7357462897edb896cc7084e9"
+							}
+						},
+						{
+							"id": "63f3d2d4e3a2454fbb54ca92b05c9122",
+							"displayed_as": "Trade",
+							"created_at": "2024-05-03T09:59:42Z",
+							"updated_at": "2024-05-03T09:59:42Z",
+							"price_name": "Trade",
+							"price": "0.0",
+							"price_includes_tax": false,
+							"product_sales_price_type": {
+								"id": "1d0fee218bcc425f803dc1bca63c3666",
+								"displayed_as": "Trade",
+								"$path": "/product_sales_price_types/1d0fee218bcc425f803dc1bca63c3666"
+							}
+						},
+						{
+							"id": "b76b365b2aca4a00832371d5c7264728",
+							"displayed_as": "Wholesale",
+							"created_at": "2024-05-03T09:59:42Z",
+							"updated_at": "2024-05-03T09:59:42Z",
+							"price_name": "Wholesale",
+							"price": "0.0",
+							"price_includes_tax": false,
+							"product_sales_price_type": {
+								"id": "2c424fdefbe944aaa69cd1ce0c7277a3",
+								"displayed_as": "Wholesale",
+								"$path": "/product_sales_price_types/2c424fdefbe944aaa69cd1ce0c7277a3"
+							}
+						}
+					],
+					"source_guid": null,
+					"purchase_description": "",
+					"reorder_level": "0.0",
+					"reorder_quantity": "0.0",
+					"location": "",
+					"barcode": "",
+					"supplier_part_number": "",
+					"weight": 0,
+					"measurement_unit": "kg",
+					"weight_converted": "0.0",
+					"active": true,
+					"quantity_in_stock": "0.0",
+					"last_cost_price": "5.0",
+					"last_cost_price_stock_value": "0.0",
+					"average_cost_price": "8.33",
+					"average_cost_price_stock_value": "0.0",
+					"cost_price_last_updated": "2024-05-13T08:02:03.000Z"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Stock Movements"
+        ],
+        "operationId": "getStockMovementsKey"
+      },
+      "x-sage-pathtitle": "single Stock Movement resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Stock Movement",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Stock Movement Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "StockMovements",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putStockMovements"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Stock Movement",
+            "schema": {
+              "$ref": "#/definitions/StockMovement"
+            }
+          }
+        },
+        "tags": [
+          "Stock Movements"
+        ],
+        "operationId": "putStockMovementsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Stock Movement",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Stock Movement Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Stock Movement"
+          }
+        },
+        "tags": [
+          "Stock Movements"
+        ],
+        "operationId": "deleteStockMovementsKey"
+      }
+    }
+  },
+  "definitions": {
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Products & Services"
+    },
+    "ProductSalesPriceType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The name of the product sales price type"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the price type is displayed in the application"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+      "x-sage-menusection": "Products & Services"
+    },
+    "postProductSalesPriceTypes": {
+      "type": "object",
+      "properties": {
+        "product_sales_price_type": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the product sales price type"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the price type is displayed in the application"
+            }
+          },
+          "required": [
+            "name",
+            "active"
+          ]
+        }
+      },
+      "required": [
+        "product_sales_price_type"
+      ],
+      "description": "Creates a Product Sales Price Type"
+    },
+    "putProductSalesPriceTypes": {
+      "type": "object",
+      "properties": {
+        "product_sales_price_type": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the product sales price type"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the price type is displayed in the application"
+            }
+          }
+        }
+      },
+      "required": [
+        "product_sales_price_type"
+      ],
+      "description": "Updates a Product Sales Price Type"
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the product can be deleted"
+        },
+        "deactivatable": {
+          "type": "boolean",
+          "description": "Indicates whether the product can be deactivated"
+        },
+        "used_on_recurring_invoice": {
+          "type": "boolean",
+          "description": "Indicates whether the product has been used on a recurring invoice"
+        },
+        "item_code": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The item code for the product"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The product description"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "The notes for the product"
+        },
+        "sales_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The sales ledger account for the product"
+        },
+        "sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The sales tax rate for the product"
+        },
+        "purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The purchase ledger account for the product"
+        },
+        "usual_supplier": {
+          "$ref": "#/definitions/Contact",
+          "description": "The usual supplier for the product"
+        },
+        "purchase_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The purchase tax rate for the product"
+        },
+        "cost_price": {
+          "type": "number",
+          "format": "double",
+          "description": "The cost price of the product"
+        },
+        "sales_prices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SalesPrice"
+          },
+          "description": "The sales prices for the product"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing products from external sources"
+        },
+        "purchase_description": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "The product purchase description"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the product is active"
+        },
+        "catalog_item_type": {
+          "$ref": "#/definitions/Base",
+          "description": "Indicates what the product type is"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+      "x-sage-menusection": "Products & Services"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The contact balance"
+        },
+        "contact_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Base"
+          },
+          "description": "The type of the contact. It has to be either CUSTOMER or VENDOR"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The contact's full name or business name"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Unique reference for the contact"
+        },
+        "default_sales_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default sales ledger account for the contact <br><i>Customers only</i>"
+        },
+        "default_sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default sales tax rate for the contact <br><i>Customers only</i>"
+        },
+        "default_purchase_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default purchase ledger account for the contact <br><i>Vendors only</i>"
+        },
+        "tax_number": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The VAT registration number of the contact. The format will be validated."
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "The notes for the contact"
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The locale for the contact"
+        },
+        "main_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The main address associated with the contact"
+        },
+        "delivery_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The delivery address <br><i>Customers only</i>"
+        },
+        "main_contact_person": {
+          "$ref": "#/definitions/ContactPerson",
+          "description": "The main contact person of the contact."
+        },
+        "bank_account_details": {
+          "$ref": "#/definitions/BankAccountDetails",
+          "description": "The account details for the contact's bank account"
+        },
+        "credit_limit": {
+          "type": "number",
+          "format": "double",
+          "description": "Custom credit limit amount for the contact <br><i>not applicable to Start</i>"
+        },
+        "credit_days": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Custom credit days for the contact.<br>\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_days'/'vendor_credit_days' as default/fallback according\nto your use case.\n"
+        },
+        "credit_terms": {
+          "type": "string",
+          "enum": [
+            "month_end_invoice",
+            "date_from_invoice",
+            "immediate_invoice",
+            "month_end_payment",
+            "date_from_payment",
+            "immediate_payment"
+          ],
+          "description": "Credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice, month_end_payment,\ndate_from_payment, immediate_payment are valid values.\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_terms'/'vendor_credit_terms' as default.\n"
+        },
+        "credit_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Custom terms and conditions for the contact. If set will override global /invoice_settings\ndefault terms and conditions.\n<br><i>Customers only</i>\n"
+        },
+        "product_sales_price_type": {
+          "$ref": "#/definitions/Base",
+          "description": "All default product_sales_price_type defaults.\n<a\n  href=\"https://developer.sage.com/api/accounting/guides/inventory/#product-sales-prices--service-rates\"\n  target=\"_blank\">Learn more about sales price types\n</a>\n<br><i>Customers only, not applicable to Start<i>\n"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing contacts from external sources"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency that the contact trades in <br><i>not applicable to Start</i>"
+        },
+        "aux_reference": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "Auxiliary reference. Used for German \"Kreditorennummer\" and \"Debitorennummer\".\n<br>\n<a href=\"https://developer.sage.com/accounting/reference/settings/#tag/Datev-Settings\">\n  See Datev Settings endpoint reference\n</a>\n"
+        },
+        "registered_number": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The registered number of the contact's business. Only used for German businesses and represents the \"Steuernummer\" there (not the \"USt-ID\")."
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the contact can be deleted successfully"
+        },
+        "tax_treatment": {
+          "$ref": "#/definitions/ContactTaxTreatment",
+          "description": "The tax treatment - indicates which tax rules to apply for a contact"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address for the given contact"
+        },
+        "tax_calculation": {
+          "type": "string",
+          "description": "<b>France:</b> The tax calculation method used to define tax\ntreatment <i>Vendors only</i>\n<br>\n<b>Spain:</b> Defines if contact is a retailer and tax is subject\nto Recargo de Equivalencia <i>Customers only</i>\n<b>United Kingdom:</b> Defines if contact tax treatment is domestic reverse\ncharge <i>Customers & Suppliers</i>\n"
+        },
+        "auxiliary_account": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "Auxiliary account - used when auxiliary accounting is enabled in business settings.\n<br><i>Available only in Spain and France</i>\n"
+        },
+        "gdpr_obfuscated": {
+          "type": "boolean",
+          "description": "General Data Protection Regulation (GDPR) came into effect on 25th May 2018. It introduces new rules for how business owners manage their contacts' personal data. When this field returns 'true', means that the contact has been requested to be obfuscated and you can not create any artifact (sales invoices, purchase invoices, ...) but you can still check previously created artifacts."
+        },
+        "system": {
+          "type": "boolean",
+          "description": "Identifies a contact as being a system contact used for processing specific transaction types and reserved specifically for those transaction types such as tax return payments/refunds."
+        },
+        "has_unfinished_recurring_invoices": {
+          "type": "boolean",
+          "description": "Indicates whether the contact is associated with any unfinished recurring invoices"
+        },
+        "cis_registered": {
+          "type": "boolean",
+          "description": "Identifies a contact as being registered as CIS.<br><i>only applicable to UK business</i>"
+        },
+        "ni_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Northern Ireland."
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "Identifies a contact as being active"
+        },
+        "gb_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Great Britain."
+        },
+        "cis_settings": {
+          "$ref": "#/definitions/ContactCisSettings",
+          "description": "The CIS Settings for the contact"
+        },
+        "destination_vat_blocking": {
+          "type": "boolean",
+          "description": "Identifies a contact should be blocked due to destination vat"
+        }
+      }
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "The link path"
+        },
+        "rel": {
+          "type": "string",
+          "description": "The relationship of the link to the resource"
+        },
+        "type": {
+          "type": "string",
+          "description": "The content-type of the link"
+        }
+      }
+    },
+    "LedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The display name for the ledger account"
+        },
+        "visible_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The visible scopes for the ledger account.\n\nThis indicates in which of the UI's areas the ledger account is displayed and available for user\nselection. Possible entries in this array are `bank`, `sales`, `purchasing`, `other_payment`,\n`other_receipt`, `reporting`, `journals`, `sales_eu`, `sales_row`, `purchasing_eu`, `purchasing_row`\nand `purchasing_hrc`.\n"
+        },
+        "included_in_chart": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is included in the chart of accounts"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the ledger account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the ledger account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the ledger account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the ledger account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "visible_in_banking": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+        },
+        "visible_in_expenses": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+        },
+        "visible_in_journals": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+        },
+        "visible_in_other_payments": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+        },
+        "visible_in_other_receipts": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+        },
+        "visible_in_reporting": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+        },
+        "visible_in_sales": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+        },
+        "balance_details": {
+          "$ref": "#/definitions/LedgerAccountBalanceDetails",
+          "description": "The ledger account balance details for the date range provided"
+        },
+        "is_control_account": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is a control account.\n\nControl accounts cannot be removed. See also `control_name`.\n"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+        },
+        "display_formatted": {
+          "type": "string",
+          "description": "The display name formatted based on coa_list_order in settings"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "non_recoverable_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The non-recoverable ledger account (Canada Only)"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Materials"
+        },
+        "tax_instalment": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for Tax Intalment (Canada only)"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Labour"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        }
+      }
+    },
+    "CoaGroupType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        }
+      }
+    },
+    "LedgerAccountBalanceDetails": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The account balance"
+        },
+        "credit_or_debit": {
+          "type": "string",
+          "description": "Is the balance a debit or credit"
+        },
+        "credits": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit balance"
+        },
+        "debits": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit balance"
+        },
+        "from_date": {
+          "type": "string",
+          "description": "The from date filter"
+        },
+        "to_date": {
+          "type": "string",
+          "description": "The to date filter"
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "address_line_1": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The first line of the address"
+        },
+        "address_line_2": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address town/city"
+        },
+        "postal_code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The address postal code/zipcode"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The address country"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The related bank account of the address, if the address belongs to a bank account."
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The related contact of the address, if the address belongs to a contact."
+        },
+        "address_type": {
+          "$ref": "#/definitions/Base",
+          "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The custom name of the address"
+        },
+        "region": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address state/province/region"
+        },
+        "country_group": {
+          "$ref": "#/definitions/Base",
+          "description": "Country group allows countries to be filtered for selection.<br>Set it to e.g. EU if the address is within the EEC."
+        },
+        "is_main_address": {
+          "type": "boolean",
+          "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+        }
+      }
+    },
+    "ContactPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "contact_person_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContactPersonType"
+          },
+          "description": "The contact person types for the contact person. Get possible types by retrieving\n<a href=\"https://developer.sage.com/accounting/reference/contacts/#operation/getContactPersonTypes\">\n  all available contact person types\n</a>.\n"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the contact person"
+        },
+        "job_title": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The job title of the contact person"
+        },
+        "telephone": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The telephone number of the contact person"
+        },
+        "mobile": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The mobile number of the contact person"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address of the contact person"
+        },
+        "fax": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The fax number of the contact person"
+        },
+        "is_main_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+        },
+        "address": {
+          "$ref": "#/definitions/Base",
+          "description": "The address of the contact person"
+        },
+        "is_preferred_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this contact person is a preferred contact"
+        }
+      }
+    },
+    "ContactPersonType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "BankAccountDetails": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string",
+          "description": "The account name"
+        },
+        "account_number": {
+          "type": "string",
+          "description": "The account number"
+        },
+        "sort_code": {
+          "type": "string",
+          "description": "The sort code"
+        },
+        "bic": {
+          "type": "string",
+          "description": "The bic"
+        },
+        "iban": {
+          "type": "string",
+          "description": "The iban"
+        }
+      }
+    },
+    "ContactTaxTreatment": {
+      "type": "object",
+      "properties": {
+        "home_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where home country tax rules should be applied"
+        },
+        "eu_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates a contact where EC tax rules should be applied"
+        },
+        "eu_not_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates an EU contact without a tax number - home tax rules should be applied"
+        },
+        "rest_of_world_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where rest of world tax rules should be applied"
+        },
+        "is_importer": {
+          "type": "boolean",
+          "description": "Indicates a contact where import rules should be appliedOnly used for suppliers and FR, ES, IE and UK businesses"
+        }
+      }
+    },
+    "ContactCisSettings": {
+      "type": "object",
+      "properties": {
+        "registered_cis_name": {
+          "type": "string",
+          "description": "the CIS name for the Contact"
+        },
+        "subcontractor_verification_number": {
+          "type": "string",
+          "description": "The CIS Verification number for the contact"
+        },
+        "deduction_rate": {
+          "$ref": "#/definitions/ContactCisDeductionRate",
+          "description": "The CIS Deduction rate for the contact"
+        }
+      }
+    },
+    "ContactCisDeductionRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "SalesPrice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "price_name": {
+          "type": "string",
+          "description": "The name of the product sales price"
+        },
+        "price": {
+          "type": "number",
+          "format": "double",
+          "description": "The sales price amount"
+        },
+        "price_includes_tax": {
+          "type": "boolean",
+          "description": "Indicates whether the sales price already includes tax"
+        },
+        "product_sales_price_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The product sales price type"
+        }
+      }
+    },
+    "postProducts": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "The product description"
+            },
+            "sales_ledger_account_id": {
+              "type": "string",
+              "description": "The sales ledger account for the product"
+            },
+            "purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The purchase ledger account for the product"
+            },
+            "item_code": {
+              "type": "string",
+              "description": "The item code for the product"
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the product"
+            },
+            "sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Sales Tax Rate."
+            },
+            "usual_supplier_id": {
+              "type": "string",
+              "description": "The ID of the Usual Supplier."
+            },
+            "purchase_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Tax Rate."
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost price of the product"
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing products from external sources"
+            },
+            "purchase_description": {
+              "type": "string",
+              "description": "The product purchase description"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the product is active"
+            },
+            "catalog_item_type_id": {
+              "type": "string",
+              "description": "The ID of the Catalog Item Type."
+            },
+            "sales_prices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "price_name": {
+                    "type": "string",
+                    "description": "The name of the product sales price"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The sales price amount"
+                  },
+                  "price_includes_tax": {
+                    "type": "boolean",
+                    "description": "Indicates whether the sales price already includes tax"
+                  },
+                  "product_sales_price_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Product Sales Price Type."
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "description",
+            "sales_ledger_account_id",
+            "purchase_ledger_account_id"
+          ]
+        }
+      },
+      "required": [
+        "product"
+      ],
+      "description": "Creates a Product"
+    },
+    "putProducts": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "The product description"
+            },
+            "sales_ledger_account_id": {
+              "type": "string",
+              "description": "The sales ledger account for the product"
+            },
+            "purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The purchase ledger account for the product"
+            },
+            "item_code": {
+              "type": "string",
+              "description": "The item code for the product"
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the product"
+            },
+            "sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Sales Tax Rate."
+            },
+            "usual_supplier_id": {
+              "type": "string",
+              "description": "The ID of the Usual Supplier."
+            },
+            "purchase_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Tax Rate."
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost price of the product"
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing products from external sources"
+            },
+            "purchase_description": {
+              "type": "string",
+              "description": "The product purchase description"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the product is active"
+            },
+            "catalog_item_type_id": {
+              "type": "string",
+              "description": "The ID of the Catalog Item Type."
+            },
+            "sales_prices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "price_name": {
+                    "type": "string",
+                    "description": "The name of the product sales price"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The sales price amount"
+                  },
+                  "price_includes_tax": {
+                    "type": "boolean",
+                    "description": "Indicates whether the sales price already includes tax"
+                  },
+                  "product_sales_price_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Product Sales Price Type."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "product"
+      ],
+      "description": "Updates a Product"
+    },
+    "Service": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the service can be deleted"
+        },
+        "deactivatable": {
+          "type": "boolean",
+          "description": "Indicates whether the service can be deactivated"
+        },
+        "used_on_recurring_invoice": {
+          "type": "boolean",
+          "description": "Indicates whether the service has been used on a recurring invoice"
+        },
+        "item_code": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The item code for the service"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The service description"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "The notes for the service"
+        },
+        "sales_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The sales ledger account for the service"
+        },
+        "purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The purchase ledger account for the service"
+        },
+        "sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The sales tax rate for the service"
+        },
+        "purchase_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The purchase tax rate for the service"
+        },
+        "sales_rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rate"
+          },
+          "description": "The sales rates for the service"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing services from external sources"
+        },
+        "purchase_description": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "The service purchase description"
+        },
+        "usual_supplier": {
+          "$ref": "#/definitions/Contact",
+          "description": "The usual supplier for the service"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the service is active"
+        },
+        "cost_price": {
+          "type": "number",
+          "format": "double",
+          "description": "The cost price of the service"
+        },
+        "oss_service": {
+          "type": "boolean",
+          "description": "Indicates whether the service is One Stop Shop"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+      "x-sage-menusection": "Products & Services"
+    },
+    "Rate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "rate_name": {
+          "type": "string",
+          "description": "The name of the service rate"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The rate amount"
+        },
+        "rate_includes_tax": {
+          "type": "boolean",
+          "description": "Indicates whether the rate already includes tax"
+        },
+        "service_rate_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The service rate type"
+        }
+      }
+    },
+    "postServices": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "The service description"
+            },
+            "sales_ledger_account_id": {
+              "type": "string",
+              "description": "The sales ledger account for the service"
+            },
+            "item_code": {
+              "type": "string",
+              "description": "The item code for the service"
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the service"
+            },
+            "purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Ledger Account."
+            },
+            "sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Sales Tax Rate."
+            },
+            "purchase_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Tax Rate."
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing services from external sources"
+            },
+            "purchase_description": {
+              "type": "string",
+              "description": "The service purchase description"
+            },
+            "usual_supplier_id": {
+              "type": "string",
+              "description": "The ID of the Usual Supplier."
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the service is active"
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost price of the service"
+            },
+            "oss_service": {
+              "type": "boolean",
+              "description": "Indicates whether the service is One Stop Shop"
+            },
+            "sales_rates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rate_name": {
+                    "type": "string",
+                    "description": "The name of the service rate"
+                  },
+                  "rate": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The rate amount"
+                  },
+                  "rate_includes_tax": {
+                    "type": "boolean",
+                    "description": "Indicates whether the rate already includes tax"
+                  },
+                  "service_rate_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Service Rate Type."
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "description",
+            "sales_ledger_account_id"
+          ]
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "description": "Creates a Service"
+    },
+    "putServices": {
+      "type": "object",
+      "properties": {
+        "service": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "The service description"
+            },
+            "sales_ledger_account_id": {
+              "type": "string",
+              "description": "The sales ledger account for the service"
+            },
+            "item_code": {
+              "type": "string",
+              "description": "The item code for the service"
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the service"
+            },
+            "purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Ledger Account."
+            },
+            "sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Sales Tax Rate."
+            },
+            "purchase_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Tax Rate."
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing services from external sources"
+            },
+            "purchase_description": {
+              "type": "string",
+              "description": "The service purchase description"
+            },
+            "usual_supplier_id": {
+              "type": "string",
+              "description": "The ID of the Usual Supplier."
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the service is active"
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost price of the service"
+            },
+            "oss_service": {
+              "type": "boolean",
+              "description": "Indicates whether the service is One Stop Shop"
+            },
+            "sales_rates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "rate_name": {
+                    "type": "string",
+                    "description": "The name of the service rate"
+                  },
+                  "rate": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The rate amount"
+                  },
+                  "rate_includes_tax": {
+                    "type": "boolean",
+                    "description": "Indicates whether the rate already includes tax"
+                  },
+                  "service_rate_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Service Rate Type."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "service"
+      ],
+      "description": "Updates a Service"
+    },
+    "ServiceRateType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The name of the service rate type"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the rate type is displayed in the application"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+      "x-sage-menusection": "Products & Services"
+    },
+    "postServiceRateTypes": {
+      "type": "object",
+      "properties": {
+        "service_rate_type": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the service rate type"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the rate type is displayed in the application"
+            }
+          },
+          "required": [
+            "name",
+            "active"
+          ]
+        }
+      },
+      "required": [
+        "service_rate_type"
+      ],
+      "description": "Creates a Service Rate Type"
+    },
+    "putServiceRateTypes": {
+      "type": "object",
+      "properties": {
+        "service_rate_type": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the service rate type"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the rate type is displayed in the application"
+            }
+          }
+        }
+      },
+      "required": [
+        "service_rate_type"
+      ],
+      "description": "Updates a Service Rate Type"
+    },
+    "StockItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the stock item can be deleted"
+        },
+        "deactivatable": {
+          "type": "boolean",
+          "description": "Indicates whether the stock item can be deactivated"
+        },
+        "used_on_recurring_invoice": {
+          "type": "boolean",
+          "description": "Indicates whether the stock item has been used on a recurring invoice"
+        },
+        "item_code": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "The item code for the stock item"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The stock item description"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "The notes for the stock item"
+        },
+        "sales_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The sales ledger account for the stock item"
+        },
+        "sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The sales tax rate for the stock item"
+        },
+        "purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The purchase ledger account for the stock item"
+        },
+        "usual_supplier": {
+          "$ref": "#/definitions/Contact",
+          "description": "The usual supplier for the stock item"
+        },
+        "purchase_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The purchase tax rate for the stock item"
+        },
+        "cost_price": {
+          "type": "number",
+          "format": "double",
+          "description": "The cost price of the stock item"
+        },
+        "sales_prices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SalesPrice"
+          },
+          "description": "The sales prices for the stock item"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing stock items from external sources"
+        },
+        "purchase_description": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "The stock item purchase description"
+        },
+        "reorder_level": {
+          "type": "number",
+          "format": "double",
+          "description": "The reorder level for the stock item"
+        },
+        "reorder_quantity": {
+          "type": "number",
+          "format": "double",
+          "description": "The reorder quantity for the stock item"
+        },
+        "location": {
+          "type": "string",
+          "description": "The location for the stock item"
+        },
+        "barcode": {
+          "type": "string",
+          "description": "The barcode for the stock item"
+        },
+        "supplier_part_number": {
+          "type": "string",
+          "description": "The supplier part number for stock item"
+        },
+        "weight": {
+          "type": "number",
+          "format": "double",
+          "description": "The weight of stock item"
+        },
+        "measurement_unit": {
+          "type": "string",
+          "description": "The unit of measure of weight for stock item"
+        },
+        "weight_converted": {
+          "type": "number",
+          "format": "double",
+          "description": "The weight of stock item converted to the lowest unit of measurement"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Indicates whether the stock item is active"
+        },
+        "quantity_in_stock": {
+          "type": "number",
+          "format": "double",
+          "description": "The current quantity of the stock item held by the business"
+        },
+        "last_cost_price": {
+          "type": "number",
+          "format": "double",
+          "description": "The most recent 'purchase invoice' or 'adjustment in' price"
+        },
+        "last_cost_price_stock_value": {
+          "type": "number",
+          "format": "double",
+          "description": "The value of the current stock in terms of the last cost price"
+        },
+        "average_cost_price": {
+          "type": "number",
+          "format": "double",
+          "description": "The average price across all purchases of this stock item"
+        },
+        "average_cost_price_stock_value": {
+          "type": "number",
+          "format": "double",
+          "description": "The value of the current stock in terms of the average cost price"
+        },
+        "cost_price_last_updated": {
+          "type": "string",
+          "format": "date",
+          "description": "The date on which the last cost price was last updated"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Restricted Access, Full Access",
+      "x-sage-menusection": "Products & Services"
+    },
+    "postStockItems": {
+      "type": "object",
+      "properties": {
+        "stock_item": {
+          "type": "object",
+          "properties": {
+            "item_code": {
+              "type": "string",
+              "description": "The item code for the stock item"
+            },
+            "description": {
+              "type": "string",
+              "description": "The stock item description"
+            },
+            "sales_ledger_account_id": {
+              "type": "string",
+              "description": "The sales ledger account for the stock item"
+            },
+            "purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The purchase ledger account for the stock item"
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the stock item"
+            },
+            "sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Sales Tax Rate."
+            },
+            "usual_supplier_id": {
+              "type": "string",
+              "description": "The ID of the Usual Supplier."
+            },
+            "purchase_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Tax Rate."
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost price of the stock item"
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing stock items from external sources"
+            },
+            "purchase_description": {
+              "type": "string",
+              "description": "The stock item purchase description"
+            },
+            "reorder_level": {
+              "type": "number",
+              "format": "double",
+              "description": "The reorder level for the stock item"
+            },
+            "reorder_quantity": {
+              "type": "number",
+              "format": "double",
+              "description": "The reorder quantity for the stock item"
+            },
+            "location": {
+              "type": "string",
+              "description": "The location for the stock item"
+            },
+            "barcode": {
+              "type": "string",
+              "description": "The barcode for the stock item"
+            },
+            "supplier_part_number": {
+              "type": "string",
+              "description": "The supplier part number for stock item"
+            },
+            "weight": {
+              "type": "number",
+              "format": "double",
+              "description": "The weight of stock item"
+            },
+            "measurement_unit": {
+              "type": "string",
+              "description": "The unit of measure of weight for stock item"
+            },
+            "weight_converted": {
+              "type": "number",
+              "format": "double",
+              "description": "The weight of stock item converted to the lowest unit of measurement"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the stock item is active"
+            },
+            "quantity_in_stock": {
+              "type": "number",
+              "format": "double",
+              "description": "The current quantity of the stock item held by the business"
+            },
+            "last_cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The most recent 'purchase invoice' or 'adjustment in' price"
+            },
+            "last_cost_price_stock_value": {
+              "type": "number",
+              "format": "double",
+              "description": "The value of the current stock in terms of the last cost price"
+            },
+            "average_cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The average price across all purchases of this stock item"
+            },
+            "average_cost_price_stock_value": {
+              "type": "number",
+              "format": "double",
+              "description": "The value of the current stock in terms of the average cost price"
+            },
+            "cost_price_last_updated": {
+              "type": "string",
+              "format": "date",
+              "description": "The date on which the last cost price was last updated"
+            },
+            "sales_prices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "price_name": {
+                    "type": "string",
+                    "description": "The name of the product sales price"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The sales price amount"
+                  },
+                  "price_includes_tax": {
+                    "type": "boolean",
+                    "description": "Indicates whether the sales price already includes tax"
+                  },
+                  "product_sales_price_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Product Sales Price Type."
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "item_code",
+            "description",
+            "sales_ledger_account_id",
+            "purchase_ledger_account_id"
+          ]
+        }
+      },
+      "required": [
+        "stock_item"
+      ],
+      "description": "Creates a Stock Item"
+    },
+    "putStockItems": {
+      "type": "object",
+      "properties": {
+        "stock_item": {
+          "type": "object",
+          "properties": {
+            "item_code": {
+              "type": "string",
+              "description": "The item code for the stock item"
+            },
+            "description": {
+              "type": "string",
+              "description": "The stock item description"
+            },
+            "sales_ledger_account_id": {
+              "type": "string",
+              "description": "The sales ledger account for the stock item"
+            },
+            "purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The purchase ledger account for the stock item"
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the stock item"
+            },
+            "sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Sales Tax Rate."
+            },
+            "usual_supplier_id": {
+              "type": "string",
+              "description": "The ID of the Usual Supplier."
+            },
+            "purchase_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Purchase Tax Rate."
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost price of the stock item"
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing stock items from external sources"
+            },
+            "purchase_description": {
+              "type": "string",
+              "description": "The stock item purchase description"
+            },
+            "reorder_level": {
+              "type": "number",
+              "format": "double",
+              "description": "The reorder level for the stock item"
+            },
+            "reorder_quantity": {
+              "type": "number",
+              "format": "double",
+              "description": "The reorder quantity for the stock item"
+            },
+            "location": {
+              "type": "string",
+              "description": "The location for the stock item"
+            },
+            "barcode": {
+              "type": "string",
+              "description": "The barcode for the stock item"
+            },
+            "supplier_part_number": {
+              "type": "string",
+              "description": "The supplier part number for stock item"
+            },
+            "weight": {
+              "type": "number",
+              "format": "double",
+              "description": "The weight of stock item"
+            },
+            "measurement_unit": {
+              "type": "string",
+              "description": "The unit of measure of weight for stock item"
+            },
+            "weight_converted": {
+              "type": "number",
+              "format": "double",
+              "description": "The weight of stock item converted to the lowest unit of measurement"
+            },
+            "active": {
+              "type": "boolean",
+              "description": "Indicates whether the stock item is active"
+            },
+            "quantity_in_stock": {
+              "type": "number",
+              "format": "double",
+              "description": "The current quantity of the stock item held by the business"
+            },
+            "last_cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The most recent 'purchase invoice' or 'adjustment in' price"
+            },
+            "last_cost_price_stock_value": {
+              "type": "number",
+              "format": "double",
+              "description": "The value of the current stock in terms of the last cost price"
+            },
+            "average_cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The average price across all purchases of this stock item"
+            },
+            "average_cost_price_stock_value": {
+              "type": "number",
+              "format": "double",
+              "description": "The value of the current stock in terms of the average cost price"
+            },
+            "cost_price_last_updated": {
+              "type": "string",
+              "format": "date",
+              "description": "The date on which the last cost price was last updated"
+            },
+            "sales_prices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "price_name": {
+                    "type": "string",
+                    "description": "The name of the product sales price"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The sales price amount"
+                  },
+                  "price_includes_tax": {
+                    "type": "boolean",
+                    "description": "Indicates whether the sales price already includes tax"
+                  },
+                  "product_sales_price_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Product Sales Price Type."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "stock_item"
+      ],
+      "description": "Updates a Stock Item"
+    },
+    "StockMovement": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the stock movement"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "movement_number": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "The movement number of the stock movement"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date the stock movement occurred"
+        },
+        "cost_price": {
+          "type": "number",
+          "format": "double",
+          "description": "The cost per unit of stock purchased"
+        },
+        "quantity": {
+          "type": "number",
+          "format": "double",
+          "description": "The quantity of the goods adjusted"
+        },
+        "details": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The transaction details of the stock movement"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 31,
+          "description": "The reference of the stock movement"
+        },
+        "stock_item": {
+          "$ref": "#/definitions/StockItem",
+          "description": "The stock item of the stock movement"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Products & Services`: Full Access",
+      "x-sage-menusection": "Products & Services"
+    },
+    "postStockMovements": {
+      "type": "object",
+      "properties": {
+        "stock_movement": {
+          "type": "object",
+          "properties": {
+            "stock_item_id": {
+              "type": "string",
+              "description": "The stock item of the stock movement"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date the stock movement occurred"
+            },
+            "quantity": {
+              "type": "number",
+              "format": "double",
+              "description": "The quantity of the goods adjusted"
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost per unit of stock purchased"
+            },
+            "details": {
+              "type": "string",
+              "description": "The transaction details of the stock movement"
+            },
+            "movement_number": {
+              "type": "string",
+              "description": "The movement number of the stock movement"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference of the stock movement"
+            }
+          },
+          "required": [
+            "stock_item_id",
+            "date",
+            "quantity",
+            "cost_price",
+            "details"
+          ]
+        }
+      },
+      "required": [
+        "stock_movement"
+      ],
+      "description": "Creates a Stock Movement"
+    },
+    "putStockMovements": {
+      "type": "object",
+      "properties": {
+        "stock_movement": {
+          "type": "object",
+          "properties": {
+            "stock_item_id": {
+              "type": "string",
+              "description": "The stock item of the stock movement"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date the stock movement occurred"
+            },
+            "quantity": {
+              "type": "number",
+              "format": "double",
+              "description": "The quantity of the goods adjusted"
+            },
+            "cost_price": {
+              "type": "number",
+              "format": "double",
+              "description": "The cost per unit of stock purchased"
+            },
+            "details": {
+              "type": "string",
+              "description": "The transaction details of the stock movement"
+            },
+            "movement_number": {
+              "type": "string",
+              "description": "The movement number of the stock movement"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference of the stock movement"
+            }
+          }
+        }
+      },
+      "required": [
+        "stock_movement"
+      ],
+      "description": "Updates a Stock Movement"
+    }
+  }
+}

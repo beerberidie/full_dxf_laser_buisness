@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Reports - Laser OS{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>
+                    <i class="fas fa-calendar-day me-2"></i>Daily Production Reports
+                </h1>
+                <div>
+                    <form method="POST" action="{{ url_for('reports.generate_daily_report_now') }}" style="display: inline;">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Generate Today's Report
+                        </button>
+                    </form>
+                    <a href="{{ url_for('reports.index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Reports
+                    </a>
+                </div>
+            </div>
+
+            <!-- Reports List -->
+            {% if reports %}
+                <div class="row">
+                    {% for report in reports %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calendar me-2"></i>
+                                    {{ report.report_date.strftime('%Y-%m-%d') }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <div class="p-2 bg-light rounded text-center">
+                                            <div class="h4 mb-0 text-primary">{{ report.runs_count }}</div>
+                                            <small class="text-muted">Runs</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="p-2 bg-light rounded text-center">
+                                            <div class="h4 mb-0 text-success">{{ report.total_sheets_used }}</div>
+                                            <small class="text-muted">Sheets</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="p-2 bg-light rounded text-center">
+                                            <div class="h4 mb-0 text-info">{{ report.total_parts_produced }}</div>
+                                            <small class="text-muted">Parts</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="p-2 bg-light rounded text-center">
+                                            <div class="h4 mb-0 text-warning">{{ (report.total_cut_time_minutes / 60)|round(1) }}</div>
+                                            <small class="text-muted">Hours</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>
+                                    Generated: {{ report.generated_at.strftime('%Y-%m-%d %H:%M') }}
+                                </small>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ url_for('reports.view_daily_report', report_date=report.report_date.strftime('%Y-%m-%d')) }}" 
+                                   class="btn btn-primary btn-sm w-100">
+                                    <i class="fas fa-eye me-2"></i>View Full Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- No Reports -->
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                        <h4>No Daily Reports</h4>
+                        <p class="text-muted mb-4">
+                            No daily reports have been generated yet.
+                        </p>
+                        <form method="POST" action="{{ url_for('reports.generate_daily_report_now') }}">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Generate First Report
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

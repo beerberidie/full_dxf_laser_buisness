@@ -1,0 +1,2513 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Banking",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "bank_accounts",
+      "description": "Operations about bank_accounts"
+    },
+    {
+      "name": "Bank Accounts",
+      "description": "Bank Accounts are a reflection of real-life bank accounts for the associated business. They are used to manage most transactional activity in Sage Business Cloud Accounting as well as track balances. The bank_account_type_id is a required attribute which can only be updated while the bank account has no associated activity. The API allows you to create, delete, update and show bank accounts. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/banking/\" target=\"_blank\">Key Concepts: Banking</a>"
+    },
+    {
+      "name": "Bank Account Types",
+      "description": "The bank account type is unique to a particular bank account and dictates the different kinds of transactions that can be recorded against the Bank Account itself. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/banking/\" target=\"_blank\">Key Concepts: Banking</a>"
+    },
+    {
+      "name": "Bank Deposits",
+      "description": "Bank Deposits, unlike bank transfers can only be used to move funds from bank accounts with bank account type CASH_IN_HAND. However the destination account can be of any type. The API allows you to show, create and delete bank deposits."
+    },
+    {
+      "name": "Bank Reconciliations",
+      "description": "Bank Reconciliations are mainly used in the front end of the application to ensure that the business bank accounts match any real-life transactions and statements. The API allows show, create and update however only certain parameters are valid for POST requests."
+    },
+    {
+      "name": "Bank Transfers",
+      "description": "Like Bank Deposits, Bank Transfers are used to move funds from one bank account to another. The origin can be of any bank account type other than CASH_IN_HAND and destination bank account can be of any bank account type. The API allows you to show, create, update and delete bank transfers."
+    }
+  ],
+  "paths": {
+    "/bank_accounts": {
+      "get": {
+        "summary": "Returns all Bank Accounts",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Read Only, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Bank Accounts changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Bank Accounts deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Bank Accounts (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "exclude_stripe",
+            "description": "Use this to filter out Stripe Bank Accounts",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "filter_inactive_bank_accounts",
+            "description": "Use this to filter inactive bank accounts",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "appName",
+            "description": "The App Name",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Bank Accounts per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Bank Accounts",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Accounts (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Bank Accounts",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 39,
+				"$page": 1,
+				"$next": "/bank_accounts?page=2&items_per_page=5",
+				"$back": null,
+				"$itemsPerPage": 5,
+				"$items": [
+					{
+						"id": "19e5f9768c9542ef840ab7532e231215",
+						"displayed_as": "Bank Account (1200)",
+						"$path": "/bank_accounts/19e5f9768c9542ef840ab7532e231215"
+					},
+					{
+						"id": "4ad5a004af3d463fa1c1179f8d821ad3",
+						"displayed_as": "Cash (1210)",
+						"$path": "/bank_accounts/4ad5a004af3d463fa1c1179f8d821ad3"
+					},
+					{
+						"id": "0a4d73cc959b4df2b3951e7c3b79a81a",
+						"displayed_as": "Bank Current Account (1220)",
+						"$path": "/bank_accounts/0a4d73cc959b4df2b3951e7c3b79a81a"
+					},
+					{
+						"id": "a65cfefa5f2144188ade3af7d027e6b0",
+						"displayed_as": "Bank Deposit Account (1230)",
+						"$path": "/bank_accounts/a65cfefa5f2144188ade3af7d027e6b0"
+					},
+					{
+						"id": "543bcf55ef144a109e90dd106f6304c6",
+						"displayed_as": "Building Society Account (1240)",
+						"$path": "/bank_accounts/543bcf55ef144a109e90dd106f6304c6"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Accounts"
+        ],
+        "operationId": "getBankAccounts"
+      },
+      "x-sage-pathtitle": "Bank Account collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Bank Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BankAccounts",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postBankAccounts"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Bank Account",
+            "schema": {
+              "$ref": "#/definitions/BankAccount"
+            }
+          }
+        },
+        "tags": [
+          "Bank Accounts"
+        ],
+        "operationId": "postBankAccounts"
+      }
+    },
+    "/bank_accounts/{key}": {
+      "get": {
+        "summary": "Returns a Bank Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Read Only, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Account Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Bank Account (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Account (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Bank Account",
+            "examples": {
+              "application/json":
+			  {
+				"id": "19e5f9768c9542ef840ab7532e231215",
+				"displayed_as": "Bank Account (1200)",
+				"$path": "/bank_accounts/19e5f9768c9542ef840ab7532e231215",
+				"created_at": "2022-12-30T13:54:24Z",
+				"updated_at": "2023-09-28T08:40:35Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/banking/bank_accounts/2949565",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"bank_account_details": {
+					"account_name": "Bank Account",
+					"account_number": null,
+					"sort_code": null,
+					"bic": null,
+					"iban": null
+				},
+				"ledger_account": {
+					"id": "163849e847954f66badb3a4bbbb4dc19",
+					"displayed_as": "Bank Account (1200)",
+					"$path": "/ledger_accounts/163849e847954f66badb3a4bbbb4dc19"
+				},
+				"bank_account_type": {
+					"id": "CHECKING",
+					"displayed_as": "Current",
+					"$path": "/bank_account_types/CHECKING"
+				},
+				"balance": "-14557.08",
+				"main_address": {
+					"id": "58ff84d719cf45b5bcf17c033ea713d3",
+					"displayed_as": "United Kingdom",
+					"$path": "/addresses/58ff84d719cf45b5bcf17c033ea713d3"
+				},
+				"main_contact_person": {
+					"id": "bdee2bb9fbc44d0bb1fcf2b52a71d5ec",
+					"displayed_as": "Main Contact",
+					"$path": "/contact_persons/bdee2bb9fbc44d0bb1fcf2b52a71d5ec"
+				},
+				"nominal_code": null,
+				"editable": true,
+				"deletable": false,
+				"journal_code": null,
+				"default_payment_method": {
+					"id": "CREDIT_DEBIT",
+					"displayed_as": "Credit/Debit Card",
+					"$path": "/payment_methods/CREDIT_DEBIT"
+				},
+				"gifi_code": null,
+				"is_active": true,
+				"currency": null
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Accounts"
+        ],
+        "operationId": "getBankAccountsKey"
+      },
+      "x-sage-pathtitle": "single Bank Account resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Bank Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Account Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "BankAccounts",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBankAccounts"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Bank Account",
+            "schema": {
+              "$ref": "#/definitions/BankAccount"
+            }
+          }
+        },
+        "tags": [
+          "Bank Accounts"
+        ],
+        "operationId": "putBankAccountsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Bank Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Account Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Bank Account"
+          }
+        },
+        "tags": [
+          "Bank Accounts"
+        ],
+        "operationId": "deleteBankAccountsKey"
+      }
+    },
+    "/bank_accounts/{key}/bank_feed": {
+      "get": {
+        "summary": "Bank feed endpoint for Banking Cloud Bank accounts",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Read Only, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Account GUID.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank feed endpoint for Banking Cloud Bank accounts",
+            "schema": {
+              "$ref": "#/definitions/Base"
+            }
+          }
+        },
+        "tags": [
+          "bank_accounts"
+        ],
+        "operationId": "getBankAccountsKeyBankFeed"
+      }
+    },
+    "/bank_account_types": {
+      "get": {
+        "summary": "Returns all Bank Account Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Account Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Account Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Account Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Bank Account Types",
+            "examples": {
+            "application/json":
+			{
+				"$total": 6,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "CHECKING",
+						"displayed_as": "Current",
+						"$path": "/bank_account_types/CHECKING"
+					},
+					{
+						"id": "SAVINGS",
+						"displayed_as": "Savings",
+						"$path": "/bank_account_types/SAVINGS"
+					},
+					{
+						"id": "CREDIT_CARD",
+						"displayed_as": "Credit Card",
+						"$path": "/bank_account_types/CREDIT_CARD"
+					},
+					{
+						"id": "CASH_IN_HAND",
+						"displayed_as": "Cash in Hand",
+						"$path": "/bank_account_types/CASH_IN_HAND"
+					},
+					{
+						"id": "LOAN",
+						"displayed_as": "Loan",
+						"$path": "/bank_account_types/LOAN"
+					},
+					{
+						"id": "OTHER",
+						"displayed_as": "Other",
+						"$path": "/bank_account_types/OTHER"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Account Types"
+        ],
+        "operationId": "getBankAccountTypes"
+      },
+      "x-sage-pathtitle": "Bank Account Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/bank_account_types/{key}": {
+      "get": {
+        "summary": "Returns a Bank Account Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Account Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Account Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Bank Account Type",
+            "examples": {
+             "application/json":
+			 {
+				"id": "SAVINGS",
+				"displayed_as": "Savings",
+				"$path": "/bank_account_types/SAVINGS"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Account Types"
+        ],
+        "operationId": "getBankAccountTypesKey"
+      },
+      "x-sage-pathtitle": "single Bank Account Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/bank_deposits": {
+      "get": {
+        "summary": "Returns all Bank Deposits",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Deposits changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Deposits deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Deposits dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Deposits dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Deposits per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Deposits",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Deposits (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Order by a given attribute (required) and direction (optional; `asc` or `desc`; defaults to `asc`).\nAvailable attributes are:\ncreated_at, updated_at, date\n\nExample: `sort=created_at` or `sort=created_at:desc`",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Bank Deposits",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 1,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "2a9099e7b8bd4631b8d04ba53e1f903e",
+						"displayed_as": "Bank deposit of cash takings",
+						"$path": "/bank_deposits/2a9099e7b8bd4631b8d04ba53e1f903e"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Deposits"
+        ],
+        "operationId": "getBankDeposits"
+      },
+      "x-sage-pathtitle": "Bank Deposit collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Bank Deposit",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BankDeposits",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postBankDeposits"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Bank Deposit",
+            "schema": {
+              "$ref": "#/definitions/BankDeposit"
+            }
+          }
+        },
+        "tags": [
+          "Bank Deposits"
+        ],
+        "operationId": "postBankDeposits"
+      }
+    },
+    "/bank_deposits/{key}": {
+      "get": {
+        "summary": "Returns a Bank Deposit",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Deposit Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Deposit (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Deposit (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Bank Deposit",
+            "examples": {
+              "application/json":
+			  {
+				"id": "2a9099e7b8bd4631b8d04ba53e1f903e",
+				"displayed_as": "Bank deposit of cash takings",
+				"$path": "/bank_deposits/2a9099e7b8bd4631b8d04ba53e1f903e",
+				"created_at": "2024-10-18T13:25:52Z",
+				"updated_at": "2024-10-18T13:25:52Z",
+				"transaction": {
+					"id": "34c8b58d8d214cccb7ccc74b40ca3e22",
+					"displayed_as": "Bank deposit of cash takings",
+					"$path": "/transactions/34c8b58d8d214cccb7ccc74b40ca3e22"
+				},
+				"transaction_type": {
+					"id": "DEPOSIT",
+					"displayed_as": "Deposit",
+					"$path": "/transaction_types/DEPOSIT"
+				},
+				"from_bank_account": {
+					"id": "70fa5b6adf264ddcabed5b2872f7525c",
+					"displayed_as": "Petty Cash (1250)",
+					"$path": "/bank_accounts/70fa5b6adf264ddcabed5b2872f7525c"
+				},
+				"to_bank_account": {
+					"id": "19e5f9768c9542ef840ab7532e231215",
+					"displayed_as": "Bank Account (1200)",
+					"$path": "/bank_accounts/19e5f9768c9542ef840ab7532e231215"
+				},
+				"date": "2024-10-18",
+				"reference": "Bank deposit of cash takings",
+				"cash_amount": "1100.0",
+				"cheque_amount": "0.0",
+				"total_amount": "1100.0"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Deposits"
+        ],
+        "operationId": "getBankDepositsKey"
+      },
+      "x-sage-pathtitle": "single Bank Deposit resource",
+      "x-sage-changelog": [
+
+      ],
+      "delete": {
+        "summary": "Deletes a Bank Deposit",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Deposit Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Bank Deposit"
+          }
+        },
+        "tags": [
+          "Bank Deposits"
+        ],
+        "operationId": "deleteBankDepositsKey"
+      }
+    },
+    "/bank_reconciliations": {
+      "get": {
+        "summary": "Returns all Bank Reconciliations",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Read Only, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Bank Reconciliations changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "bank_account_id",
+            "description": "Use this to filter by bank account id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Bank Reconciliations per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Bank Reconciliations",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Reconciliations (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Bank Reconciliations",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 2,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "7a65651bcec143d181fc2d7eb3ab6ea8",
+						"displayed_as": "Bank Account (1200) - 2023-05-31",
+						"$path": "/bank_reconciliations/7a65651bcec143d181fc2d7eb3ab6ea8"
+					},
+					{
+						"id": "3673d2a5b1a94391b3276489afd03d6c",
+						"displayed_as": "Bank Account (1200) - 2023-09-28",
+						"$path": "/bank_reconciliations/3673d2a5b1a94391b3276489afd03d6c"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Reconciliations"
+        ],
+        "operationId": "getBankReconciliations"
+      },
+      "x-sage-pathtitle": "Bank Reconciliation collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Bank Reconciliation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BankReconciliations",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postBankReconciliations"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Bank Reconciliation",
+            "schema": {
+              "$ref": "#/definitions/BankReconciliation"
+            }
+          }
+        },
+        "tags": [
+          "Bank Reconciliations"
+        ],
+        "operationId": "postBankReconciliations"
+      }
+    },
+    "/bank_reconciliations/{key}": {
+      "get": {
+        "summary": "Returns a Bank Reconciliation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Read Only, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Reconciliation Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Reconciliation (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Bank Reconciliation",
+            "examples": {
+             "application/json":
+			 {
+				"id": "7a65651bcec143d181fc2d7eb3ab6ea8",
+				"displayed_as": "Bank Account (1200) - 2023-05-31",
+				"$path": "/bank_reconciliations/7a65651bcec143d181fc2d7eb3ab6ea8",
+				"created_at": "2023-05-31T10:06:42Z",
+				"updated_at": "2023-05-31T10:09:02Z",
+				"bank_account": {
+					"id": "19e5f9768c9542ef840ab7532e231215",
+					"displayed_as": "Bank Account (1200)",
+					"$path": "/bank_accounts/19e5f9768c9542ef840ab7532e231215"
+				},
+				"statement_date": "2023-05-31",
+				"statement_end_balance": "0.0",
+				"reference": null,
+				"total_received": "112382.3",
+				"total_paid": "128197.38",
+				"starting_balance": "0.0",
+				"closing_balance": "-15815.08",
+				"reconciled_balance": "-15815.08",
+				"balance_difference": "15815.08",
+				"status": {
+					"id": "COMPLETED",
+					"displayed_as": "Completed"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Reconciliations"
+        ],
+        "operationId": "getBankReconciliationsKey"
+      },
+      "x-sage-pathtitle": "single Bank Reconciliation resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Bank Reconciliation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Reconciliation Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "BankReconciliations",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBankReconciliations"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Bank Reconciliation",
+            "schema": {
+              "$ref": "#/definitions/BankReconciliation"
+            }
+          }
+        },
+        "tags": [
+          "Bank Reconciliations"
+        ],
+        "operationId": "putBankReconciliationsKey"
+      }
+    },
+    "/bank_transfers": {
+      "get": {
+        "summary": "Returns all Bank Transfers",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Bank Transfers changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Bank Transfers deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Bank Transfers dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Bank Transfers dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Bank Transfers per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Bank Transfers",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Transfers (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Order by a given attribute (required) and direction (optional; `asc` or `desc`; defaults to `asc`).\nAvailable attributes are:\ncreated_at, updated_at, date\n\nExample: `sort=created_at` or `sort=created_at:desc`",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Bank Transfers",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 1,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "b1944873013f4d209cda044fb3945f44",
+						"displayed_as": "Test non base Bank transfer",
+						"$path": "/bank_transfers/b1944873013f4d209cda044fb3945f44"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Transfers"
+        ],
+        "operationId": "getBankTransfers"
+      },
+      "x-sage-pathtitle": "Bank Transfer collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Bank Transfer",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BankTransfers",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postBankTransfers"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Bank Transfer",
+            "schema": {
+              "$ref": "#/definitions/BankTransfer"
+            }
+          }
+        },
+        "tags": [
+          "Bank Transfers"
+        ],
+        "operationId": "postBankTransfers"
+      }
+    },
+    "/bank_transfers/{key}": {
+      "get": {
+        "summary": "Returns a Bank Transfer",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Transfer Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Bank Transfer (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Transfer (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Bank Transfer",
+            "examples": {
+              "application/json":
+			  {
+				"id": "b1944873013f4d209cda044fb3945f44",
+				"displayed_as": "Test non base Bank transfer",
+				"$path": "/bank_transfers/b1944873013f4d209cda044fb3945f44",
+				"created_at": "2024-04-08T07:19:31Z",
+				"updated_at": "2024-04-08T07:19:32Z",
+				"transaction": {
+					"id": "6ee6ecd521484b428a77d5d58a63917b",
+					"displayed_as": "Test non base Bank transfer",
+					"$path": "/transactions/6ee6ecd521484b428a77d5d58a63917b"
+				},
+				"transaction_type": {
+					"id": "BANK_TRANSFER",
+					"displayed_as": "Bank Transfer",
+					"$path": "/transaction_types/BANK_TRANSFER"
+				},
+				"from_bank_account": {
+					"id": "a8cb7746dfc846dca7721355b8b74a3e",
+					"displayed_as": "Euro Account (1490)",
+					"$path": "/bank_accounts/a8cb7746dfc846dca7721355b8b74a3e"
+				},
+				"to_bank_account": {
+					"id": "74ba991117354ac0951752f8c92b4960",
+					"displayed_as": "USD account (1500)",
+					"$path": "/bank_accounts/74ba991117354ac0951752f8c92b4960"
+				},
+				"date": "2024-04-08",
+				"reference": "Test non base Bank transfer",
+				"amount": "100.0",
+				"description": "Test non base Bank transfer",
+				"editable": true
+			}
+            }
+          }
+        },
+        "tags": [
+          "Bank Transfers"
+        ],
+        "operationId": "getBankTransfersKey"
+      },
+      "x-sage-pathtitle": "single Bank Transfer resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Bank Transfer",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Restricted Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Transfer Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "BankTransfers",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBankTransfers"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Bank Transfer",
+            "schema": {
+              "$ref": "#/definitions/BankTransfer"
+            }
+          }
+        },
+        "tags": [
+          "Bank Transfers"
+        ],
+        "operationId": "putBankTransfersKey"
+      },
+      "delete": {
+        "summary": "Deletes a Bank Transfer",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Transfer Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Bank Transfer"
+          }
+        },
+        "tags": [
+          "Bank Transfers"
+        ],
+        "operationId": "deleteBankTransfersKey"
+      }
+    }
+  },
+  "definitions": {
+    "BankAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "bank_account_details": {
+          "$ref": "#/definitions/BankAccountDetails",
+          "description": "The account details for the bank account"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account for the bank account"
+        },
+        "bank_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The bank account type for the bank account"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The bank account balance"
+        },
+        "main_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The main address for the bank account"
+        },
+        "main_contact_person": {
+          "$ref": "#/definitions/BankAccountContact",
+          "description": "The main contact for the bank account"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the bank account"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether or not the bank account can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether or not the bank account can be deleted"
+        },
+        "journal_code": {
+          "$ref": "#/definitions/JournalCode",
+          "description": "The journal code of the bank account (France only)"
+        },
+        "default_payment_method": {
+          "$ref": "#/definitions/Base",
+          "description": "The default payment method of the bank account"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the bank ledger account'\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "Indicates whether the Bank account is active or inactive."
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency for the bank account"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "BankAccountDetails": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string",
+          "description": "The account name"
+        },
+        "account_number": {
+          "type": "string",
+          "description": "The account number"
+        },
+        "sort_code": {
+          "type": "string",
+          "description": "The sort code"
+        },
+        "bic": {
+          "type": "string",
+          "description": "The bic"
+        },
+        "iban": {
+          "type": "string",
+          "description": "The iban"
+        }
+      }
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "address_line_1": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The first line of the address"
+        },
+        "address_line_2": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address town/city"
+        },
+        "postal_code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The address postal code/zipcode"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The address country"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The related bank account of the address, if the address belongs to a bank account."
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The related contact of the address, if the address belongs to a contact."
+        },
+        "address_type": {
+          "$ref": "#/definitions/Base",
+          "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The custom name of the address"
+        },
+        "region": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address state/province/region"
+        },
+        "country_group": {
+          "$ref": "#/definitions/Base",
+          "description": "Country group allows countries to be filtered for selection.<br>Set it to e.g. EU if the address is within the EEC."
+        },
+        "is_main_address": {
+          "type": "boolean",
+          "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+        }
+      }
+    },
+    "BankAccountContact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the contact"
+        },
+        "job_title": {
+          "type": "string",
+          "description": "The job title of the contact"
+        },
+        "telephone": {
+          "type": "string",
+          "description": "The telephone of the contact"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "The mobile of the contact"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the contact"
+        },
+        "fax": {
+          "type": "string",
+          "description": "The fax number of the contact"
+        }
+      }
+    },
+    "JournalCode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The name of the journal code"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The code of the journal code"
+        },
+        "journal_code_type": {
+          "$ref": "#/definitions/JournalCodeType",
+          "description": "The journal code type of the journal code"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name of the journal code\n\nControl names are identifiers for a journal codes with a specific meaning. Some examples are `AC` for\npurchases, `VE` for sales, `OD` for other transactions and `REPBAL` for opening balances.\n"
+        },
+        "reserved": {
+          "type": "boolean",
+          "description": "Indicates whether the journal code is reserved.\n\nReserved journal codes cannot be deleted. A journal code is reserved when it has a control name.\nPlease note that journal codes can also not be deleted when there is any journal that is using\nthe code.\n"
+        }
+      }
+    },
+    "JournalCodeType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "postBankAccounts": {
+      "type": "object",
+      "properties": {
+        "bank_account": {
+          "type": "object",
+          "properties": {
+            "bank_account_type_id": {
+              "type": "string",
+              "description": "The bank account type for the bank account"
+            },
+            "ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Ledger Account."
+            },
+            "nominal_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The nominal code of the bank account",
+              "minimum": 1,
+              "maximum": 99999999
+            },
+            "default_payment_method_id": {
+              "type": "string",
+              "description": "The ID of the Default Payment Method."
+            },
+            "gifi_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The GIFI code of the bank ledger account'\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n",
+              "minimum": 1000,
+              "maximum": 9999
+            },
+            "is_active": {
+              "type": "boolean",
+              "description": "Indicates whether the Bank account is active or inactive."
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "bank_account_details": {
+              "type": "object",
+              "properties": {
+                "account_name": {
+                  "type": "string",
+                  "description": "The account name"
+                },
+                "account_number": {
+                  "type": "string",
+                  "description": "The account number"
+                },
+                "sort_code": {
+                  "type": "string",
+                  "description": "The sort code"
+                },
+                "bic": {
+                  "type": "string",
+                  "description": "The bic"
+                },
+                "iban": {
+                  "type": "string",
+                  "description": "The iban"
+                }
+              },
+              "required": [
+                "account_name"
+              ]
+            },
+            "main_address": {
+              "type": "object",
+              "properties": {
+                "address_line_1": {
+                  "type": "string",
+                  "description": "The first line of the address"
+                },
+                "address_line_2": {
+                  "type": "string",
+                  "description": "The second line of the address"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The address town/city"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "description": "The address postal code/zipcode"
+                },
+                "country_id": {
+                  "type": "string",
+                  "description": "The ID of the Country."
+                },
+                "bank_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Account."
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "address_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Address Type."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The custom name of the address"
+                },
+                "region": {
+                  "type": "string",
+                  "description": "The address state/province/region"
+                },
+                "country_group_id": {
+                  "type": "string",
+                  "description": "The ID of the Country Group."
+                },
+                "is_main_address": {
+                  "type": "boolean",
+                  "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+                }
+              }
+            },
+            "main_contact_person": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the contact"
+                },
+                "job_title": {
+                  "type": "string",
+                  "description": "The job title of the contact"
+                },
+                "telephone": {
+                  "type": "string",
+                  "description": "The telephone of the contact"
+                },
+                "mobile": {
+                  "type": "string",
+                  "description": "The mobile of the contact"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email of the contact"
+                },
+                "fax": {
+                  "type": "string",
+                  "description": "The fax number of the contact"
+                }
+              }
+            },
+            "journal_code": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the journal code"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "The code of the journal code"
+                },
+                "journal_code_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Journal Code Type."
+                },
+                "control_name": {
+                  "type": "string",
+                  "description": "The control name of the journal code\n\nControl names are identifiers for a journal codes with a specific meaning. Some examples are `AC` for\npurchases, `VE` for sales, `OD` for other transactions and `REPBAL` for opening balances.\n"
+                },
+                "reserved": {
+                  "type": "boolean",
+                  "description": "Indicates whether the journal code is reserved.\n\nReserved journal codes cannot be deleted. A journal code is reserved when it has a control name.\nPlease note that journal codes can also not be deleted when there is any journal that is using\nthe code.\n"
+                }
+              }
+            }
+          },
+          "required": [
+            "bank_account_type_id"
+          ]
+        }
+      },
+      "required": [
+        "bank_account"
+      ],
+      "description": "Creates a Bank Account"
+    },
+    "putBankAccounts": {
+      "type": "object",
+      "properties": {
+        "bank_account": {
+          "type": "object",
+          "properties": {
+            "bank_account_type_id": {
+              "type": "string",
+              "description": "The bank account type for the bank account"
+            },
+            "ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Ledger Account."
+            },
+            "nominal_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The nominal code of the bank account",
+              "minimum": 1,
+              "maximum": 99999999
+            },
+            "default_payment_method_id": {
+              "type": "string",
+              "description": "The ID of the Default Payment Method."
+            },
+            "gifi_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The GIFI code of the bank ledger account'\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n",
+              "minimum": 1000,
+              "maximum": 9999
+            },
+            "is_active": {
+              "type": "boolean",
+              "description": "Indicates whether the Bank account is active or inactive."
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "bank_account_details": {
+              "type": "object",
+              "properties": {
+                "account_name": {
+                  "type": "string",
+                  "description": "The account name"
+                },
+                "account_number": {
+                  "type": "string",
+                  "description": "The account number"
+                },
+                "sort_code": {
+                  "type": "string",
+                  "description": "The sort code"
+                },
+                "bic": {
+                  "type": "string",
+                  "description": "The bic"
+                },
+                "iban": {
+                  "type": "string",
+                  "description": "The iban"
+                }
+              }
+            },
+            "main_address": {
+              "type": "object",
+              "properties": {
+                "address_line_1": {
+                  "type": "string",
+                  "description": "The first line of the address"
+                },
+                "address_line_2": {
+                  "type": "string",
+                  "description": "The second line of the address"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The address town/city"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "description": "The address postal code/zipcode"
+                },
+                "country_id": {
+                  "type": "string",
+                  "description": "The ID of the Country."
+                },
+                "bank_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Account."
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "address_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Address Type."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The custom name of the address"
+                },
+                "region": {
+                  "type": "string",
+                  "description": "The address state/province/region"
+                },
+                "country_group_id": {
+                  "type": "string",
+                  "description": "The ID of the Country Group."
+                },
+                "is_main_address": {
+                  "type": "boolean",
+                  "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+                }
+              }
+            },
+            "main_contact_person": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the contact"
+                },
+                "job_title": {
+                  "type": "string",
+                  "description": "The job title of the contact"
+                },
+                "telephone": {
+                  "type": "string",
+                  "description": "The telephone of the contact"
+                },
+                "mobile": {
+                  "type": "string",
+                  "description": "The mobile of the contact"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email of the contact"
+                },
+                "fax": {
+                  "type": "string",
+                  "description": "The fax number of the contact"
+                }
+              }
+            },
+            "journal_code": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the journal code"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "The code of the journal code"
+                },
+                "journal_code_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Journal Code Type."
+                },
+                "control_name": {
+                  "type": "string",
+                  "description": "The control name of the journal code\n\nControl names are identifiers for a journal codes with a specific meaning. Some examples are `AC` for\npurchases, `VE` for sales, `OD` for other transactions and `REPBAL` for opening balances.\n"
+                },
+                "reserved": {
+                  "type": "boolean",
+                  "description": "Indicates whether the journal code is reserved.\n\nReserved journal codes cannot be deleted. A journal code is reserved when it has a control name.\nPlease note that journal codes can also not be deleted when there is any journal that is using\nthe code.\n"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "bank_account"
+      ],
+      "description": "Updates a Bank Account"
+    },
+    "BankDeposit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the item"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "from_bank_account": {
+          "$ref": "#/definitions/BankAccount",
+          "description": "From bank account - money leaves this account"
+        },
+        "to_bank_account": {
+          "$ref": "#/definitions/BankAccount",
+          "description": "To bank account - money goes into this account"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "User generated date of transaction, not necessarily when it was created"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Reference"
+        },
+        "cash_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "Cash total in the deposit"
+        },
+        "cheque_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "Cheque total in the deposit"
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "Total of cash and cheques in the deposit"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "postBankDeposits": {
+      "type": "object",
+      "properties": {
+        "bank_deposit": {
+          "type": "object",
+          "properties": {
+            "from_bank_account_id": {
+              "type": "string",
+              "description": "From bank account - money leaves this account"
+            },
+            "to_bank_account_id": {
+              "type": "string",
+              "description": "To bank account - money goes into this account"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "User generated date of transaction, not necessarily when it was created"
+            },
+            "reference": {
+              "type": "string",
+              "description": "Reference"
+            },
+            "cash_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "Cash total in the deposit"
+            },
+            "cheque_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "Cheque total in the deposit"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "Total of cash and cheques in the deposit"
+            }
+          },
+          "required": [
+            "from_bank_account_id",
+            "to_bank_account_id",
+            "date",
+            "reference",
+            "cash_amount"
+          ]
+        }
+      },
+      "required": [
+        "bank_deposit"
+      ],
+      "description": "Creates a Bank Deposit"
+    },
+    "BankReconciliation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The bank account the reconciliation relates to"
+        },
+        "statement_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the bank reconciliation"
+        },
+        "statement_end_balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The statement end balance for the reconciliation"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "A reference for the bank reconciliation"
+        },
+        "total_received": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount received"
+        },
+        "total_paid": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount paid"
+        },
+        "starting_balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The starting balance of the bank reconciliation"
+        },
+        "closing_balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The closing balance of the bank reconciliation"
+        },
+        "reconciled_balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The reconciled balance of the bank reconciliation"
+        },
+        "balance_difference": {
+          "type": "number",
+          "format": "double",
+          "description": "The difference between the statement end balance and the reconciled balance"
+        },
+        "status": {
+          "$ref": "#/definitions/BankReconciliationStatus",
+          "description": "The status of the bank reconciliation"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "BankReconciliationStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The bank reconciliation status id"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The bank reconciliation status name"
+        }
+      }
+    },
+    "postBankReconciliations": {
+      "type": "object",
+      "properties": {
+        "bank_reconciliation": {
+          "type": "object",
+          "properties": {
+            "bank_account_id": {
+              "type": "string",
+              "description": "The bank account the reconciliation relates to"
+            },
+            "statement_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the bank reconciliation"
+            },
+            "statement_end_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The statement end balance for the reconciliation"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference for the bank reconciliation"
+            },
+            "total_received": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount received"
+            },
+            "total_paid": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount paid"
+            },
+            "starting_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The starting balance of the bank reconciliation"
+            },
+            "closing_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The closing balance of the bank reconciliation"
+            },
+            "reconciled_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The reconciled balance of the bank reconciliation"
+            },
+            "balance_difference": {
+              "type": "number",
+              "format": "double",
+              "description": "The difference between the statement end balance and the reconciled balance"
+            },
+            "status_id": {
+              "type": "string",
+              "description": "The ID of the Status."
+            }
+          },
+          "required": [
+            "bank_account_id"
+          ]
+        }
+      },
+      "required": [
+        "bank_reconciliation"
+      ],
+      "description": "Creates a Bank Reconciliation"
+    },
+    "putBankReconciliations": {
+      "type": "object",
+      "properties": {
+        "bank_reconciliation": {
+          "type": "object",
+          "properties": {
+            "bank_account_id": {
+              "type": "string",
+              "description": "The bank account the reconciliation relates to"
+            },
+            "statement_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the bank reconciliation"
+            },
+            "statement_end_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The statement end balance for the reconciliation"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference for the bank reconciliation"
+            },
+            "total_received": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount received"
+            },
+            "total_paid": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount paid"
+            },
+            "starting_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The starting balance of the bank reconciliation"
+            },
+            "closing_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The closing balance of the bank reconciliation"
+            },
+            "reconciled_balance": {
+              "type": "number",
+              "format": "double",
+              "description": "The reconciled balance of the bank reconciliation"
+            },
+            "balance_difference": {
+              "type": "number",
+              "format": "double",
+              "description": "The difference between the statement end balance and the reconciled balance"
+            },
+            "status_id": {
+              "type": "string",
+              "description": "The ID of the Status."
+            }
+          }
+        }
+      },
+      "required": [
+        "bank_reconciliation"
+      ],
+      "description": "Updates a Bank Reconciliation"
+    },
+    "BankTransfer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the item"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "from_bank_account": {
+          "$ref": "#/definitions/BankAccount",
+          "description": "The bank account that the money was transfered from"
+        },
+        "to_bank_account": {
+          "$ref": "#/definitions/BankAccount",
+          "description": "The bank account that the money was transfered to"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the bank transfer"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The reference for the bank transfer"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The amount of the bank transfer"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The description for the bank transfer"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access, Restricted Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "postBankTransfers": {
+      "type": "object",
+      "properties": {
+        "bank_transfer": {
+          "type": "object",
+          "properties": {
+            "from_bank_account_id": {
+              "type": "string",
+              "description": "The bank account that the money was transfered from"
+            },
+            "to_bank_account_id": {
+              "type": "string",
+              "description": "The bank account that the money was transfered to"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the bank transfer"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The amount of the bank transfer"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference for the bank transfer"
+            },
+            "description": {
+              "type": "string",
+              "description": "The description for the bank transfer"
+            }
+          },
+          "required": [
+            "from_bank_account_id",
+            "to_bank_account_id",
+            "date",
+            "amount"
+          ]
+        }
+      },
+      "required": [
+        "bank_transfer"
+      ],
+      "description": "Creates a Bank Transfer"
+    },
+    "putBankTransfers": {
+      "type": "object",
+      "properties": {
+        "bank_transfer": {
+          "type": "object",
+          "properties": {
+            "from_bank_account_id": {
+              "type": "string",
+              "description": "The bank account that the money was transfered from"
+            },
+            "to_bank_account_id": {
+              "type": "string",
+              "description": "The bank account that the money was transfered to"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the bank transfer"
+            },
+            "amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The amount of the bank transfer"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference for the bank transfer"
+            },
+            "description": {
+              "type": "string",
+              "description": "The description for the bank transfer"
+            }
+          }
+        }
+      },
+      "required": [
+        "bank_transfer"
+      ],
+      "description": "Updates a Bank Transfer"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightBurnProject AppVersion="2.0.03" DeviceName="No Machine" FormatVersion="1" MaterialHeight="0" MirrorX="False" MirrorY="False">
+    <Thumbnail Source="iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAABJ0AAASdAHeZh94AAAEWklEQVR4nO3cMUqcWxiA4RMTEcFGJI0SsLVIKbiDwdbGQrfiLmytLNPEbbgDISFVFAfEIhCiMPF2F2wcLspN5H2e8nDO93/VW0wxbx4eHh7GE05PT8eHDx/G4uLiU9eAP+Dz58/j7u5u7O/vPzq/v78fl5eX4+Dg4Mn3b+YFYGVlZWxtbY2lpaXnbwu8qPPz8/H79++xs7Pz6PzXr1/j4uJi/Pjx48n37+Z94P379+PTp09jc3PzWYsCL+/m5mYsLCyM1dXVR+dfv34dk8lk7vu5AQD+Xmtra896v/BCewCvkABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABA2Ls/vQDw33z79m3MZrOxvLw8jo+Px+3t7Tg6Onp05/r6esxms7mzBABemd3d3TGdTsfy8vK4uroaY4xxdnY23r59+++d2Ww2fv78OXeWAMArs729PSaTyTg8PHz2LL8BQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQNjcvwSbTqdjb29vLC0t/R/7AHN8+fJlrK+vv8isuQE4OTkZGxsbY3Fx8UU+CDzP9+/fx8ePH19k1j94ml+phcGFnwAAAABJRU5ErkJggg=="/>
+    <VariableText>
+        <Start Value="0"/>
+        <End Value="999"/>
+        <Current Value="0"/>
+        <Increment Value="1"/>
+        <AutoAdvance Value="0"/>
+    </VariableText>
+    <UIPrefs>
+        <Optimize_ByLayer Value="0"/>
+        <Optimize_ByGroup Value="-1"/>
+        <Optimize_ByPriority Value="1"/>
+        <Optimize_WhichDirection Value="0"/>
+        <Optimize_InnerToOuter Value="1"/>
+        <Optimize_ByDirection Value="0"/>
+        <Optimize_ReduceTravel Value="1"/>
+        <Optimize_HideBacklash Value="0"/>
+        <Optimize_ReduceDirChanges Value="0"/>
+        <Optimize_ChooseCorners Value="0"/>
+        <Optimize_AllowReverse Value="1"/>
+        <Optimize_RemoveOverlaps Value="0"/>
+        <Optimize_OptimalEntryPoint Value="0"/>
+        <Optimize_OverlapDist Value="0.025"/>
+    </UIPrefs>
+    <CutSetting type="Cut">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <maxPower2 Value="20"/>
+        <speed Value="100"/>
+        <priority Value="0"/>
+    </CutSetting>
+    <Shape Type="Path" CutIndex="0" VertID="20" PrimID="5">
+        <XForm>1 0 0 1 -237.46582 -819.39728</XForm>
+        <VertList>V1230.9658 1904.3972c0x1230.9659c0y1903.5688c1x1V1232.4658 1902.8975c0x1233.2942c0y1902.8975c1x1231.6375c1y1902.8975SV1233.9658 1904.3972c0x1c1x1233.9657c1y1903.5688V1259.4658 1904.3972c0x178.96564c0y716.14728c1x178.96564c1y716.14728V1259.4658 906.39728c0x178.96564c0y716.14728c1x178.96564c1y716.14728V1233.9658 906.39728c0x1233.9658c0y907.22571c1x178.96564c1y716.14728SV1232.4658 907.89728c0x1231.6375c0y907.89728c1x1233.2942c1y907.89728SV1230.9658 906.39728c0x178.96564c0y716.14728c1x1230.9658c1y907.22571SV1218.7991 906.39728c0x178.96564c0y716.14728c1x178.96564c1y716.14728V1218.7991 819.39728c0x178.96564c0y716.14728c1x178.96564c1y716.14728V237.46582 819.39728c0x178.96564c0y716.14728c1x178.96564c1y716.14728V237.46582 1904.3972c0x178.96564c0y716.14728c1x178.96564c1y716.14728</VertList>
+        <PrimList>B0 1B1 2L2 3L3 4L4 5B5 6B6 7L7 8L8 9L9 10L10 11L11 0</PrimList>
+    </Shape>
+    <Notes ShowOnLoad="0" Notes=""/>
+</LightBurnProject>

@@ -1,0 +1,973 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Currencies",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Business Exchange Rates",
+      "description": "This endpoint exposes exchange rates defined for the business. Each exchange rate has a rate to convert the business' base currency to a foreign one and vice versa. <br><br> The `base_currency` used by the current business is exposed on the Financial Settings endpoint. Please be advised that only businesses that have `multi_currency_enabled` set to `true` on the `financial_settings` may use other currencies than their base currency, even if exchange rates are available on this endpoint. <br><br> This endpoint exposes Business Exchanges Rates, ie. rates defined by the user. The `use_live_exchange_rates` attribute on the Financial Settings endpoint tells you whether the business uses live rates or those exposed here."
+    },
+    {
+      "name": "Currencies",
+      "description": "This endpoint exposes the currencies available in Accounting. The `base_currency` used by the current business is exposed on the `financial_settings` endpoint. Please be advised that only businesses that have `multi_currency_enabled` set to `true` on the Financial Settings may use other currencies than their base currency. <br><br> Currencies do not change often, so it makes sense to cache this data in your client if you need it."
+    },
+    {
+      "name": "Exchange Rates",
+      "description": "This endpoint exposes exchange rates available for a business. Each exchange rate has a rate to convert the business' base currency to a foreign one and vice versa. <br><br> The `base_currency` used by the current business is exposed on the Financial Settings endpoint. Please be advised that only businesses that have `multi_currency_enabled` set to `true` on the `financial_settings` may use other currencies than their base currency, even if exchange rates are available on this endpoint. <br><br> This endpoint combines Business Exchanges Rates, ie. rates defined by the user, with Live Exchange Rates, which are updated automatically. If there is no business defined rate for a currency available in Accounting, a Live Exchange Rate is exposed. The `use_live_exchange_rates` attribute on the Financial Settings endpoint tells you whether the business uses live rates or business defined ones."
+    },
+    {
+      "name": "Live Exchange Rates",
+      "description": "This endpoint exposes automatically updated exchange rates available for a business. Each exchange rate has a rate to convert the business' base currency to a foreign one and vice versa. <br><br> The `base_currency` used by the current business is exposed on the Financial Settings endpoint. Please be advised that only businesses that have `multi_currency_enabled` set to `true` on the `financial_settings` may use other currencies than their base currency, even if exchange rates are available on this endpoint. <br><br> This endpoint exposes Live Exchange Rates, which are updated automatically. The `use_live_exchange_rates` attribute on the Financial Settings endpoint tells you whether the business uses the rates exposes here or user defined rates, which are available on the Business Exchange Rates endpoint."
+    }
+  ],
+  "paths": {
+    "/business_exchange_rates": {
+      "get": {
+        "summary": "Returns all Business Exchange Rates",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Business Exchange Rates per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Business Exchange Rates",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Business Exchange Rates (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Business Exchange Rates",
+            "examples": {
+			"application/json":
+			{
+				"$total": 3,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"displayed_as": "GBP -> EUR",
+						"$path": "/business_exchange_rates/EUR"
+					},
+					{
+						"displayed_as": "GBP -> GBP",
+						"$path": "/business_exchange_rates/GBP"
+					},
+					{
+						"displayed_as": "GBP -> USD",
+						"$path": "/business_exchange_rates/USD"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Business Exchange Rates"
+        ],
+        "operationId": "getBusinessExchangeRates"
+      },
+      "x-sage-pathtitle": "Business Exchange Rate collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Business Exchange Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BusinessExchangeRates",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postBusinessExchangeRates"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Business Exchange Rate",
+            "schema": {
+              "$ref": "#/definitions/BusinessExchangeRate"
+            }
+          }
+        },
+        "tags": [
+          "Business Exchange Rates"
+        ],
+        "operationId": "postBusinessExchangeRates"
+      }
+    },
+    "/business_exchange_rates/{key}": {
+      "get": {
+        "summary": "Returns a Business Exchange Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Business Exchange Rate Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Business Exchange Rate (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Business Exchange Rate",
+            "examples": {
+              "application/json":
+			  {
+				"displayed_as": "GBP -> EUR",
+				"$path": "/business_exchange_rates/EUR",
+				"created_at": "2022-12-30T13:54:24Z",
+				"updated_at": "2023-01-13T09:31:16Z",
+				"rate": "1.127522832",
+				"inverse_rate": "0.8869000003",
+				"base_currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"currency": {
+					"id": "EUR",
+					"displayed_as": "Euro (EUR)",
+					"$path": "/currencies/EUR"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Business Exchange Rates"
+        ],
+        "operationId": "getBusinessExchangeRatesKey"
+      },
+      "x-sage-pathtitle": "single Business Exchange Rate resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Business Exchange Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Business Exchange Rate Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "BusinessExchangeRates",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBusinessExchangeRates"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Business Exchange Rate",
+            "schema": {
+              "$ref": "#/definitions/BusinessExchangeRate"
+            }
+          }
+        },
+        "tags": [
+          "Business Exchange Rates"
+        ],
+        "operationId": "putBusinessExchangeRatesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Business Exchange Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Business Exchange Rate Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Business Exchange Rate"
+          }
+        },
+        "tags": [
+          "Business Exchange Rates"
+        ],
+        "operationId": "deleteBusinessExchangeRatesKey"
+      }
+    },
+    "/currencies": {
+      "get": {
+        "summary": "Returns all Currencies",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Currencies per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Currencies",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Currencies (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Currencies",
+            "examples": {
+            "application/json":
+			{
+				"$total": 34,
+				"$page": 1,
+				"$next": "/currencies?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "AUD",
+						"displayed_as": "Australian Dollar (AUD)",
+						"$path": "/currencies/AUD"
+					},
+					{
+						"id": "BGN",
+						"displayed_as": "Bulgarian Lev (BGN)",
+						"$path": "/currencies/BGN"
+					},
+					{
+						"id": "BRL",
+						"displayed_as": "Brazilian Real (BRL)",
+						"$path": "/currencies/BRL"
+					},
+					{
+						"id": "CAD",
+						"displayed_as": "Canadian Dollar (CAD)",
+						"$path": "/currencies/CAD"
+					},
+					{
+						"id": "CHF",
+						"displayed_as": "Swiss Franc (CHF)",
+						"$path": "/currencies/CHF"
+					},
+					{
+						"id": "CNY",
+						"displayed_as": "Yuan Renminbi (CNY)",
+						"$path": "/currencies/CNY"
+					},
+					{
+						"id": "CZK",
+						"displayed_as": "Czech Koruna (CZK)",
+						"$path": "/currencies/CZK"
+					},
+					{
+						"id": "DKK",
+						"displayed_as": "Danish Krone (DKK)",
+						"$path": "/currencies/DKK"
+					},
+					{
+						"id": "EUR",
+						"displayed_as": "Euro (EUR)",
+						"$path": "/currencies/EUR"
+					},
+					{
+						"id": "GBP",
+						"displayed_as": "Pound Sterling (GBP)",
+						"$path": "/currencies/GBP"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Currencies"
+        ],
+        "operationId": "getCurrencies"
+      },
+      "x-sage-pathtitle": "Currency collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/currencies/{key}": {
+      "get": {
+        "summary": "Returns a Currency",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Currency Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Currency (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Currency",
+            "examples": {
+              "application/json":
+			  {
+				"id": "AUD",
+				"displayed_as": "Australian Dollar (AUD)",
+				"$path": "/currencies/AUD"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Currencies"
+        ],
+        "operationId": "getCurrenciesKey"
+      },
+      "x-sage-pathtitle": "single Currency resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/exchange_rates": {
+      "get": {
+        "summary": "Returns all Exchange Rates",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Currencies per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Currencies",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Currencies (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Exchange Rates",
+            "examples": {
+            "application/json":
+			{
+				"$total": 34,
+				"$page": 1,
+				"$next": "/exchange_rates?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"displayed_as": "GBP -> AUD",
+						"$path": "/exchange_rates/AUD"
+					},
+					{
+						"displayed_as": "GBP -> BGN",
+						"$path": "/exchange_rates/BGN"
+					},
+					{
+						"displayed_as": "GBP -> BRL",
+						"$path": "/exchange_rates/BRL"
+					},
+					{
+						"displayed_as": "GBP -> CAD",
+						"$path": "/exchange_rates/CAD"
+					},
+					{
+						"displayed_as": "GBP -> CHF",
+						"$path": "/exchange_rates/CHF"
+					},
+					{
+						"displayed_as": "GBP -> CNY",
+						"$path": "/exchange_rates/CNY"
+					},
+					{
+						"displayed_as": "GBP -> CZK",
+						"$path": "/exchange_rates/CZK"
+					},
+					{
+						"displayed_as": "GBP -> DKK",
+						"$path": "/exchange_rates/DKK"
+					},
+					{
+						"displayed_as": "GBP -> EUR",
+						"$path": "/exchange_rates/EUR"
+					},
+					{
+						"displayed_as": "GBP -> GBP",
+						"$path": "/exchange_rates/GBP"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Exchange Rates"
+        ],
+        "operationId": "getExchangeRates"
+      },
+      "x-sage-pathtitle": "Exchange Rate collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/exchange_rates/{key}": {
+      "get": {
+        "summary": "Returns a Exchange Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Exchange Rate Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Currency (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Exchange Rate",
+            "examples": {
+              "application/json":
+			  {
+				"displayed_as": "GBP -> AUD",
+				"$path": "/exchange_rates/AUD",
+				"created_at": "2024-10-20T15:30:05Z",
+				"updated_at": "2024-10-20T15:30:05Z",
+				"rate": "1.9437263272",
+				"inverse_rate": "0.5144757191",
+				"base_currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"currency": {
+					"id": "AUD",
+					"displayed_as": "Australian Dollar (AUD)",
+					"$path": "/currencies/AUD"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Exchange Rates"
+        ],
+        "operationId": "getExchangeRatesKey"
+      },
+      "x-sage-pathtitle": "single Exchange Rate resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/live_exchange_rates": {
+      "get": {
+        "summary": "Returns all Live Exchange Rates",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Currencies per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Currencies",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Currencies (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Live Exchange Rates",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 34,
+				"$page": 1,
+				"$next": "/live_exchange_rates?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"displayed_as": "GBP -> AUD",
+						"$path": "/live_exchange_rates/AUD"
+					},
+					{
+						"displayed_as": "GBP -> BGN",
+						"$path": "/live_exchange_rates/BGN"
+					},
+					{
+						"displayed_as": "GBP -> BRL",
+						"$path": "/live_exchange_rates/BRL"
+					},
+					{
+						"displayed_as": "GBP -> CAD",
+						"$path": "/live_exchange_rates/CAD"
+					},
+					{
+						"displayed_as": "GBP -> CHF",
+						"$path": "/live_exchange_rates/CHF"
+					},
+					{
+						"displayed_as": "GBP -> CNY",
+						"$path": "/live_exchange_rates/CNY"
+					},
+					{
+						"displayed_as": "GBP -> CZK",
+						"$path": "/live_exchange_rates/CZK"
+					},
+					{
+						"displayed_as": "GBP -> DKK",
+						"$path": "/live_exchange_rates/DKK"
+					},
+					{
+						"displayed_as": "GBP -> EUR",
+						"$path": "/live_exchange_rates/EUR"
+					},
+					{
+						"displayed_as": "GBP -> GBP",
+						"$path": "/live_exchange_rates/GBP"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Live Exchange Rates"
+        ],
+        "operationId": "getLiveExchangeRates"
+      },
+      "x-sage-pathtitle": "Live Exchange Rate collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/live_exchange_rates/{key}": {
+      "get": {
+        "summary": "Returns a Live Exchange Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Live Exchange Rate Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Currency (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Live Exchange Rate",
+            "examples": {
+              "application/json":
+			  {
+				"displayed_as": "GBP -> AUD",
+				"$path": "/live_exchange_rates/AUD",
+				"rate": "1.9437263272",
+				"inverse_rate": "0.5144757191",
+				"base_currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"currency": {
+					"id": "AUD",
+					"displayed_as": "Australian Dollar (AUD)",
+					"$path": "/currencies/AUD"
+				},
+				"retrieved_at": "2024-10-20T15:30:05Z",
+				"updated_at": "2024-10-18T00:00:00Z"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Live Exchange Rates"
+        ],
+        "operationId": "getLiveExchangeRatesKey"
+      },
+      "x-sage-pathtitle": "single Live Exchange Rate resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "BusinessExchangeRate": {
+      "type": "object",
+      "properties": {
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The exchange rate"
+        },
+        "inverse_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The inverse exchange rate"
+        },
+        "base_currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The base currency for the business"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The foreign currency"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+      "x-sage-menusection": "Currencies & Exchange"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Currencies & Exchange"
+    },
+    "postBusinessExchangeRates": {
+      "type": "object",
+      "properties": {
+        "business_exchange_rate": {
+          "type": "object",
+          "properties": {
+            "currency_id": {
+              "type": "string",
+              "description": "The foreign currency"
+            },
+            "rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The exchange rate"
+            },
+            "inverse_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The inverse exchange rate"
+            },
+            "base_currency_id": {
+              "type": "string",
+              "description": "The ID of the Base Currency."
+            }
+          },
+          "required": [
+            "currency_id",
+            "rate"
+          ]
+        }
+      },
+      "required": [
+        "business_exchange_rate"
+      ],
+      "description": "Creates a Business Exchange Rate"
+    },
+    "putBusinessExchangeRates": {
+      "type": "object",
+      "properties": {
+        "business_exchange_rate": {
+          "type": "object",
+          "properties": {
+            "currency_id": {
+              "type": "string",
+              "description": "The foreign currency"
+            },
+            "rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The exchange rate"
+            },
+            "inverse_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The inverse exchange rate"
+            },
+            "base_currency_id": {
+              "type": "string",
+              "description": "The ID of the Base Currency."
+            }
+          }
+        }
+      },
+      "required": [
+        "business_exchange_rate"
+      ],
+      "description": "Updates a Business Exchange Rate"
+    },
+    "ExchangeRate": {
+      "type": "object",
+      "properties": {
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The exchange rate"
+        },
+        "inverse_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The inverse exchange rate"
+        },
+        "base_currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The base currency for the business"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The foreign currency"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Currencies & Exchange"
+    },
+    "LiveExchangeRate": {
+      "type": "object",
+      "properties": {
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The exchange rate"
+        },
+        "inverse_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The inverse exchange rate"
+        },
+        "base_currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The base currency for the business"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The foreign currency"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Currencies & Exchange"
+    }
+  }
+}

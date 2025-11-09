@@ -1,0 +1,4 @@
+client_code,name,contact_person,email,phone,address,notes
+,Acme Corporation,John Smith,john@acme.com,+27 11 123 4567,"123 Main St, Johannesburg, 2000",Preferred customer
+,Tech Solutions Ltd,Jane Doe,jane@techsolutions.co.za,+27 21 987 6543,"456 Oak Ave, Cape Town, 8001",Net 30 payment terms
+,Manufacturing Co,Bob Johnson,bob@manufacturing.com,+27 31 555 1234,"789 Industrial Rd, Durban, 4001",

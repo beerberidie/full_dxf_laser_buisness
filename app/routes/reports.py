@@ -3,8 +3,10 @@ Reporting and analytics routes
 """
 
 from flask import Blueprint, render_template, request, make_response
+from flask_login import login_required
 from app import db
 from app.models import Client, Project, Product, DesignFile, QueueItem, LaserRun, InventoryItem, InventoryTransaction
+from app.utils.decorators import role_required
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import csv
@@ -14,12 +16,14 @@ bp = Blueprint('reports', __name__, url_prefix='/reports')
 
 
 @bp.route('/')
+@login_required
 def index():
     """Display reports dashboard."""
     return render_template('reports/index.html')
 
 
 @bp.route('/production')
+@login_required
 def production_summary():
     """Production summary report."""
     # Get date range from request
@@ -99,6 +103,7 @@ def production_summary():
 
 
 @bp.route('/efficiency')
+@login_required
 def efficiency_metrics():
     """Efficiency metrics report."""
     # Get queue items with estimated vs actual times
@@ -153,6 +158,7 @@ def efficiency_metrics():
 
 
 @bp.route('/inventory')
+@login_required
 def inventory_report():
     """Inventory usage and value report."""
     # Get all inventory items
@@ -209,6 +215,7 @@ def inventory_report():
 
 
 @bp.route('/clients')
+@login_required
 def client_report():
     """Client and project profitability report."""
     # Get all clients with their projects
@@ -262,6 +269,7 @@ def client_report():
 
 
 @bp.route('/export/production')
+@role_required('admin', 'manager')
 def export_production_csv():
     """Export production report to CSV."""
     # Get date range
@@ -312,6 +320,97 @@ def export_production_csv():
     response = make_response(output.getvalue())
     response.headers['Content-Type'] = 'text/csv'
     response.headers['Content-Disposition'] = f'attachment; filename=production_report_{start_date.strftime("%Y%m%d")}_{end_date.strftime("%Y%m%d")}.csv'
-    
+
     return response
 
+
+# Production Automation: Daily Report Routes
+
+@bp.route('/daily')
+@login_required
+def daily_reports():
+    """List all daily reports."""
+    from app.services.daily_report import get_reports_for_date_range
+    from datetime import date
+
+    # Get last 30 days of reports
+    end_date = date.today()
+    start_date = end_date - timedelta(days=30)
+
+    reports = get_reports_for_date_range(start_date, end_date)
+
+    return render_template('reports/daily_reports.html', reports=reports)
+
+
+@bp.route('/daily/<report_date>')
+@login_required
+def view_daily_report(report_date):
+    """View a specific daily report."""
+    from app.services.daily_report import get_report_by_date, generate_daily_report
+    from datetime import datetime
+
+    # Parse date
+    try:
+        date_obj = datetime.strptime(report_date, '%Y-%m-%d').date()
+    except ValueError:
+        flash('Invalid date format.', 'error')
+        return redirect(url_for('reports.daily_reports'))
+
+    # Get or generate report
+    report = get_report_by_date(date_obj)
+    if not report:
+        # Generate report for this date
+        report = generate_daily_report(date_obj)
+
+    return render_template('reports/daily_report.html', report=report)
+
+
+@bp.route('/daily/generate', methods=['POST'])
+@login_required
+@role_required('admin', 'manager')
+def generate_daily_report_now():
+    """Manually generate daily report for yesterday."""
+    from app.services.daily_report import generate_daily_report
+    from flask import flash, redirect, url_for
+
+    report = generate_daily_report()
+
+    flash(f'Daily report generated for {report.report_date.strftime("%Y-%m-%d")}.', 'success')
+    return redirect(url_for('reports.view_daily_report', report_date=report.report_date.strftime('%Y-%m-%d')))
+
+
+@bp.route('/daily/<report_date>/export')
+@login_required
+@role_required('admin', 'manager')
+def export_daily_report_txt(report_date):
+    """Export daily report as .txt file."""
+    from app.services.daily_report import get_report_by_date
+    from flask import send_file, flash, redirect, url_for
+    from datetime import datetime
+    import tempfile
+
+    # Parse date
+    try:
+        date_obj = datetime.strptime(report_date, '%Y-%m-%d').date()
+    except ValueError:
+        flash('Invalid date format.', 'error')
+        return redirect(url_for('reports.daily_reports'))
+
+    # Get report
+    report = get_report_by_date(date_obj)
+    if not report:
+        flash('Report not found.', 'error')
+        return redirect(url_for('reports.daily_reports'))
+
+    # Write to temp file
+    temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt', encoding='utf-8')
+    temp_file.write(report.report_body)
+    temp_file.close()
+
+    # Send file
+    return send_file(
+        temp_file.name,
+        as_attachment=True,
+        download_name=f'DailyReport_{report_date}.txt',
+        mimetype='text/plain'
+    )

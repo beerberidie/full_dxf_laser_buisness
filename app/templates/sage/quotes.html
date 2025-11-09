@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Quotes - Sage Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Sales Quotes</h1>
+        <p class="page-subtitle">Manage quotes from {{ business.displayed_as or business.name }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('sage.dashboard') }}" class="btn btn-secondary">
+            <span class="icon">←</span> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if quotes %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Quote #</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Valid Until</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quote in quotes %}
+                    <tr>
+                        <td><strong>{{ quote.displayed_as or quote.reference or '-' }}</strong></td>
+                        <td>{{ quote.contact.displayed_as if quote.contact else '-' }}</td>
+                        <td>{{ quote.date or '-' }}</td>
+                        <td>{{ quote.expiry_date or '-' }}</td>
+                        <td><strong>R {{ "%.2f"|format(quote.total_amount or 0) }}</strong></td>
+                        <td>
+                            {% if quote.status == 'ACCEPTED' %}
+                            <span class="badge badge-success">Accepted</span>
+                            {% elif quote.status == 'REJECTED' %}
+                            <span class="badge badge-danger">Rejected</span>
+                            {% elif quote.status == 'SENT' %}
+                            <span class="badge badge-info">Sent</span>
+                            {% else %}
+                            <span class="badge badge-secondary">{{ quote.status or 'Draft' }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing {{ quotes|length }} quotes
+            </div>
+            <div class="pagination-controls">
+                {% if page > 1 %}
+                <a href="{{ url_for('sage.quotes', page=page-1, items_per_page=items_per_page) }}" class="btn btn-sm btn-secondary">
+                    ← Previous
+                </a>
+                {% endif %}
+                <span class="pagination-current">Page {{ page }}</span>
+                {% if quotes|length == items_per_page %}
+                <a href="{{ url_for('sage.quotes', page=page+1, items_per_page=items_per_page) }}" class="btn btn-sm btn-secondary">
+                    Next →
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <h2 class="empty-state-title">No Quotes Found</h2>
+            <p class="empty-state-description">
+                You don't have any quotes in Sage yet.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.pagination-info {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.pagination-current {
+    padding: 0 var(--spacing-md);
+    color: var(--color-gray-700);
+    font-weight: 600;
+}
+</style>
+{% endblock %}
+

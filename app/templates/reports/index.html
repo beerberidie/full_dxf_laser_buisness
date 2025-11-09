@@ -75,6 +75,28 @@
             <a href="{{ url_for('reports.client_report') }}" class="btn btn-primary">View Client Report</a>
         </div>
     </div>
+
+    <!-- Daily Report -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📋 Daily Report</h2>
+        </div>
+        <div class="card-body">
+            <p>View automated daily operational briefs generated at 07:30 SAST.</p>
+            <ul>
+                <li>What needs to be cut today</li>
+                <li>What material needs to be ordered</li>
+                <li>Which clients need to be notified</li>
+                <li>Blocked projects requiring attention</li>
+            </ul>
+            <div class="flex-row flex-gap-sm flex-wrap">
+                <a href="{{ url_for('reports.daily_reports') }}" class="btn btn-primary">View Daily Reports</a>
+                <form action="{{ url_for('reports.generate_daily_report_now') }}" method="POST" class="inline-form">
+                    <button type="submit" class="btn btn-success">Generate Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

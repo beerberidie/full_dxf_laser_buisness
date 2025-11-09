@@ -1,0 +1,966 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Sage Accounting API - Reporting",
+    "version": "3.1"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Trial Balance",
+      "description": "A trial balance is a list of all the general ledger accounts (both revenue and capital). Each nominal ledger account will hold either a debit balance or a credit balance. Additionally to the balances at the start and end dates you will get the sums of all debit and credit transactions during the specified period."
+    }
+  ],
+  "paths": {
+    "/trial_balance": {
+      "get": {
+        "tags": [
+          "Trial Balance"
+        ],
+        "summary": "Returns a trial balance for a date range",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "The first day in the date range to query the balance from.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "The last day in the date range to query the balance from.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all ledger accounts' trial balances",
+            "examples": {
+              "application/json":
+			  {
+				"from_date": "2024-01-01",
+				"to_date": "2024-12-31",
+				"ledger_accounts": [
+					{
+						"id": "b4cea718a61a451d8eddbf032375f809",
+						"displayed_as": "Stripe283 (1380)",
+						"$path": "/ledger_accounts/b4cea718a61a451d8eddbf032375f809",
+						"opening_balance": {
+							"debit": "804.39",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "804.39",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "ccd4db18df44421bbdc93e18ab1427b7",
+						"displayed_as": "Euro Bank Account (1600)",
+						"$path": "/ledger_accounts/ccd4db18df44421bbdc93e18ab1427b7",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "400"
+						},
+						"debit": "0",
+						"credit": "400"
+					},
+					{
+						"id": "7a5eab22884911ed84fa0252b90cda0d",
+						"displayed_as": "Late Payment Charges (4400)",
+						"$path": "/ledger_accounts/7a5eab22884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "8.33"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "8.33"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "2d0be1262aa346598975ed0c5e4a4d5a",
+						"displayed_as": "Stripe298 (1340)",
+						"$path": "/ledger_accounts/2d0be1262aa346598975ed0c5e4a4d5a",
+						"opening_balance": {
+							"debit": "703.49",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "703.49",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "6726182e9fa742798fcda41eb48afad8",
+						"displayed_as": "Petty Cash (1250)",
+						"$path": "/ledger_accounts/6726182e9fa742798fcda41eb48afad8",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "1200"
+						},
+						"debit": "0",
+						"credit": "1200"
+					},
+					{
+						"id": "7a5b422f884911ed84fa0252b90cda0d",
+						"displayed_as": "Trade Creditors (2100)",
+						"$path": "/ledger_accounts/7a5b422f884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "52699.63"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "55677.75"
+						},
+						"debit": "0",
+						"credit": "2978.12"
+					},
+					{
+						"id": "7a5b6c2f884911ed84fa0252b90cda0d",
+						"displayed_as": "Accruals (2110)",
+						"$path": "/ledger_accounts/7a5b6c2f884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "50"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "50"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5b2a31884911ed84fa0252b90cda0d",
+						"displayed_as": "Prepayments (1120)",
+						"$path": "/ledger_accounts/7a5b2a31884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "450"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "450"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a6b6a32884911ed84fa0252b90cda0d",
+						"displayed_as": "Motor Vehicles Depreciation (8050)",
+						"$path": "/ledger_accounts/7a6b6a32884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "5520",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "5520",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "18313c3bb11742e580e38de612013e2a",
+						"displayed_as": "Paypal GBP IN (1510)",
+						"$path": "/ledger_accounts/18313c3bb11742e580e38de612013e2a",
+						"opening_balance": {
+							"debit": "147.78",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "147.78",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "c8ed1840a6d14e11b833a440d1f8af1a",
+						"displayed_as": "Stripe180 (1530)",
+						"$path": "/ledger_accounts/c8ed1840a6d14e11b833a440d1f8af1a",
+						"opening_balance": {
+							"debit": "5924.64",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "5924.64",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5e8543884911ed84fa0252b90cda0d",
+						"displayed_as": "Sale of Assets (4200)",
+						"$path": "/ledger_accounts/7a5e8543884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "83.33"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "83.33"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "d256da43e3f946e4b130193d81cc339f",
+						"displayed_as": "Paypal GBP IN (1450)",
+						"$path": "/ledger_accounts/d256da43e3f946e4b130193d81cc339f",
+						"opening_balance": {
+							"debit": "502.59",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "502.59",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "159041491538432dbab2b5f65e369e56",
+						"displayed_as": "Building Society Account (1240)",
+						"$path": "/ledger_accounts/159041491538432dbab2b5f65e369e56",
+						"opening_balance": {
+							"debit": "9018.41",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "9018.41",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "12156f49008b4140b17a97ecb29ea1df",
+						"displayed_as": "Gocardless GBP IN (1430)",
+						"$path": "/ledger_accounts/12156f49008b4140b17a97ecb29ea1df",
+						"opening_balance": {
+							"debit": "594.9",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "594.9",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5ad74c884911ed84fa0252b90cda0d",
+						"displayed_as": "Trade Debtors (1100)",
+						"$path": "/ledger_accounts/7a5ad74c884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "100131.4",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "104854.4",
+							"credit": "0"
+						},
+						"debit": "4723",
+						"credit": "0"
+					},
+					{
+						"id": "7a5a8952884911ed84fa0252b90cda0d",
+						"displayed_as": "Motor Vehicles - Accumulated Depreciation (51)",
+						"$path": "/ledger_accounts/7a5a8952884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "5520"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "5520"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "c3226d53929048beb9a930f1cb6c4f2a",
+						"displayed_as": "Gocardless GBP IN (1400)",
+						"$path": "/ledger_accounts/c3226d53929048beb9a930f1cb6c4f2a",
+						"opening_balance": {
+							"debit": "396",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "396",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a632154884911ed84fa0252b90cda0d",
+						"displayed_as": "Opening Balances (9998)",
+						"$path": "/ledger_accounts/7a632154884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "261.44"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "261.44"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a639255884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales - Services (4010)",
+						"$path": "/ledger_accounts/7a639255884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "6012"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "6012"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "b73ebf58b70c4625b1daf06597724572",
+						"displayed_as": "Stripe894 (1550)",
+						"$path": "/ledger_accounts/b73ebf58b70c4625b1daf06597724572",
+						"opening_balance": {
+							"debit": "21.16",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "21.16",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a63695f884911ed84fa0252b90cda0d",
+						"displayed_as": "Suspense (9999)",
+						"$path": "/ledger_accounts/7a63695f884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "1385.4"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "1385.4"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "2a625063792e41ff9e772ab51c2ec98f",
+						"displayed_as": "BlackCurrant FInance (1320)",
+						"$path": "/ledger_accounts/2a625063792e41ff9e772ab51c2ec98f",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "53"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "53"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "92b8166843a84772997849dbacd70830",
+						"displayed_as": "Gocardless GBP IN (1480)",
+						"$path": "/ledger_accounts/92b8166843a84772997849dbacd70830",
+						"opening_balance": {
+							"debit": "182.4",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "182.4",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "d47fbc695161427b9d579d92020c2d1b",
+						"displayed_as": "US Dollar Account (1590)",
+						"$path": "/ledger_accounts/d47fbc695161427b9d579d92020c2d1b",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "400",
+							"credit": "0"
+						},
+						"debit": "400",
+						"credit": "0"
+					},
+					{
+						"id": "1953c27bb03f48bf99d8d239d50cefd2",
+						"displayed_as": "Stripe731 (1410)",
+						"$path": "/ledger_accounts/1953c27bb03f48bf99d8d239d50cefd2",
+						"opening_balance": {
+							"debit": "732.8",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "732.8",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "e5e86a844da111ef963b02a97020826f",
+						"displayed_as": "CIS Tax Liability Withheld (2501)",
+						"$path": "/ledger_accounts/e5e86a844da111ef963b02a97020826f",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "20"
+						},
+						"debit": "0",
+						"credit": "20"
+					},
+					{
+						"id": "3f95d2a0daa043919870a27099e98bb5",
+						"displayed_as": "USD account (1500)",
+						"$path": "/ledger_accounts/3f95d2a0daa043919870a27099e98bb5",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "100",
+							"credit": "0"
+						},
+						"debit": "100",
+						"credit": "0"
+					},
+					{
+						"id": "5c575ca1cfe646bc8f26c81d6c8ee8d2",
+						"displayed_as": "Paypal GBP IN (1420)",
+						"$path": "/ledger_accounts/5c575ca1cfe646bc8f26c81d6c8ee8d2",
+						"opening_balance": {
+							"debit": "2458.71",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "2458.71",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5f27a2884911ed84fa0252b90cda0d",
+						"displayed_as": "Cost of Sales - Goods (5000)",
+						"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "168006.29",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "170845",
+							"credit": "0"
+						},
+						"debit": "2838.71",
+						"credit": "0"
+					},
+					{
+						"id": "7a5f66a6884911ed84fa0252b90cda0d",
+						"displayed_as": "Cost of Sales - Materials (5020)",
+						"$path": "/ledger_accounts/7a5f66a6884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "65",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "65",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5bc3ae884911ed84fa0252b90cda0d",
+						"displayed_as": "VAT on Purchases (2201)",
+						"$path": "/ledger_accounts/7a5bc3ae884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "14827.53",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "14886.94",
+							"credit": "0"
+						},
+						"debit": "59.41",
+						"credit": "0"
+					},
+					{
+						"id": "7a5b95af884911ed84fa0252b90cda0d",
+						"displayed_as": "VAT on Sales (2200)",
+						"$path": "/ledger_accounts/7a5b95af884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "32371.99"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "32569.01"
+						},
+						"debit": "0",
+						"credit": "197.02"
+					},
+					{
+						"id": "a036f7b3951e4b39bf39d78906b05da7",
+						"displayed_as": "Stripe4 (1330)",
+						"$path": "/ledger_accounts/a036f7b3951e4b39bf39d78906b05da7",
+						"opening_balance": {
+							"debit": "5.94",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "5.94",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5e37b4884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales - Products (4000)",
+						"$path": "/ledger_accounts/7a5e37b4884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "191589.14"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "191921.88"
+						},
+						"debit": "0",
+						"credit": "332.74"
+					},
+					{
+						"id": "696c42b8c8c44b2ba0cb9797d525f948",
+						"displayed_as": "Bank Current Account (1220)",
+						"$path": "/ledger_accounts/696c42b8c8c44b2ba0cb9797d525f948",
+						"opening_balance": {
+							"debit": "107.53",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "107.53",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a653db9884911ed84fa0252b90cda0d",
+						"displayed_as": "Insurance Claims (4930)",
+						"$path": "/ledger_accounts/7a653db9884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "5"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "5"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "9cc910badc124b0989b101e57f7caa8e",
+						"displayed_as": "Bank Deposit Account (1230)",
+						"$path": "/ledger_accounts/9cc910badc124b0989b101e57f7caa8e",
+						"opening_balance": {
+							"debit": "830.48",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "830.48",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5ecfcf884911ed84fa0252b90cda0d",
+						"displayed_as": "Other income (4900)",
+						"$path": "/ledger_accounts/7a5ecfcf884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "17517.37"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "22278.61"
+						},
+						"debit": "0",
+						"credit": "4761.24"
+					},
+					{
+						"id": "200512d2ea0e46ff87d5626d6d7d485f",
+						"displayed_as": "Euro Account (1490)",
+						"$path": "/ledger_accounts/200512d2ea0e46ff87d5626d6d7d485f",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "100"
+						},
+						"debit": "0",
+						"credit": "100"
+					},
+					{
+						"id": "511371d830764c6fa6b7b6b91822afcd",
+						"displayed_as": "Stripe Account (1360)",
+						"$path": "/ledger_accounts/511371d830764c6fa6b7b6b91822afcd",
+						"opening_balance": {
+							"debit": "829.57",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "829.57",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5ef5d8884911ed84fa0252b90cda0d",
+						"displayed_as": "Carriage on Sales (4910)",
+						"$path": "/ledger_accounts/7a5ef5d8884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "90.55"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "90.55"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "004240d939c74b63a425ea63098e1420",
+						"displayed_as": "Stripe174 (1290)",
+						"$path": "/ledger_accounts/004240d939c74b63a425ea63098e1420",
+						"opening_balance": {
+							"debit": "116.32",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "116.32",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "13a77fda743145368e269a306f3919ea",
+						"displayed_as": "Stripe542 (1310)",
+						"$path": "/ledger_accounts/13a77fda743145368e269a306f3919ea",
+						"opening_balance": {
+							"debit": "6985.53",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "6985.53",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a5e5edc884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales Discounts (4020)",
+						"$path": "/ledger_accounts/7a5e5edc884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "186.16",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "186.16",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a62f9e6884911ed84fa0252b90cda0d",
+						"displayed_as": "Exchange Rate Gains and Losses (8260)",
+						"$path": "/ledger_accounts/7a62f9e6884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "17.83"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "17.83"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a6282e7884911ed84fa0252b90cda0d",
+						"displayed_as": "Bank Charges and Interest (7900)",
+						"$path": "/ledger_accounts/7a6282e7884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "703.73",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "703.73",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "163849e847954f66badb3a4bbbb4dc19",
+						"displayed_as": "Bank Account (1200)",
+						"$path": "/ledger_accounts/163849e847954f66badb3a4bbbb4dc19",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "15225.08"
+						},
+						"closing_balance": {
+							"debit": "0",
+							"credit": "13457.08"
+						},
+						"debit": "1768",
+						"credit": "0"
+					},
+					{
+						"id": "c4dd7cebed2b499c818ba5fd0f263cdf",
+						"displayed_as": "Paypal GBP IN (1390)",
+						"$path": "/ledger_accounts/c4dd7cebed2b499c818ba5fd0f263cdf",
+						"opening_balance": {
+							"debit": "519.08",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "519.08",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "e5e7b9ee4da111ef963b02a97020826f",
+						"displayed_as": "CIS Labour Expense (5111)",
+						"$path": "/ledger_accounts/e5e7b9ee4da111ef963b02a97020826f",
+						"opening_balance": {
+							"debit": "0",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "100",
+							"credit": "0"
+						},
+						"debit": "100",
+						"credit": "0"
+					},
+					{
+						"id": "7a696ef3884911ed84fa0252b90cda0d",
+						"displayed_as": "Telephone (7530)",
+						"$path": "/ledger_accounts/7a696ef3884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "50",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "50",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "f5d19cf58b314e9a8840f55fa67dc459",
+						"displayed_as": "Stripe454 (1350)",
+						"$path": "/ledger_accounts/f5d19cf58b314e9a8840f55fa67dc459",
+						"opening_balance": {
+							"debit": "93.92",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "93.92",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "a7e0a1f77a9b4566829ccf8247bdb22d",
+						"displayed_as": "Cash (1210)",
+						"$path": "/ledger_accounts/a7e0a1f77a9b4566829ccf8247bdb22d",
+						"opening_balance": {
+							"debit": "2421",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "2421",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					},
+					{
+						"id": "7a612dff884911ed84fa0252b90cda0d",
+						"displayed_as": "Rent (7100)",
+						"$path": "/ledger_accounts/7a612dff884911ed84fa0252b90cda0d",
+						"opening_balance": {
+							"debit": "453.34",
+							"credit": "0"
+						},
+						"closing_balance": {
+							"debit": "453.34",
+							"credit": "0"
+						},
+						"debit": "0",
+						"credit": "0"
+					}
+				]
+			}
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TrialBalanceOpeningBalance": {
+      "type": "object",
+      "properties": {
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The amount in the credit column of the ledger account upon opening balance"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The amount in the debit column of the ledger account upon opening balance"
+        }
+      }
+    },
+    "TrialBalanceClosingBalance": {
+      "type": "object",
+      "properties": {
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The amount in the credit column of the ledger account upon closing balance"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The amount in the debit column of the ledger account upon closing balance"
+        }
+      }
+    },
+    "TrialBalanceLedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "opening_balance": {
+          "$ref": "#/definitions/TrialBalanceOpeningBalance"
+        },
+        "closing_balance": {
+          "$ref": "#/definitions/TrialBalanceClosingBalance"
+        },
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The current amount in the credit column of the ledger account"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The current amount in the debit column of the ledger account"
+        }
+      }
+    },
+    "TrialBalance": {
+      "type": "object",
+      "properties": {
+        "trial_balance": {
+          "type": "object",
+          "properties": {
+            "from_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The start date of the requested date range"
+            },
+            "to_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The end date of the requested date range"
+            },
+            "ledger_accounts": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TrialBalanceLedgerAccount"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

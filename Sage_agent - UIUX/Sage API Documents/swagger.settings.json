@@ -1,0 +1,3811 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Settings",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Analysis Type Categories",
+      "description": "Operations about Analysis Type Categories"
+    },
+    {
+      "name": "Analysis Types",
+      "description": "Operations about Analysis Types"
+    },
+    {
+      "name": "Business Activity Types",
+      "description": "This endpoint is restricted to French businesses specifically and gives information about the commercial nature of the business (e.g. Élevage de vaches laitières - Dairy Farming). The business' actual business activity type is dictated by the business settings endpoint where it can be updated. The API allows show and index."
+    },
+    {
+      "name": "Business Settings",
+      "description": "This endpoint defines numerous global and region specific business level settings in addition to all default ledger_accounts. The API allows show and update requests for this endpoint. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/settings/\" target=\"_blank\">Key Concepts: Settings</a>"
+    },
+    {
+      "name": "Business Types",
+      "description": "This endpoint is used to read the region specific business types that are available for the associated business (e.g. For UKI businesses SOLE, PARTNER, LIMITED). The business type is dictated by the business settings endpoint where it can be updated. The API allows show and index requests for this endpoint."
+    },
+    {
+      "name": "Cis Settings",
+      "description": "This endpoint defines Construction Industry Scheme (CIS) settings for UK only businesses. For example, the ability to specify a business as a contractor or subcontractor. The API allows initial create as well as update and show requests for these settings."
+    },
+    {
+      "name": "Financial Settings",
+      "description": "This endpoint defines a number of global and region specific financial based settings. For example regional tax settings such as tax number. The API allows both show and update requests."
+    },
+    {
+      "name": "Invoice Settings",
+      "description": "Although the endpoint is named \"Invoice Settings\" all types of sales transactional settings are managed here in addition to all invoice related settings, including: invoices, quotes, estimates, credit notes etc. The API allows both index and update requests."
+    },
+    {
+      "name": "Legal Form Types",
+      "description": "This endpoint is restricted to French businesses and returns all legal form types. The business' actual legal form type is dictated by the business settings endpoint where it can be updated. The API allows show and index."
+    },
+    {
+      "name": "Country Of Registrations",
+      "description": "Every limited business in the UK and Ireland must have a country of registration (E.g. ENGLAND AND WALES). The country of registration is dictated by the business settings endpoint where it can be updated. This endpoint returns a list of the availale countries that are accepted in business settings. The API allows only SHOW and INDEX actions."
+    }
+  ],
+  "paths": {
+    "/analysis_type_categories": {
+      "get": {
+        "summary": "Returns all Analysis Type Categories",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Analysis Type Categories changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "analysis_type_level",
+            "description": "Use this to filter Analysis Type Categories by analysis_type_level",
+            "type": "string",
+            "enum": [
+              "TRANSACTION",
+              "GROUP"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Analysis Type Categories per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Analysis Type Categories",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Analysis Type Categories (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Analysis Type Categories",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 18,
+				"$page": 1,
+				"$next": "/analysis_type_categories?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "64d22f88e73f44a99823bb1487d74082",
+						"displayed_as": "Department 1",
+						"$path": "/analysis_type_categories/64d22f88e73f44a99823bb1487d74082"
+					},
+					{
+						"id": "730826e18686449eab86de25343eff84",
+						"displayed_as": "Department 2",
+						"$path": "/analysis_type_categories/730826e18686449eab86de25343eff84"
+					},
+					{
+						"id": "028c8388209646f8a603801d70fa7614",
+						"displayed_as": "Department 3",
+						"$path": "/analysis_type_categories/028c8388209646f8a603801d70fa7614"
+					},
+					{
+						"id": "269a7ed9dd21409f89ee7c498d1e3ac5",
+						"displayed_as": "Customer Group 1",
+						"$path": "/analysis_type_categories/269a7ed9dd21409f89ee7c498d1e3ac5"
+					},
+					{
+						"id": "3c39c4aa300342d38200838a1570c337",
+						"displayed_as": "Customer Group 2",
+						"$path": "/analysis_type_categories/3c39c4aa300342d38200838a1570c337"
+					},
+					{
+						"id": "a9fc90029b9e48f3ba95c0788c808b64",
+						"displayed_as": "Customer Group 3",
+						"$path": "/analysis_type_categories/a9fc90029b9e48f3ba95c0788c808b64"
+					},
+					{
+						"id": "2c6b1b1c7df34e6b87c31dc8a5370050",
+						"displayed_as": "Cost Centre 1",
+						"$path": "/analysis_type_categories/2c6b1b1c7df34e6b87c31dc8a5370050"
+					},
+					{
+						"id": "4fe3b795089c45619137b3ac490345e1",
+						"displayed_as": "Cost Centre 2",
+						"$path": "/analysis_type_categories/4fe3b795089c45619137b3ac490345e1"
+					},
+					{
+						"id": "4ae5c5a5c05b4d64b62ac68d764f6eaf",
+						"displayed_as": "Cost Centre 3",
+						"$path": "/analysis_type_categories/4ae5c5a5c05b4d64b62ac68d764f6eaf"
+					},
+					{
+						"id": "c3edbe98162d46e8af69c4f051e7590f",
+						"displayed_as": "Supplier Group 1",
+						"$path": "/analysis_type_categories/c3edbe98162d46e8af69c4f051e7590f"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Analysis Type Categories"
+        ],
+        "operationId": "getAnalysisTypeCategories"
+      },
+      "x-sage-pathtitle": "Analysis Type Category collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Analysis Type Category",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "AnalysisTypeCategories",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postAnalysisTypeCategories"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Analysis Type Category",
+            "schema": {
+              "$ref": "#/definitions/AnalysisTypeCategory"
+            }
+          }
+        },
+        "tags": [
+          "Analysis Type Categories"
+        ],
+        "operationId": "postAnalysisTypeCategories"
+      }
+    },
+    "/analysis_type_categories/{key}": {
+      "get": {
+        "summary": "Returns a Analysis Type Category",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Analysis Type Category Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Analysis Type Category (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Analysis Type Category",
+            "examples": {
+              "application/json":
+			  {
+				"id": "730826e18686449eab86de25343eff84",
+				"displayed_as": "Department 2",
+				"$path": "/analysis_type_categories/730826e18686449eab86de25343eff84",
+				"created_at": "2022-12-30T13:54:28Z",
+				"updated_at": "2022-12-30T13:54:28Z",
+				"code": "02",
+				"name": "Department 2",
+				"combined_id": "5639877,17204944",
+				"analysis_type": {
+					"id": "747c9d74f062497aa20108eeecefe6d9",
+					"displayed_as": "Department",
+					"$path": "/analysis_types/747c9d74f062497aa20108eeecefe6d9"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Analysis Type Categories"
+        ],
+        "operationId": "getAnalysisTypeCategoriesKey"
+      },
+      "x-sage-pathtitle": "single Analysis Type Category resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Analysis Type Category",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Analysis Type Category Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "AnalysisTypeCategories",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putAnalysisTypeCategories"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Analysis Type Category",
+            "schema": {
+              "$ref": "#/definitions/AnalysisTypeCategory"
+            }
+          }
+        },
+        "tags": [
+          "Analysis Type Categories"
+        ],
+        "operationId": "putAnalysisTypeCategoriesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Analysis Type Category",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Analysis Type Category Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Analysis Type Category"
+          }
+        },
+        "tags": [
+          "Analysis Type Categories"
+        ],
+        "operationId": "deleteAnalysisTypeCategoriesKey"
+      }
+    },
+    "/analysis_types": {
+      "get": {
+        "summary": "Returns all Analysis Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Analysis Types changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "analysis_type_level",
+            "description": "Use this to filter Analysis Types by analysis_type_level",
+            "type": "string",
+            "enum": [
+              "TRANSACTION",
+              "GROUP"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the item code or description",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Analysis Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Analysis Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Analysis Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Analysis Types",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 6,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "747c9d74f062497aa20108eeecefe6d9",
+						"displayed_as": "Department",
+						"$path": "/analysis_types/747c9d74f062497aa20108eeecefe6d9"
+					},
+					{
+						"id": "cb12dccacc1d464dbae14f74a15c3c2e",
+						"displayed_as": "Customer Group",
+						"$path": "/analysis_types/cb12dccacc1d464dbae14f74a15c3c2e"
+					},
+					{
+						"id": "d79f361e3720435a91a6035541c58d91",
+						"displayed_as": "Cost Centre",
+						"$path": "/analysis_types/d79f361e3720435a91a6035541c58d91"
+					},
+					{
+						"id": "63298b622dfc4b93b94612482bbcc8b7",
+						"displayed_as": "Supplier Group",
+						"$path": "/analysis_types/63298b622dfc4b93b94612482bbcc8b7"
+					},
+					{
+						"id": "10c466c30b0e48a2a7e535159adc27ac",
+						"displayed_as": "Project",
+						"$path": "/analysis_types/10c466c30b0e48a2a7e535159adc27ac"
+					},
+					{
+						"id": "e283dbdd5ada4354890db1cba9c6414f",
+						"displayed_as": "Product Group",
+						"$path": "/analysis_types/e283dbdd5ada4354890db1cba9c6414f"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Analysis Types"
+        ],
+        "operationId": "getAnalysisTypes"
+      },
+      "x-sage-pathtitle": "Analysis Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/analysis_types/{key}": {
+      "get": {
+        "summary": "Returns a Analysis Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Analysis Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Analysis Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Analysis Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "747c9d74f062497aa20108eeecefe6d9",
+				"displayed_as": "Department",
+				"$path": "/analysis_types/747c9d74f062497aa20108eeecefe6d9",
+				"created_at": "2022-12-30T13:54:28Z",
+				"updated_at": "2023-03-03T16:20:14Z",
+				"active_areas": [
+					"SALES",
+					"EXPENSES",
+					"BANKING",
+					"JOURNALS"
+				],
+				"analysis_type_level": {
+					"id": 1,
+					"name": "TRANSACTION_LEVEL",
+					"identifier": "TRANSACTION"
+				},
+				"analysis_type_categories": [
+					{
+						"id": "64d22f88e73f44a99823bb1487d74082",
+						"displayed_as": "Department 1",
+						"$path": "/analysis_type_categories/64d22f88e73f44a99823bb1487d74082",
+						"created_at": "2022-12-30T13:54:28Z",
+						"updated_at": "2022-12-30T13:54:28Z",
+						"code": "01",
+						"name": "Department 1",
+						"combined_id": "5639877,17204943",
+						"analysis_type": {
+							"id": "747c9d74f062497aa20108eeecefe6d9",
+							"displayed_as": "Department",
+							"$path": "/analysis_types/747c9d74f062497aa20108eeecefe6d9"
+						}
+					},
+					{
+						"id": "730826e18686449eab86de25343eff84",
+						"displayed_as": "Department 2",
+						"$path": "/analysis_type_categories/730826e18686449eab86de25343eff84",
+						"created_at": "2022-12-30T13:54:28Z",
+						"updated_at": "2022-12-30T13:54:28Z",
+						"code": "02",
+						"name": "Department 2",
+						"combined_id": "5639877,17204944",
+						"analysis_type": {
+							"id": "747c9d74f062497aa20108eeecefe6d9",
+							"displayed_as": "Department",
+							"$path": "/analysis_types/747c9d74f062497aa20108eeecefe6d9"
+						}
+					},
+					{
+						"id": "028c8388209646f8a603801d70fa7614",
+						"displayed_as": "Department 3",
+						"$path": "/analysis_type_categories/028c8388209646f8a603801d70fa7614",
+						"created_at": "2022-12-30T13:54:28Z",
+						"updated_at": "2022-12-30T13:54:28Z",
+						"code": "03",
+						"name": "Department 3",
+						"combined_id": "5639877,17204945",
+						"analysis_type": {
+							"id": "747c9d74f062497aa20108eeecefe6d9",
+							"displayed_as": "Department",
+							"$path": "/analysis_types/747c9d74f062497aa20108eeecefe6d9"
+						}
+					}
+				],
+				"name": "Department"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Analysis Types"
+        ],
+        "operationId": "getAnalysisTypesKey"
+      },
+      "x-sage-pathtitle": "single Analysis Type resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Analysis Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Analysis Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "AnalysisTypes",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putAnalysisTypes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Analysis Type",
+            "schema": {
+              "$ref": "#/definitions/AnalysisType"
+            }
+          }
+        },
+        "tags": [
+          "Analysis Types"
+        ],
+        "operationId": "putAnalysisTypesKey"
+      }
+    },
+    "/business_activity_types": {
+      "get": {
+        "summary": "Returns all Business Activity Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷\n* Accounting Standard: 🇫🇷\n* Accounting Start: 🇫🇷",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Business Classifications per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Business Classifications",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Business Classifications (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Business Activity Types",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BusinessActivityType"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Business Activity Types"
+        ],
+        "operationId": "getBusinessActivityTypes"
+      },
+      "x-sage-pathtitle": "Business Activity Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/business_activity_types/{key}": {
+      "get": {
+        "summary": "Returns a Business Activity Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷\n* Accounting Standard: 🇫🇷\n* Accounting Start: 🇫🇷",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Business Activity Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Business Classification (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Business Activity Type",
+            "schema": {
+              "$ref": "#/definitions/BusinessActivityType"
+            }
+          }
+        },
+        "tags": [
+          "Business Activity Types"
+        ],
+        "operationId": "getBusinessActivityTypesKey"
+      },
+      "x-sage-pathtitle": "single Business Activity Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/business_settings": {
+      "get": {
+        "summary": "Returns all Business Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Business Settings",
+            "examples": {
+              "application/json":
+			  {
+				"$path": "/business_settings",
+				"siret": null,
+				"management_centre_member": false,
+				"smart_transaction_enabled": false,
+				"rcs_number": null,
+				"share_capital": null,
+				"business_activity_type": null,
+				"legal_form_type": null,
+				"auxiliary_accounts_visible": false,
+				"default_ledger_accounts": {
+					"bank_charges_ledger_account": {
+						"id": "7a6282e7884911ed84fa0252b90cda0d",
+						"displayed_as": "Bank Charges and Interest (7900)",
+						"$path": "/ledger_accounts/7a6282e7884911ed84fa0252b90cda0d"
+					},
+					"bank_interest_received_ledger_account": {
+						"id": "7a6282e7884911ed84fa0252b90cda0d",
+						"displayed_as": "Bank Charges and Interest (7900)",
+						"$path": "/ledger_accounts/7a6282e7884911ed84fa0252b90cda0d"
+					},
+					"bank_interest_charges_paid_ledger_account": {
+						"id": "7a6282e7884911ed84fa0252b90cda0d",
+						"displayed_as": "Bank Charges and Interest (7900)",
+						"$path": "/ledger_accounts/7a6282e7884911ed84fa0252b90cda0d"
+					},
+					"exchange_rate_gains_ledger_account": {
+						"id": "7a62f9e6884911ed84fa0252b90cda0d",
+						"displayed_as": "Exchange Rate Gains and Losses (8260)",
+						"$path": "/ledger_accounts/7a62f9e6884911ed84fa0252b90cda0d"
+					},
+					"exchange_rate_losses_ledger_account": {
+						"id": "7a62f9e6884911ed84fa0252b90cda0d",
+						"displayed_as": "Exchange Rate Gains and Losses (8260)",
+						"$path": "/ledger_accounts/7a62f9e6884911ed84fa0252b90cda0d"
+					},
+					"sales_ledger_account": {
+						"id": "7a5ecfcf884911ed84fa0252b90cda0d",
+						"displayed_as": "Other income (4900)",
+						"$path": "/ledger_accounts/7a5ecfcf884911ed84fa0252b90cda0d"
+					},
+					"sales_discount_ledger_account": {
+						"id": "7a5e5edc884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales Discounts (4020)",
+						"$path": "/ledger_accounts/7a5e5edc884911ed84fa0252b90cda0d"
+					},
+					"purchase_ledger_account": {
+						"id": "7a5f27a2884911ed84fa0252b90cda0d",
+						"displayed_as": "Cost of Sales - Goods (5000)",
+						"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d"
+					},
+					"purchase_discount_ledger_account": {
+						"id": "7a5f4fe4884911ed84fa0252b90cda0d",
+						"displayed_as": "Purchase Discounts (5010)",
+						"$path": "/ledger_accounts/7a5f4fe4884911ed84fa0252b90cda0d"
+					},
+					"product_sales_ledger_account": {
+						"id": "7a5e37b4884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales - Products (4000)",
+						"$path": "/ledger_accounts/7a5e37b4884911ed84fa0252b90cda0d"
+					},
+					"product_purchase_ledger_account": {
+						"id": "7a5f27a2884911ed84fa0252b90cda0d",
+						"displayed_as": "Cost of Sales - Goods (5000)",
+						"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d"
+					},
+					"service_sales_ledger_account": {
+						"id": "7a639255884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales - Services (4010)",
+						"$path": "/ledger_accounts/7a639255884911ed84fa0252b90cda0d"
+					},
+					"service_purchase_ledger_account": {
+						"id": "7a5f27a2884911ed84fa0252b90cda0d",
+						"displayed_as": "Cost of Sales - Goods (5000)",
+						"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d"
+					},
+					"stock_purchase_ledger_account": {
+						"id": "7a5ab138884911ed84fa0252b90cda0d",
+						"displayed_as": "Stock - Raw Materials (1000)",
+						"$path": "/ledger_accounts/7a5ab138884911ed84fa0252b90cda0d"
+					},
+					"other_receipt_ledger_account": {
+						"id": "7a5ecfcf884911ed84fa0252b90cda0d",
+						"displayed_as": "Other income (4900)",
+						"$path": "/ledger_accounts/7a5ecfcf884911ed84fa0252b90cda0d"
+					},
+					"other_payment_ledger_account": {
+						"id": "7a5f27a2884911ed84fa0252b90cda0d",
+						"displayed_as": "Cost of Sales - Goods (5000)",
+						"$path": "/ledger_accounts/7a5f27a2884911ed84fa0252b90cda0d"
+					},
+					"customer_receipt_discount_ledger_account": {
+						"id": "7a5e5edc884911ed84fa0252b90cda0d",
+						"displayed_as": "Sales Discounts (4020)",
+						"$path": "/ledger_accounts/7a5e5edc884911ed84fa0252b90cda0d"
+					},
+					"vendor_payment_discount_ledger_account": {
+						"id": "7a5f4fe4884911ed84fa0252b90cda0d",
+						"displayed_as": "Purchase Discounts (5010)",
+						"$path": "/ledger_accounts/7a5f4fe4884911ed84fa0252b90cda0d"
+					},
+					"carriage_ledger_account": {
+						"id": "7a5ef5d8884911ed84fa0252b90cda0d",
+						"displayed_as": "Carriage on Sales (4910)",
+						"$path": "/ledger_accounts/7a5ef5d8884911ed84fa0252b90cda0d"
+					}
+				},
+				"business_type": {
+					"id": "LIMITED",
+					"displayed_as": "Limited Company/LLP - we're registered at Companies House",
+					"$path": "/business_types/LIMITED",
+					"name": "Limited Company/LLP",
+					"description": "we're registered at Companies House"
+				},
+				"country_of_registration": {
+					"id": "ENGLAND_AND_WALES",
+					"displayed_as": "England and Wales",
+					"$path": "/countries_of_registration/ENGLAND_AND_WALES"
+				},
+				"business_created_at": "2022-12-30T13:54:24Z",
+				"updated_at": "2024-10-18T01:09:36Z",
+				"wizard_complete": true
+			}
+            }
+          }
+        },
+        "tags": [
+          "Business Settings"
+        ],
+        "operationId": "getBusinessSettings"
+      },
+      "x-sage-pathtitle": "Business Settings collection",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Business Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BusinessSettings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBusinessSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Business Settings",
+            "schema": {
+              "$ref": "#/definitions/BusinessSettings"
+            }
+          }
+        },
+        "tags": [
+          "Business Settings"
+        ],
+        "operationId": "putBusinessSettings"
+      }
+    },
+    "/business_types": {
+      "get": {
+        "summary": "Returns all Business Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of For Business Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of For Business Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the For Business Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Business Types",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 3,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "SOLE",
+						"displayed_as": "Sole Trader or Small Business - I work for myself",
+						"$path": "/business_types/SOLE"
+					},
+					{
+						"id": "PARTNER",
+						"displayed_as": "Partnership - it's me and my business partner(s)",
+						"$path": "/business_types/PARTNER"
+					},
+					{
+						"id": "LIMITED",
+						"displayed_as": "Limited Company/LLP - we're registered at Companies House",
+						"$path": "/business_types/LIMITED"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Business Types"
+        ],
+        "operationId": "getBusinessTypes"
+      },
+      "x-sage-pathtitle": "Business Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/business_types/{key}": {
+      "get": {
+        "summary": "Returns a Business Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Business Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the For Business Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Business Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "LIMITED",
+				"displayed_as": "Limited Company/LLP - we're registered at Companies House",
+				"$path": "/business_types/LIMITED",
+				"name": "Limited Company/LLP",
+				"description": "we're registered at Companies House"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Business Types"
+        ],
+        "operationId": "getBusinessTypesKey"
+      },
+      "x-sage-pathtitle": "single Business Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/cis_settings": {
+      "get": {
+        "summary": "Returns all Cis Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇬🇧\n* Accounting Standard: 🇬🇧\n* Accounting Start: 🇬🇧\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Cis Settings",
+            "schema": {
+              "$ref": "#/definitions/CisSettings"
+            }
+          }
+        },
+        "tags": [
+          "Cis Settings"
+        ],
+        "operationId": "getCisSettings"
+      },
+      "x-sage-pathtitle": "Cis Settings collection",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Cis Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇬🇧\n* Accounting Standard: 🇬🇧\n* Accounting Start: 🇬🇧\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "CisSettings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putCisSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Cis Settings",
+            "schema": {
+              "$ref": "#/definitions/CisSettings"
+            }
+          }
+        },
+        "tags": [
+          "Cis Settings"
+        ],
+        "operationId": "putCisSettings"
+      }
+    },
+    "/financial_settings": {
+      "get": {
+        "summary": "Returns all Financial Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Financial Settings",
+            "examples": {
+              "application/json":
+			  {
+				"$path": "/financial_settings",
+				"year_end_date": "2024-12-15",
+				"year_end_lockdown_date": null,
+				"accounting_type": "accrual",
+				"accounts_start_date": "2022-01-01",
+				"base_currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"multi_currency_enabled": true,
+				"use_live_exchange_rates": true,
+				"mtd_activation_status": "enablable",
+				"mtd_connected": false,
+				"mtd_authenticated_date": "",
+				"tax_scheme": {
+					"id": "STANDARD",
+					"displayed_as": "Standard",
+					"$path": "/tax_schemes/STANDARD"
+				},
+				"tax_return_frequency": {
+					"id": "QUARTERLY",
+					"displayed_as": "Quarterly",
+					"$path": "/tax_return_frequencies/QUARTERLY"
+				},
+				"tax_number": "987654321",
+				"general_tax_number": "87654321",
+				"tax_office": null,
+				"default_irpf_rate": "0.0",
+				"flat_rate_tax_percentage": null,
+				"recoverable_percentage": null,
+				"sales_tax_calculation": null,
+				"purchase_tax_calculation": null,
+				"updated_at": "2024-07-19T10:46:54Z",
+				"postponed_accounting": false,
+				"destination_vat": false,
+				"exempt_from_vat": false
+			}
+            }
+          }
+        },
+        "tags": [
+          "Financial Settings"
+        ],
+        "operationId": "getFinancialSettings"
+      },
+      "x-sage-pathtitle": "Financial Settings collection",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Financial Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "FinancialSettings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putFinancialSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Financial Settings",
+            "schema": {
+              "$ref": "#/definitions/FinancialSettings"
+            }
+          }
+        },
+        "tags": [
+          "Financial Settings"
+        ],
+        "operationId": "putFinancialSettings"
+      }
+    },
+    "/invoice_settings": {
+      "get": {
+        "summary": "Returns all Invoice Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Invoice Settings",
+            "examples": {
+				"application/json":
+				{
+					"$path": "/invoice_settings",
+					"next_invoice_number": 376,
+					"next_credit_note_number": 48,
+					"separate_invoice_credit_note_numbering": true,
+					"sales_invoice_number_prefix": "SI-",
+					"sales_credit_note_number_prefix": "SCN-",
+					"invoice_terms_and_conditions": "These are the terms & conditions created in document settings.",
+					"default_note_on_invoice": "These are the notes set in the document settings",
+					"default_note_on_credit_note": "",
+					"default_note_on_estimate": "",
+					"default_note_on_quote": "",
+					"next_quote_number": 29,
+					"quote_number_prefix": "SQ-",
+					"estimate_number_prefix": "SE-",
+					"quote_default_days_to_expiry": 30,
+					"estimate_default_days_to_expiry": 30,
+					"quote_terms_and_conditions": "These are the terms & conditions created in document settings.",
+					"estimate_terms_and_conditions": "",
+					"delivery_note_terms_and_conditions": "",
+					"delivery_note_show_signature": false,
+					"delivery_note_show_picked": false,
+					"delivery_note_show_notes": false,
+					"delivery_note_show_contact_details": false,
+					"quick_entry_prefix": "QE-",
+					"late_payment_percentage": null,
+					"prompt_payment_percentage": null,
+					"show_auto_entrepreneur": false,
+					"show_insurance": false,
+					"insurer": null,
+					"insurance_area": null,
+					"insurance_type": null,
+					"insurance_text": null,
+					"payment_bank_account": null,
+					"sales_corrective_invoice_number_prefix": null,
+					"next_sales_corrective_invoice_number": null,
+					"document_headings": {
+						"sales_invoice": "Sales Invoice",
+						"sales_credit_note": "Sales Credit Note",
+						"sales_corrective_invoice": null,
+						"sales_quote": "Sales Quote",
+						"sales_estimate": "Sales Estimate",
+						"pro_forma": "Pro Forma Invoice",
+						"remittance_advice": "Remittance Advice",
+						"statement": "Statement",
+						"delivery_note": "Delivery Note"
+					},
+					"line_item_titles": {
+						"description": "Description",
+						"unit_price": "Price/Rate",
+						"quantity": "Qty/Hrs",
+						"discount": "Discount"
+					},
+					"footer_details": {
+						"column_1": "",
+						"column_2": "",
+						"column_3": ""
+					},
+					"print_contact_details": {
+						"business_name": true,
+						"contact_name": true,
+						"website": true,
+						"telephone": true,
+						"mobile": true,
+						"email_address": true,
+						"due_date": true,
+						"default_delivery_address": "INVOICE_ADDRESS"
+					},
+					"print_statements": {
+						"days_overdue": true,
+						"table_of_balances": true
+					},
+					"customer_credit_days": 31,
+					"vendor_credit_days": 30,
+					"customer_credit_terms": "date_from_invoice",
+					"vendor_credit_terms": "date_from_payment",
+					"updated_at": "2024-10-18T01:09:36Z"
+				}
+            }
+          }
+        },
+        "tags": [
+          "Invoice Settings"
+        ],
+        "operationId": "getInvoiceSettings"
+      },
+      "x-sage-pathtitle": "Invoice Settings collection",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Invoice Settings",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "InvoiceSettings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putInvoiceSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Invoice Settings",
+            "schema": {
+              "$ref": "#/definitions/InvoiceSettings"
+            }
+          }
+        },
+        "tags": [
+          "Invoice Settings"
+        ],
+        "operationId": "putInvoiceSettings"
+      }
+    },
+    "/legal_form_types": {
+      "get": {
+        "summary": "Returns all Legal Form Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷\n* Accounting Standard: 🇫🇷\n* Accounting Start: 🇫🇷",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Business Classifications per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Business Classifications",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Business Classifications (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Legal Form Types",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LegalFormType"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Legal Form Types"
+        ],
+        "operationId": "getLegalFormTypes"
+      },
+      "x-sage-pathtitle": "Legal Form Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/legal_form_types/{key}": {
+      "get": {
+        "summary": "Returns a Legal Form Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷\n* Accounting Standard: 🇫🇷\n* Accounting Start: 🇫🇷",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Legal Form Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Business Classification (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Legal Form Type",
+            "schema": {
+              "$ref": "#/definitions/LegalFormType"
+            }
+          }
+        },
+        "tags": [
+          "Legal Form Types"
+        ],
+        "operationId": "getLegalFormTypesKey"
+      },
+      "x-sage-pathtitle": "single Legal Form Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/countries_of_registration": {
+      "get": {
+        "summary": "Returns all Country Of Registrations",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Registered Countries per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Registered Countries",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Registered Countries (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Country Of Registrations",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 5,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "ENGLAND_AND_WALES",
+						"displayed_as": "England and Wales",
+						"$path": "/countries_of_registration/ENGLAND_AND_WALES"
+					},
+					{
+						"id": "WALES",
+						"displayed_as": "Wales",
+						"$path": "/countries_of_registration/WALES"
+					},
+					{
+						"id": "SCOTLAND",
+						"displayed_as": "Scotland",
+						"$path": "/countries_of_registration/SCOTLAND"
+					},
+					{
+						"id": "NORTHERN_IRELAND",
+						"displayed_as": "Northern Ireland",
+						"$path": "/countries_of_registration/NORTHERN_IRELAND"
+					},
+					{
+						"id": "REPUBLIC_OF_IRELAND",
+						"displayed_as": "Republic of Ireland",
+						"$path": "/countries_of_registration/REPUBLIC_OF_IRELAND"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Country Of Registrations"
+        ],
+        "operationId": "getCountriesOfRegistration"
+      },
+      "x-sage-pathtitle": "Country Of Registration collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/countries_of_registration/{key}": {
+      "get": {
+        "summary": "Returns a Country Of Registration",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Country Of Registration Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Registered Country (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Country Of Registration",
+            "examples": {
+              "application/json":
+			  {
+				"id": "ENGLAND_AND_WALES",
+				"displayed_as": "England and Wales",
+				"$path": "/countries_of_registration/ENGLAND_AND_WALES"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Country Of Registrations"
+        ],
+        "operationId": "getCountriesOfRegistrationKey"
+      },
+      "x-sage-pathtitle": "single Country Of Registration resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "AnalysisTypeCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The code for the analysis type category"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the analysis type category"
+        },
+        "combined_id": {
+          "type": "string",
+          "description": "The combined_id of the analysis type category"
+        },
+        "analysis_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The analysis type for the analysis type category"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n*\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+    },
+    "postAnalysisTypeCategories": {
+      "type": "object",
+      "properties": {
+        "analysis_type_category": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code for the analysis type category"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the analysis type category"
+            },
+            "combined_id": {
+              "type": "string",
+              "description": "The combined_id of the analysis type category"
+            },
+            "analysis_type_id": {
+              "type": "string",
+              "description": "The ID of the Analysis Type."
+            }
+          }
+        }
+      },
+      "required": [
+        "analysis_type_category"
+      ],
+      "description": "Creates a Analysis Type Category"
+    },
+    "putAnalysisTypeCategories": {
+      "type": "object",
+      "properties": {
+        "analysis_type_category": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The code for the analysis type category"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the analysis type category"
+            },
+            "combined_id": {
+              "type": "string",
+              "description": "The combined_id of the analysis type category"
+            },
+            "analysis_type_id": {
+              "type": "string",
+              "description": "The ID of the Analysis Type."
+            }
+          }
+        }
+      },
+      "required": [
+        "analysis_type_category"
+      ],
+      "description": "Updates a Analysis Type Category"
+    },
+    "AnalysisType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "active_areas": {
+          "type": "array",
+          "description": "The areas for which the analysis type is available"
+        },
+        "analysis_type_level": {
+          "type": "array",
+          "description": "The analysis type level"
+        },
+        "analysis_type_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisTypeCategory"
+          },
+          "description": "The analysis type categories for the analysis type"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the analysis type"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n*\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access"
+    },
+    "putAnalysisTypes": {
+      "type": "object",
+      "properties": {
+        "analysis_type": {
+          "type": "object",
+          "properties": {
+            "active_areas": {
+              "type": "array",
+              "description": "The areas for which the analysis type is available",
+              "items": {
+                "type": "string"
+              }
+            },
+            "analysis_type_level": {
+              "type": "array",
+              "description": "The analysis type level",
+              "items": {
+                "type": "string"
+              }
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the analysis type"
+            },
+            "analysis_type_categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "description": "The code for the analysis type category"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the analysis type category"
+                  },
+                  "combined_id": {
+                    "type": "string",
+                    "description": "The combined_id of the analysis type category"
+                  },
+                  "analysis_type_id": {
+                    "type": "string",
+                    "description": "The ID of the Analysis Type."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "analysis_type"
+      ],
+      "description": "Updates a Analysis Type"
+    },
+    "BusinessActivityType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "BusinessActivityType model"
+    },
+    "BusinessSettings": {
+      "type": "object",
+      "properties": {
+        "$path": {
+          "type": "string",
+          "description": "The path for the resource"
+        },
+        "siret": {
+          "type": "string",
+          "description": "SIRET Number (France only)"
+        },
+        "management_centre_member": {
+          "type": "boolean",
+          "description": "Member of Approved Management Centres (France only)"
+        },
+        "rcs_number": {
+          "type": "string",
+          "description": "RCS Number (France only)"
+        },
+        "share_capital": {
+          "type": "number",
+          "format": "double",
+          "description": "Share Capital (France only)"
+        },
+        "business_activity_type": {
+          "$ref": "#/definitions/BusinessActivityType",
+          "description": "Business Activity Type (France only)"
+        },
+        "legal_form_type": {
+          "$ref": "#/definitions/LegalFormType",
+          "description": "Legal Form Business Type (France only)"
+        },
+        "auxiliary_accounts_visible": {
+          "type": "boolean",
+          "description": "Auxiliary Accounts Visible (France & Spain only)"
+        },
+        "default_ledger_accounts": {
+          "$ref": "#/definitions/DefaultLedgerAccounts",
+          "description": "The default ledger accounts for the business"
+        },
+        "business_type": {
+          "$ref": "#/definitions/BusinessType",
+          "description": "The type of the business"
+        },
+        "country_of_registration": {
+          "$ref": "#/definitions/Base",
+          "description": "One of the political entities identified by [\"ENGLAND_AND_WALES\", \"WALES\", \"SCOTLAND\", \"NORTHERN_IRELAND\", \"REPUBLIC_OF_IRELAND\"]. Only for businesses registered on the British Isles"
+        },
+        "business_created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp on which the business was created. This can be the timestamp of the initial creation or the latest business reset."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "wizard_complete": {
+          "type": "boolean",
+          "description": "Quick Start Wizard completion"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "LegalFormType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷\n* Accounting Standard: 🇫🇷\n* Accounting Start: 🇫🇷",
+      "x-sage-menusection": "Settings"
+    },
+    "DefaultLedgerAccounts": {
+      "type": "object",
+      "properties": {
+        "bank_charges_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for bank charges"
+        },
+        "bank_interest_received_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for bank interest received"
+        },
+        "bank_interest_charges_paid_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for bank interest charges paid"
+        },
+        "exchange_rate_gains_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for exchange rate gains"
+        },
+        "exchange_rate_losses_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for exchange rate losses"
+        },
+        "sales_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for sales"
+        },
+        "sales_discount_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for sales discounts"
+        },
+        "purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for purchases"
+        },
+        "purchase_discount_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for purchase discounts"
+        },
+        "product_sales_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default sales ledger account for products"
+        },
+        "product_purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default purchase ledger account for products"
+        },
+        "service_sales_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default sales ledger account for services"
+        },
+        "service_purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default purchase ledger account for services"
+        },
+        "stock_purchase_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default purchase ledger account for stock"
+        },
+        "other_receipt_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for other receipts"
+        },
+        "other_payment_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for other payments"
+        },
+        "customer_receipt_discount_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for customer receipt discounts"
+        },
+        "vendor_payment_discount_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for vendor payment discounts"
+        },
+        "carriage_ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default ledger account for carriage"
+        }
+      }
+    },
+    "BusinessType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the business type"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the business type"
+        }
+      },
+      "description": "BusinessType model"
+    },
+    "putBusinessSettings": {
+      "type": "object",
+      "properties": {
+        "business_settings": {
+          "type": "object",
+          "properties": {
+            "siret": {
+              "type": "string",
+              "description": "SIRET Number (France only)"
+            },
+            "management_centre_member": {
+              "type": "boolean",
+              "description": "Member of Approved Management Centres (France only)"
+            },
+            "rcs_number": {
+              "type": "string",
+              "description": "RCS Number (France only)"
+            },
+            "share_capital": {
+              "type": "number",
+              "format": "double",
+              "description": "Share Capital (France only)"
+            },
+            "business_activity_type_id": {
+              "type": "string",
+              "description": "The ID of the Business Activity Type."
+            },
+            "legal_form_type_id": {
+              "type": "string",
+              "description": "The ID of the Legal Form Type."
+            },
+            "auxiliary_accounts_visible": {
+              "type": "boolean",
+              "description": "Auxiliary Accounts Visible (France & Spain only)"
+            },
+            "business_type_id": {
+              "type": "string",
+              "description": "The ID of the Business Type."
+            },
+            "country_of_registration_id": {
+              "type": "string",
+              "description": "The ID of the Country Of Registration."
+            },
+            "wizard_complete": {
+              "type": "boolean",
+              "description": "Quick Start Wizard completion"
+            },
+            "default_ledger_accounts": {
+              "type": "object",
+              "properties": {
+                "bank_charges_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Charges Ledger Account."
+                },
+                "bank_interest_received_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Interest Received Ledger Account."
+                },
+                "bank_interest_charges_paid_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Interest Charges Paid Ledger Account."
+                },
+                "exchange_rate_gains_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Exchange Rate Gains Ledger Account."
+                },
+                "exchange_rate_losses_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Exchange Rate Losses Ledger Account."
+                },
+                "sales_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Sales Ledger Account."
+                },
+                "sales_discount_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Sales Discount Ledger Account."
+                },
+                "purchase_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Purchase Ledger Account."
+                },
+                "purchase_discount_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Purchase Discount Ledger Account."
+                },
+                "product_sales_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Product Sales Ledger Account."
+                },
+                "product_purchase_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Product Purchase Ledger Account."
+                },
+                "service_sales_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Service Sales Ledger Account."
+                },
+                "service_purchase_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Service Purchase Ledger Account."
+                },
+                "stock_purchase_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Stock Purchase Ledger Account."
+                },
+                "other_receipt_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Other Receipt Ledger Account."
+                },
+                "other_payment_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Other Payment Ledger Account."
+                },
+                "customer_receipt_discount_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Customer Receipt Discount Ledger Account."
+                },
+                "vendor_payment_discount_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Vendor Payment Discount Ledger Account."
+                },
+                "carriage_ledger_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Carriage Ledger Account."
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "business_settings"
+      ],
+      "description": "Updates a Business Settings"
+    },
+    "CisSettings": {
+      "type": "object",
+      "properties": {
+        "$path": {
+          "type": "string",
+          "description": "The path for the resource"
+        },
+        "unique_tax_reference": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Unique Tax Reference, format should match ########## (10 digits) e.g. 1234567890"
+        },
+        "contractor": {
+          "type": "boolean",
+          "description": "Contractor status"
+        },
+        "subcontractor": {
+          "type": "boolean",
+          "description": "Subcontractor status"
+        },
+        "accounts_office_reference": {
+          "type": "string",
+          "maxLength": 13,
+          "description": "Accounts Office Reference, format should match ###PX???????? e.g. 123PA1234567A or 123PA12345678"
+        },
+        "paye_reference": {
+          "type": "string",
+          "maxLength": 14,
+          "description": "PAYE Reference, format should match ###/X?##### e.g. 123/A45678 or 123/AB45678"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The CIS deduction tax rate"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus:  🇬🇧, \n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start:  🇬🇧, \n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+      "x-sage-menusection": "CIS Settings"
+    },
+    "putCisSettings": {
+      "type": "object",
+      "properties": {
+        "cis_settings": {
+          "type": "object",
+          "properties": {
+            "unique_tax_reference": {
+              "type": "string",
+              "description": "Unique Tax Reference, format should match ########## (10 digits) e.g. 1234567890"
+            },
+            "contractor": {
+              "type": "boolean",
+              "description": "Contractor status"
+            },
+            "subcontractor": {
+              "type": "boolean",
+              "description": "Subcontractor status"
+            },
+            "accounts_office_reference": {
+              "type": "string",
+              "description": "Accounts Office Reference, format should match ###PX???????? e.g. 123PA1234567A or 123PA12345678"
+            },
+            "paye_reference": {
+              "type": "string",
+              "description": "PAYE Reference, format should match ###/X?##### e.g. 123/A45678 or 123/AB45678"
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            }
+          }
+        }
+      },
+      "required": [
+        "cis_settings"
+      ],
+      "description": "Updates a Cis Settings"
+    },
+    "FinancialSettings": {
+      "type": "object",
+      "properties": {
+        "$path": {
+          "type": "string",
+          "description": "The api path for this item"
+        },
+        "year_end_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The financial year end date of the business"
+        },
+        "year_end_lockdown_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The year end lockdown date of the business"
+        },
+        "accounting_type": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Indicates the accounting type of a business, it can be accrual or cash based"
+        },
+        "accounts_start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The accounts start date of the business"
+        },
+        "base_currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The base currency of the business"
+        },
+        "multi_currency_enabled": {
+          "type": "boolean",
+          "description": "Indicates whether multi-currency is enabled for the business"
+        },
+        "use_live_exchange_rates": {
+          "type": "boolean",
+          "description": "Indicates whether to use live or business defined exchange rates"
+        },
+        "mtd_activation_status": {
+          "type": "string",
+          "description": "Indicates the UK Making Tax Digital for VAT activation status"
+        },
+        "mtd_connected": {
+          "type": "boolean",
+          "description": "Indicates whether UK Making Tax Digital for VAT is currently connected"
+        },
+        "mtd_authenticated_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Indicates when a UK business enabled UK Making Tax Digital for VAT, nil if not enabled or non-uk"
+        },
+        "tax_scheme": {
+          "$ref": "#/definitions/TaxScheme",
+          "description": "The tax scheme of the business"
+        },
+        "tax_return_frequency": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax return frequency"
+        },
+        "tax_number": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The tax number"
+        },
+        "general_tax_number": {
+          "type": "string",
+          "description": "The number for various tax report submissions"
+        },
+        "tax_office": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax office details"
+        },
+        "default_irpf_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The default IRPF rate"
+        },
+        "flat_rate_tax_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax percentage that applies to flat rate tax schemes."
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "sales_tax_calculation": {
+          "type": "string",
+          "description": "The method of collection for tax on sales. Allowed values - \"invoice\", \"cash\"."
+        },
+        "purchase_tax_calculation": {
+          "type": "string",
+          "description": "The method of collection for tax on purchases. Allowed values - \"invoice\", \"cash\"."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "postponed_accounting": {
+          "type": "boolean",
+          "description": "Indicates whether to use postponed accounting or not"
+        },
+        "destination_vat": {
+          "type": "boolean",
+          "description": "Indicates whether to use destination vat or not"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "TaxScheme": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "putFinancialSettings": {
+      "type": "object",
+      "properties": {
+        "financial_settings": {
+          "type": "object",
+          "properties": {
+            "year_end_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The financial year end date of the business"
+            },
+            "year_end_lockdown_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The year end lockdown date of the business"
+            },
+            "accounting_type": {
+              "type": "string",
+              "description": "Indicates the accounting type of a business, it can be accrual or cash based"
+            },
+            "accounts_start_date": {
+              "type": "string",
+              "format": "date",
+              "description": "The accounts start date of the business"
+            },
+            "base_currency_id": {
+              "type": "string",
+              "description": "The ID of the Base Currency."
+            },
+            "multi_currency_enabled": {
+              "type": "boolean",
+              "description": "Indicates whether multi-currency is enabled for the business"
+            },
+            "use_live_exchange_rates": {
+              "type": "boolean",
+              "description": "Indicates whether to use live or business defined exchange rates"
+            },
+            "mtd_activation_status": {
+              "type": "string",
+              "description": "Indicates the UK Making Tax Digital for VAT activation status"
+            },
+            "mtd_connected": {
+              "type": "boolean",
+              "description": "Indicates whether UK Making Tax Digital for VAT is currently connected"
+            },
+            "mtd_authenticated_date": {
+              "type": "string",
+              "format": "date",
+              "description": "Indicates when a UK business enabled UK Making Tax Digital for VAT, nil if not enabled or non-uk"
+            },
+            "tax_scheme_id": {
+              "type": "string",
+              "description": "The ID of the Tax Scheme."
+            },
+            "tax_return_frequency_id": {
+              "type": "string",
+              "description": "The ID of the Tax Return Frequency."
+            },
+            "tax_number": {
+              "type": "string",
+              "description": "The tax number"
+            },
+            "general_tax_number": {
+              "type": "string",
+              "description": "The number for various tax report submissions"
+            },
+            "tax_office_id": {
+              "type": "string",
+              "description": "The ID of the Tax Office."
+            },
+            "default_irpf_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The default IRPF rate"
+            },
+            "flat_rate_tax_percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax percentage that applies to flat rate tax schemes."
+            },
+            "recoverable_percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The partial recoverable tax rate (Canada only)"
+            },
+            "sales_tax_calculation": {
+              "type": "string",
+              "description": "The method of collection for tax on sales. Allowed values - \"invoice\", \"cash\"."
+            },
+            "purchase_tax_calculation": {
+              "type": "string",
+              "description": "The method of collection for tax on purchases. Allowed values - \"invoice\", \"cash\"."
+            },
+            "postponed_accounting": {
+              "type": "boolean",
+              "description": "Indicates whether to use postponed accounting or not"
+            },
+            "destination_vat": {
+              "type": "boolean",
+              "description": "Indicates whether to use destination vat or not"
+            }
+          }
+        }
+      },
+      "required": [
+        "financial_settings"
+      ],
+      "description": "Updates a Financial Settings"
+    },
+    "InvoiceSettings": {
+      "type": "object",
+      "properties": {
+        "$path": {
+          "type": "string",
+          "description": "The path for the resource"
+        },
+        "next_invoice_number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The next invoice number"
+        },
+        "next_credit_note_number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The next credit note number"
+        },
+        "separate_invoice_credit_note_numbering": {
+          "type": "boolean",
+          "description": "Indicates whether to use separate or combined number sequences for invoices and credit notes"
+        },
+        "sales_invoice_number_prefix": {
+          "type": "string",
+          "maxLength": 6,
+          "description": "The prefix to use for sales invoices"
+        },
+        "sales_credit_note_number_prefix": {
+          "type": "string",
+          "maxLength": 6,
+          "description": "The prefix to use for sales credit notes"
+        },
+        "invoice_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default terms and conditions to include on invoices"
+        },
+        "default_note_on_invoice": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default notes to include on invoices"
+        },
+        "default_note_on_credit_note": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default notes to include on credit notes"
+        },
+        "default_note_on_estimate": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default notes to include on estimates"
+        },
+        "default_note_on_quote": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default notes to include on quotes"
+        },
+        "next_quote_number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The next quote number"
+        },
+        "quote_number_prefix": {
+          "type": "string",
+          "maxLength": 6,
+          "description": "The prefix to use for sales quotes"
+        },
+        "estimate_number_prefix": {
+          "type": "string",
+          "maxLength": 6,
+          "description": "The prefix to use for sales estimates"
+        },
+        "quote_default_days_to_expiry": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The default number of days before quotes expire"
+        },
+        "estimate_default_days_to_expiry": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The default number of days before estimates expire"
+        },
+        "quote_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default terms and conditions to include on quotes"
+        },
+        "estimate_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default terms and conditions to include on estimates"
+        },
+        "delivery_note_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "The default terms and conditions to include on delivery notes"
+        },
+        "delivery_note_show_signature": {
+          "type": "boolean",
+          "description": "Indicates whether to include the signature lines on delivery notes"
+        },
+        "delivery_note_show_picked": {
+          "type": "boolean",
+          "description": "Indicates whether to include the picked column on delivery notes"
+        },
+        "delivery_note_show_notes": {
+          "type": "boolean",
+          "description": "Indicates whether to include the document notes on delivery notes"
+        },
+        "delivery_note_show_contact_details": {
+          "type": "boolean",
+          "description": "Indicates whether to include contact details on delivery notes"
+        },
+        "quick_entry_prefix": {
+          "type": "string",
+          "maxLength": 6,
+          "description": "The prefix to use for quick entries"
+        },
+        "late_payment_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The percentage charge applied to late payment of invoices (France only)"
+        },
+        "prompt_payment_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The percentage applied to late payment of invoices (France only)"
+        },
+        "show_auto_entrepreneur": {
+          "type": "boolean",
+          "description": "Indicates whether to include auto entrepreneur details on invoices (France only)"
+        },
+        "show_insurance": {
+          "type": "boolean",
+          "description": "Indicates whether to include insurance details on invoices (France only)"
+        },
+        "insurer": {
+          "$ref": "#/definitions/Contact",
+          "description": "The insurer of the business (France only)"
+        },
+        "insurance_area": {
+          "type": "string",
+          "description": "The insurance area to be displayed on invoices (France only)"
+        },
+        "insurance_type": {
+          "type": "string",
+          "description": "The insurance type to be displayed on invoices (France only)"
+        },
+        "insurance_text": {
+          "type": "string",
+          "description": "The insurance mention to be displayed on invoices (France only)"
+        },
+        "payment_bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The default payment bank account"
+        },
+        "sales_corrective_invoice_number_prefix": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The sales corrective invoice number prefix (Spain only)"
+        },
+        "next_sales_corrective_invoice_number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The next sales corrective invoice number"
+        },
+        "document_headings": {
+          "$ref": "#/definitions/InvoiceSettingsDocumentHeadings",
+          "description": "The customisable document headings used on printed documents"
+        },
+        "line_item_titles": {
+          "$ref": "#/definitions/InvoiceSettingsLineItemTitles",
+          "description": "The customisable line item column headings"
+        },
+        "footer_details": {
+          "$ref": "#/definitions/FooterDetails",
+          "description": "The pdf footer details"
+        },
+        "print_contact_details": {
+          "$ref": "#/definitions/PrintContactDetails",
+          "description": "Print settings for contact details"
+        },
+        "print_statements": {
+          "$ref": "#/definitions/PrintStatements",
+          "description": "Print settings for statements"
+        },
+        "customer_credit_days": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The default delay within which the business' customer has to pay an invoice\nPrefer the (customer) contact's attribute 'credit_days' over this setting\nto calculate an invoice's date of payment; only if null, use this as default.\n"
+        },
+        "vendor_credit_days": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The default delay within which the business has to pay any vendor's invoice\nPrefer the specific (vendor) contact's attribute 'credit_days' over this setting;\nonly if null, use this as default.\n"
+        },
+        "customer_credit_terms": {
+          "type": "string",
+          "enum": [
+            "month_end_invoice",
+            "date_from_invoice",
+            "immediate_invoice"
+          ],
+          "description": "The default credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of customer credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice are valid values.\nPrefer the (customer) contact's credit terms over this setting\nto calculate an invoice's date of payment; only if null, use this as default.\n"
+        },
+        "vendor_credit_terms": {
+          "type": "string",
+          "enum": [
+            "month_end_payment",
+            "date_from_payment",
+            "immediate_payment"
+          ],
+          "description": "The default credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_payment, date_from_payment, immediate_payment are valid values.\nPrefer the (vendor) contact's credit terms over this setting\nto calculate an invoice's date of payment; only if null, use this as default.\n"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The contact balance"
+        },
+        "contact_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Base"
+          },
+          "description": "The type of the contact. It has to be either CUSTOMER or VENDOR"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The contact's full name or business name"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Unique reference for the contact"
+        },
+        "default_sales_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default sales ledger account for the contact <br><i>Customers only</i>"
+        },
+        "default_sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default sales tax rate for the contact <br><i>Customers only</i>"
+        },
+        "default_purchase_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default purchase ledger account for the contact <br><i>Vendors only</i>"
+        },
+        "tax_number": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The VAT registration number of the contact. The format will be validated."
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "The notes for the contact"
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The locale for the contact"
+        },
+        "main_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The main address associated with the contact"
+        },
+        "delivery_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The delivery address <br><i>Customers only</i>"
+        },
+        "main_contact_person": {
+          "$ref": "#/definitions/ContactPerson",
+          "description": "The main contact person of the contact."
+        },
+        "bank_account_details": {
+          "$ref": "#/definitions/BankAccountDetails",
+          "description": "The account details for the contact's bank account"
+        },
+        "credit_limit": {
+          "type": "number",
+          "format": "double",
+          "description": "Custom credit limit amount for the contact <br><i>not applicable to Start</i>"
+        },
+        "credit_days": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Custom credit days for the contact.<br>\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_days'/'vendor_credit_days' as default/fallback according\nto your use case.\n"
+        },
+        "credit_terms": {
+          "type": "string",
+          "enum": [
+            "month_end_invoice",
+            "date_from_invoice",
+            "immediate_invoice",
+            "month_end_payment",
+            "date_from_payment",
+            "immediate_payment"
+          ],
+          "description": "Credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice, month_end_payment,\ndate_from_payment, immediate_payment are valid values.\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_terms'/'vendor_credit_terms' as default.\n"
+        },
+        "credit_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Custom terms and conditions for the contact. If set will override global /invoice_settings\ndefault terms and conditions.\n<br><i>Customers only</i>\n"
+        },
+        "product_sales_price_type": {
+          "$ref": "#/definitions/Base",
+          "description": "All default product_sales_price_type defaults.\n<a\n  href=\"https://developer.sage.com/api/accounting/guides/inventory/#product-sales-prices--service-rates\"\n  target=\"_blank\">Learn more about sales price types\n</a>\n<br><i>Customers only, not applicable to Start<i>\n"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing contacts from external sources"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency that the contact trades in <br><i>not applicable to Start</i>"
+        },
+        "registered_number": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The registered number of the contact's business. Only used for German businesses and represents the \"Steuernummer\" there (not the \"USt-ID\")."
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the contact can be deleted successfully"
+        },
+        "tax_treatment": {
+          "$ref": "#/definitions/ContactTaxTreatment",
+          "description": "The tax treatment - indicates which tax rules to apply for a contact"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address for the given contact"
+        },
+        "tax_calculation": {
+          "type": "string",
+          "description": "<b>France:</b> The tax calculation method used to define tax\ntreatment <i>Vendors only</i>\n<br>\n<b>Spain:</b> Defines if contact is a retailer and tax is subject\nto Recargo de Equivalencia <i>Customers only</i>\n<b>United Kingdom:</b> Defines if contact tax treatment is domestic reverse\ncharge <i>Customers & Suppliers</i>\n"
+        },
+        "auxiliary_account": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "Auxiliary account - used when auxiliary accounting is enabled in business settings.\n<br><i>Available only in Spain and France</i>\n"
+        },
+        "gdpr_obfuscated": {
+          "type": "boolean",
+          "description": "General Data Protection Regulation (GDPR) came into effect on 25th May 2018. It introduces new rules for how business owners manage their contacts' personal data. When this field returns 'true', means that the contact has been requested to be obfuscated and you can not create any artifact (sales invoices, purchase invoices, ...) but you can still check previously created artifacts."
+        },
+        "system": {
+          "type": "boolean",
+          "description": "Identifies a contact as being a system contact used for processing specific transaction types and reserved specifically for those transaction types such as tax return payments/refunds."
+        },
+        "has_unfinished_recurring_invoices": {
+          "type": "boolean",
+          "description": "Indicates whether the contact is associated with any unfinished recurring invoices"
+        },
+        "cis_registered": {
+          "type": "boolean",
+          "description": "Identifies a contact as being registered as CIS.<br><i>only applicable to UK business</i>"
+        },
+        "ni_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Northern Ireland."
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "Identifies a contact as being active"
+        },
+        "gb_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Great Britain."
+        },
+        "cis_settings": {
+          "$ref": "#/definitions/ContactCisSettings",
+          "description": "The CIS Settings for the contact"
+        },
+        "destination_vat_blocking": {
+          "type": "boolean",
+          "description": "Identifies a contact should be blocked due to destination vat"
+        }
+      }
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "The link path"
+        },
+        "rel": {
+          "type": "string",
+          "description": "The relationship of the link to the resource"
+        },
+        "type": {
+          "type": "string",
+          "description": "The content-type of the link"
+        }
+      }
+    },
+    "LedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The display name for the ledger account"
+        },
+        "visible_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The visible scopes for the ledger account.\n\nThis indicates in which of the UI's areas the ledger account is displayed and available for user\nselection. Possible entries in this array are `bank`, `sales`, `purchasing`, `other_payment`,\n`other_receipt`, `reporting`, `journals`, `sales_eu`, `sales_row`, `purchasing_eu`, `purchasing_row`\nand `purchasing_hrc`.\n"
+        },
+        "included_in_chart": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is included in the chart of accounts"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the ledger account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the ledger account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the ledger account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the ledger account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "visible_in_banking": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+        },
+        "visible_in_expenses": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+        },
+        "visible_in_journals": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+        },
+        "visible_in_other_payments": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+        },
+        "visible_in_other_receipts": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+        },
+        "visible_in_reporting": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+        },
+        "visible_in_sales": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+        },
+        "balance_details": {
+          "$ref": "#/definitions/LedgerAccountBalanceDetails",
+          "description": "The ledger account balance details for the date range provided"
+        },
+        "is_control_account": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is a control account.\n\nControl accounts cannot be removed. See also `control_name`.\n"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+        },
+        "display_formatted": {
+          "type": "string",
+          "description": "The display name formatted based on coa_list_order in settings"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "non_recoverable_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The non-recoverable ledger account (Canada Only)"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Materials"
+        },
+        "tax_instalment": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for Tax Intalment (Canada only)"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Labour"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        }
+      }
+    },
+    "CoaGroupType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        }
+      }
+    },
+    "LedgerAccountBalanceDetails": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The account balance"
+        },
+        "credit_or_debit": {
+          "type": "string",
+          "description": "Is the balance a debit or credit"
+        },
+        "credits": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit balance"
+        },
+        "debits": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit balance"
+        },
+        "from_date": {
+          "type": "string",
+          "description": "The from date filter"
+        },
+        "to_date": {
+          "type": "string",
+          "description": "The to date filter"
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "address_line_1": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The first line of the address"
+        },
+        "address_line_2": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address town/city"
+        },
+        "postal_code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The address postal code/zipcode"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The address country"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The related bank account of the address, if the address belongs to a bank account."
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The related contact of the address, if the address belongs to a contact."
+        },
+        "address_type": {
+          "$ref": "#/definitions/Base",
+          "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The custom name of the address"
+        },
+        "region": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address state/province/region"
+        },
+        "country_group": {
+          "$ref": "#/definitions/Base",
+          "description": "Country group allows countries to be filtered for selection.<br>Set it to e.g. EU if the address is within the EEC."
+        },
+        "is_main_address": {
+          "type": "boolean",
+          "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+        }
+      }
+    },
+    "ContactPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "contact_person_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContactPersonType"
+          },
+          "description": "The contact person types for the contact person. Get possible types by retrieving\n<a href=\"https://developer.sage.com/accounting/reference/contacts/#operation/getContactPersonTypes\">\n  all available contact person types\n</a>.\n"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the contact person"
+        },
+        "job_title": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The job title of the contact person"
+        },
+        "telephone": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The telephone number of the contact person"
+        },
+        "mobile": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The mobile number of the contact person"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address of the contact person"
+        },
+        "fax": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The fax number of the contact person"
+        },
+        "is_main_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+        },
+        "address": {
+          "$ref": "#/definitions/Base",
+          "description": "The address of the contact person"
+        },
+        "is_preferred_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this contact person is a preferred contact"
+        }
+      }
+    },
+    "ContactPersonType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "BankAccountDetails": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string",
+          "description": "The account name"
+        },
+        "account_number": {
+          "type": "string",
+          "description": "The account number"
+        },
+        "sort_code": {
+          "type": "string",
+          "description": "The sort code"
+        },
+        "bic": {
+          "type": "string",
+          "description": "The bic"
+        },
+        "iban": {
+          "type": "string",
+          "description": "The iban"
+        }
+      }
+    },
+    "ContactTaxTreatment": {
+      "type": "object",
+      "properties": {
+        "home_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where home country tax rules should be applied"
+        },
+        "eu_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates a contact where EC tax rules should be applied"
+        },
+        "eu_not_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates an EU contact without a tax number - home tax rules should be applied"
+        },
+        "rest_of_world_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where rest of world tax rules should be applied"
+        },
+        "is_importer": {
+          "type": "boolean",
+          "description": "Indicates a contact where import rules should be appliedOnly used for suppliers and FR, ES, IE and UK businesses"
+        }
+      }
+    },
+    "ContactCisSettings": {
+      "type": "object",
+      "properties": {
+        "registered_cis_name": {
+          "type": "string",
+          "description": "the CIS name for the Contact"
+        },
+        "subcontractor_verification_number": {
+          "type": "string",
+          "description": "The CIS Verification number for the contact"
+        },
+        "deduction_rate": {
+          "$ref": "#/definitions/ContactCisDeductionRate",
+          "description": "The CIS Deduction rate for the contact"
+        }
+      }
+    },
+    "ContactCisDeductionRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "InvoiceSettingsDocumentHeadings": {
+      "type": "object",
+      "properties": {
+        "sales_invoice": {
+          "type": "string",
+          "description": "The customisable sales invoice document header"
+        },
+        "sales_credit_note": {
+          "type": "string",
+          "description": "The customisable sales credit note document header"
+        },
+        "sales_corrective_invoice": {
+          "type": "string",
+          "description": "The customisable sales corrective invoice document header"
+        },
+        "sales_quote": {
+          "type": "string",
+          "description": "The customisable sales quote document header"
+        },
+        "sales_estimate": {
+          "type": "string",
+          "description": "The customisable sales estimate document header"
+        },
+        "pro_forma": {
+          "type": "string",
+          "description": "The customisable pro forma document header"
+        },
+        "remittance_advice": {
+          "type": "string",
+          "description": "The customisable remittance advice document header"
+        },
+        "statement": {
+          "type": "string",
+          "description": "The customisable statement document header"
+        },
+        "delivery_note": {
+          "type": "string",
+          "description": "The customisable delivery note document header"
+        }
+      }
+    },
+    "InvoiceSettingsLineItemTitles": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "The user defined description column title"
+        },
+        "unit_price": {
+          "type": "string",
+          "description": "The user defined unit price column title"
+        },
+        "quantity": {
+          "type": "string",
+          "description": "The user defined quantity column title"
+        },
+        "discount": {
+          "type": "string",
+          "description": "The user defined discount column title"
+        }
+      }
+    },
+    "FooterDetails": {
+      "type": "object",
+      "properties": {
+        "column_1": {
+          "type": "string",
+          "description": "The pdf footer details for column 1"
+        },
+        "column_2": {
+          "type": "string",
+          "description": "The pdf footer details for column 2"
+        },
+        "column_3": {
+          "type": "string",
+          "description": "The pdf footer details for column 3"
+        }
+      }
+    },
+    "PrintContactDetails": {
+      "type": "object",
+      "properties": {
+        "business_name": {
+          "type": "boolean",
+          "description": "Indicates whether business name is printed on the invoice"
+        },
+        "website": {
+          "type": "boolean",
+          "description": "Indicates whether website is printed on the invoice"
+        },
+        "telephone": {
+          "type": "boolean",
+          "description": "Indicates whether telephone is printed on the invoice"
+        },
+        "mobile": {
+          "type": "boolean",
+          "description": "Indicates whether mobile is printed on the invoice"
+        },
+        "email_address": {
+          "type": "boolean",
+          "description": "Indicates whether email address is printed on the invoice"
+        },
+        "due_date": {
+          "type": "boolean",
+          "description": "Indicates whether due date is printed on the invoice"
+        },
+        "default_delivery_address": {
+          "type": "string",
+          "description": "Indicates which contact address is used for the delivery address of the invoice. Valid options are: INVOICE_ADDRESS, CONTACT_DELIVERY_ADDRESS, NONE."
+        }
+      }
+    },
+    "PrintStatements": {
+      "type": "object",
+      "properties": {
+        "days_overdue": {
+          "type": "boolean",
+          "description": "Indicates whether days of overdue are printed in the contact's statement"
+        },
+        "table_of_balances": {
+          "type": "boolean",
+          "description": "Indicates whether table of balances is printed in the contact's statement"
+        }
+      }
+    },
+    "putInvoiceSettings": {
+      "type": "object",
+      "properties": {
+        "invoice_settings": {
+          "type": "object",
+          "properties": {
+            "next_invoice_number": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The next invoice number",
+              "minimum": 1,
+              "maximum": 999999999
+            },
+            "next_credit_note_number": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The next credit note number",
+              "minimum": 1,
+              "maximum": 999999999
+            },
+            "separate_invoice_credit_note_numbering": {
+              "type": "boolean",
+              "description": "Indicates whether to use separate or combined number sequences for invoices and credit notes"
+            },
+            "sales_invoice_number_prefix": {
+              "type": "string",
+              "description": "The prefix to use for sales invoices"
+            },
+            "sales_credit_note_number_prefix": {
+              "type": "string",
+              "description": "The prefix to use for sales credit notes"
+            },
+            "invoice_terms_and_conditions": {
+              "type": "string",
+              "description": "The default terms and conditions to include on invoices"
+            },
+            "default_note_on_invoice": {
+              "type": "string",
+              "description": "The default notes to include on invoices"
+            },
+            "default_note_on_credit_note": {
+              "type": "string",
+              "description": "The default notes to include on credit notes"
+            },
+            "default_note_on_estimate": {
+              "type": "string",
+              "description": "The default notes to include on estimates"
+            },
+            "default_note_on_quote": {
+              "type": "string",
+              "description": "The default notes to include on quotes"
+            },
+            "next_quote_number": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The next quote number",
+              "minimum": 1,
+              "maximum": 999999999
+            },
+            "quote_number_prefix": {
+              "type": "string",
+              "description": "The prefix to use for sales quotes"
+            },
+            "estimate_number_prefix": {
+              "type": "string",
+              "description": "The prefix to use for sales estimates"
+            },
+            "quote_default_days_to_expiry": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The default number of days before quotes expire",
+              "minimum": 0,
+              "maximum": 365
+            },
+            "estimate_default_days_to_expiry": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The default number of days before estimates expire",
+              "minimum": 0,
+              "maximum": 365
+            },
+            "quote_terms_and_conditions": {
+              "type": "string",
+              "description": "The default terms and conditions to include on quotes"
+            },
+            "estimate_terms_and_conditions": {
+              "type": "string",
+              "description": "The default terms and conditions to include on estimates"
+            },
+            "delivery_note_terms_and_conditions": {
+              "type": "string",
+              "description": "The default terms and conditions to include on delivery notes"
+            },
+            "delivery_note_show_signature": {
+              "type": "boolean",
+              "description": "Indicates whether to include the signature lines on delivery notes"
+            },
+            "delivery_note_show_picked": {
+              "type": "boolean",
+              "description": "Indicates whether to include the picked column on delivery notes"
+            },
+            "delivery_note_show_notes": {
+              "type": "boolean",
+              "description": "Indicates whether to include the document notes on delivery notes"
+            },
+            "delivery_note_show_contact_details": {
+              "type": "boolean",
+              "description": "Indicates whether to include contact details on delivery notes"
+            },
+            "quick_entry_prefix": {
+              "type": "string",
+              "description": "The prefix to use for quick entries"
+            },
+            "late_payment_percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The percentage charge applied to late payment of invoices (France only)"
+            },
+            "prompt_payment_percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The percentage applied to late payment of invoices (France only)"
+            },
+            "show_auto_entrepreneur": {
+              "type": "boolean",
+              "description": "Indicates whether to include auto entrepreneur details on invoices (France only)"
+            },
+            "show_insurance": {
+              "type": "boolean",
+              "description": "Indicates whether to include insurance details on invoices (France only)"
+            },
+            "insurer_id": {
+              "type": "string",
+              "description": "The ID of the Insurer. (France only)"
+            },
+            "insurance_area": {
+              "type": "string",
+              "description": "The insurance area to be displayed on invoices (France only)"
+            },
+            "insurance_type": {
+              "type": "string",
+              "description": "The insurance type to be displayed on invoices (France only)"
+            },
+            "insurance_text": {
+              "type": "string",
+              "description": "The insurance mention to be displayed on invoices (France only)"
+            },
+            "payment_bank_account_id": {
+              "type": "string",
+              "description": "The ID of the Payment Bank Account."
+            },
+            "sales_corrective_invoice_number_prefix": {
+              "type": "string",
+              "description": "The sales corrective invoice number prefix (Spain only)"
+            },
+            "next_sales_corrective_invoice_number": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The next sales corrective invoice number",
+              "minimum": 1,
+              "maximum": 2147483647
+            },
+            "customer_credit_days": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The default delay within which the business' customer has to pay an invoice\nPrefer the (customer) contact's attribute 'credit_days' over this setting\nto calculate an invoice's date of payment; only if null, use this as default.\n",
+              "minimum": 0,
+              "maximum": 365
+            },
+            "vendor_credit_days": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The default delay within which the business has to pay any vendor's invoice\nPrefer the specific (vendor) contact's attribute 'credit_days' over this setting;\nonly if null, use this as default.\n",
+              "minimum": 0,
+              "maximum": 365
+            },
+            "customer_credit_terms": {
+              "type": "string",
+              "description": "The default credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of customer credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice are valid values.\nPrefer the (customer) contact's credit terms over this setting\nto calculate an invoice's date of payment; only if null, use this as default.\n",
+              "enum": [
+                "month_end_invoice",
+                "date_from_invoice",
+                "immediate_invoice"
+              ]
+            },
+            "vendor_credit_terms": {
+              "type": "string",
+              "description": "The default credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_payment, date_from_payment, immediate_payment are valid values.\nPrefer the (vendor) contact's credit terms over this setting\nto calculate an invoice's date of payment; only if null, use this as default.\n",
+              "enum": [
+                "month_end_payment",
+                "date_from_payment",
+                "immediate_payment"
+              ]
+            },
+            "document_headings": {
+              "type": "object",
+              "properties": {
+                "sales_invoice": {
+                  "type": "string",
+                  "description": "The customisable sales invoice document header"
+                },
+                "sales_credit_note": {
+                  "type": "string",
+                  "description": "The customisable sales credit note document header"
+                },
+                "sales_corrective_invoice": {
+                  "type": "string",
+                  "description": "The customisable sales corrective invoice document header"
+                },
+                "sales_quote": {
+                  "type": "string",
+                  "description": "The customisable sales quote document header"
+                },
+                "sales_estimate": {
+                  "type": "string",
+                  "description": "The customisable sales estimate document header"
+                },
+                "pro_forma": {
+                  "type": "string",
+                  "description": "The customisable pro forma document header"
+                },
+                "remittance_advice": {
+                  "type": "string",
+                  "description": "The customisable remittance advice document header"
+                },
+                "statement": {
+                  "type": "string",
+                  "description": "The customisable statement document header"
+                },
+                "delivery_note": {
+                  "type": "string",
+                  "description": "The customisable delivery note document header"
+                }
+              }
+            },
+            "line_item_titles": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "The user defined description column title"
+                },
+                "unit_price": {
+                  "type": "string",
+                  "description": "The user defined unit price column title"
+                },
+                "quantity": {
+                  "type": "string",
+                  "description": "The user defined quantity column title"
+                },
+                "discount": {
+                  "type": "string",
+                  "description": "The user defined discount column title"
+                }
+              }
+            },
+            "footer_details": {
+              "type": "object",
+              "properties": {
+                "column_1": {
+                  "type": "string",
+                  "description": "The pdf footer details for column 1"
+                },
+                "column_2": {
+                  "type": "string",
+                  "description": "The pdf footer details for column 2"
+                },
+                "column_3": {
+                  "type": "string",
+                  "description": "The pdf footer details for column 3"
+                }
+              }
+            },
+            "print_contact_details": {
+              "type": "object",
+              "properties": {
+                "business_name": {
+                  "type": "boolean",
+                  "description": "Indicates whether business name is printed on the invoice"
+                },
+                "website": {
+                  "type": "boolean",
+                  "description": "Indicates whether website is printed on the invoice"
+                },
+                "telephone": {
+                  "type": "boolean",
+                  "description": "Indicates whether telephone is printed on the invoice"
+                },
+                "mobile": {
+                  "type": "boolean",
+                  "description": "Indicates whether mobile is printed on the invoice"
+                },
+                "email_address": {
+                  "type": "boolean",
+                  "description": "Indicates whether email address is printed on the invoice"
+                },
+                "due_date": {
+                  "type": "boolean",
+                  "description": "Indicates whether due date is printed on the invoice"
+                },
+                "default_delivery_address": {
+                  "type": "string",
+                  "description": "Indicates which contact address is used for the delivery address of the invoice. Valid options are: INVOICE_ADDRESS, CONTACT_DELIVERY_ADDRESS, NONE."
+                }
+              }
+            },
+            "print_statements": {
+              "type": "object",
+              "properties": {
+                "days_overdue": {
+                  "type": "boolean",
+                  "description": "Indicates whether days of overdue are printed in the contact's statement"
+                },
+                "table_of_balances": {
+                  "type": "boolean",
+                  "description": "Indicates whether table of balances is printed in the contact's statement"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "invoice_settings"
+      ],
+      "description": "Updates a Invoice Settings"
+    }
+  }
+}

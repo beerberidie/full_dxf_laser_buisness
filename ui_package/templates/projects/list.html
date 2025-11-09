@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Projects</h1>
+    <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
+            + New Project
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Search and Filter Bar -->
+<div class="search-bar">
+    <form method="get" action="{{ url_for('projects.index') }}">
+        <input 
+            type="text" 
+            name="search" 
+            placeholder="Search projects by name, code, or description..." 
+            value="{{ search }}"
+            class="search-input"
+        >
+        
+        <select name="client_id" class="filter-select">
+            <option value="">All Clients</option>
+            {% for client in clients %}
+                <option value="{{ client.id }}" {% if selected_client_id == client.id %}selected{% endif %}>
+                    {{ client.name }} ({{ client.client_code }})
+                </option>
+            {% endfor %}
+        </select>
+        
+        <select name="status" class="filter-select">
+            <option value="">All Statuses</option>
+            {% for status in statuses %}
+                <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>
+                    {{ status }}
+                </option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit" class="btn btn-secondary">Filter</button>
+        {% if search or selected_client_id or selected_status %}
+            <a href="{{ url_for('projects.index') }}" class="btn btn-ghost">Clear</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Project List -->
+{% if projects %}
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Due Date</th>
+                    <th>Quoted Price</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('projects.detail', id=project.id) }}" class="link-primary">
+                            {{ project.project_code }}
+                        </a>
+                    </td>
+                    <td>{{ project.name }}</td>
+                    <td>
+                        <a href="{{ url_for('clients.detail', id=project.client.id) }}" class="link-secondary">
+                            {{ project.client.name }}
+                        </a>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ project.status|lower|replace(' ', '-') }}">
+                            {{ project.status }}
+                        </span>
+                        {% if project.is_overdue %}
+                            <span class="badge badge-danger" title="Overdue">⚠️</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if project.due_date %}
+                            {{ project.due_date|date }}
+                            {% if project.days_until_due is not none %}
+                                <small class="text-muted">({{ project.days_until_due }} days)</small>
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if project.quoted_price %}
+                            R{{ "%.2f"|format(project.quoted_price) }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>{{ project.created_at|date }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ url_for('projects.detail', id=project.id) }}" class="btn btn-sm btn-ghost">
+                                View
+                            </a>
+                            {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+                            <a href="{{ url_for('projects.edit', id=project.id) }}" class="btn btn-sm btn-ghost">
+                                Edit
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('projects.index', page=pagination.prev_num, search=search, client_id=selected_client_id, status=selected_status) }}" class="btn btn-ghost">
+                    &laquo; Previous
+                </a>
+            {% endif %}
+            
+            <span class="pagination-info">
+                Page {{ pagination.page }} of {{ pagination.pages }}
+            </span>
+            
+            {% if pagination.has_next %}
+                <a href="{{ url_for('projects.index', page=pagination.next_num, search=search, client_id=selected_client_id, status=selected_status) }}" class="btn btn-ghost">
+                    Next &raquo;
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+{% else %}
+    <div class="empty-state">
+        <p>No projects found.</p>
+        {% if search or selected_client_id or selected_status %}
+            <p>Try adjusting your search or filter criteria.</p>
+        {% else %}
+            <p>Get started by creating your first project.</p>
+            {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+            <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
+                + New Project
+            </a>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}
+

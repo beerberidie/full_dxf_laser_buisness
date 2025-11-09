@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Log Laser Run - {{ project.project_code }}{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+    <a href="{{ url_for('main.dashboard') }}">Dashboard</a> /
+    <a href="{{ url_for('projects.detail', id=project.id) }}">{{ project.project_code }}</a> /
+    Log Laser Run
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Log Laser Run</h1>
+    <p class="text-muted">Project: {{ project.project_code }} - {{ project.name }}</p>
+</div>
+
+<!-- Run Form -->
+<div class="card">
+    <div class="card-header">
+        <h2>Laser Run Details</h2>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('queue.new_run', project_id=project.id) }}" method="POST">
+            <div class="grid grid-2">
+                <!-- Queue Item -->
+                <div class="form-group">
+                    <label for="queue_item_id">Queue Item (Optional):</label>
+                    <select id="queue_item_id" name="queue_item_id" class="form-control">
+                        <option value="">Not from queue</option>
+                        {% for item in queue_items %}
+                        <option value="{{ item.id }}">
+                            Position {{ item.queue_position }} - {{ item.status }}
+                            {% if item.scheduled_date %}(Scheduled: {{ item.scheduled_date.strftime('%Y-%m-%d') }}){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Operator (Dropdown) -->
+                <div class="form-group">
+                    <label for="operator_id">Operator:</label>
+                    <select id="operator_id" name="operator_id" class="form-control">
+                        <option value="">Select operator...</option>
+                        {% for operator in operators %}
+                        <option value="{{ operator.id }}">{{ operator.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Cut Time -->
+                <div class="form-group">
+                    <label for="cut_time_minutes">Cut Time (minutes):</label>
+                    <input type="number" id="cut_time_minutes" name="cut_time_minutes"
+                           class="form-control" min="0" placeholder="e.g., 45">
+                </div>
+
+                <!-- Material Type (Dropdown) -->
+                <div class="form-group">
+                    <label for="material_type">Material Type:</label>
+                    <select id="material_type" name="material_type" class="form-control">
+                        <option value="">Select material type...</option>
+                        {% for material in material_types %}
+                        <option value="{{ material }}">{{ material }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Material Thickness -->
+                <div class="form-group">
+                    <label for="material_thickness">Material Thickness (mm):</label>
+                    <input type="number" id="material_thickness" name="material_thickness"
+                           class="form-control" step="0.001" min="0" placeholder="e.g., 3.0">
+                </div>
+
+                <!-- Machine Settings Preset (Dropdown) -->
+                <div class="form-group">
+                    <label for="preset_id">Machine Settings Preset:</label>
+                    <select id="preset_id" name="preset_id" class="form-control">
+                        <option value="">Select preset (optional)...</option>
+                        {% for preset in presets %}
+                        <option value="{{ preset.id }}"
+                                data-material="{{ preset.material_type }}"
+                                data-thickness="{{ preset.thickness }}">
+                            {{ preset.preset_name }} ({{ preset.material_type }} {{ preset.thickness }}mm)
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">
+                        Preset defines all machine settings. Manage presets in the <a href="{{ url_for('presets.index') }}">Presets</a> page.
+                    </small>
+                </div>
+
+                <!-- Raw Material Count -->
+                <div class="form-group">
+                    <label for="sheet_count">Raw Material Count:</label>
+                    <input type="number" id="sheet_count" name="sheet_count"
+                           class="form-control" min="1" value="1">
+                </div>
+
+                <!-- Parts Produced -->
+                <div class="form-group">
+                    <label for="parts_produced">Parts Produced:</label>
+                    <input type="number" id="parts_produced" name="parts_produced"
+                           class="form-control" min="0" placeholder="e.g., 50">
+                </div>
+            </div>
+
+            <!-- Additional Settings/Notes -->
+            <div class="form-group">
+                <label for="machine_settings">Additional Settings/Notes:</label>
+                <textarea id="machine_settings" name="machine_settings" class="form-control"
+                          rows="3" placeholder="Any additional machine settings or notes not covered by the preset..."></textarea>
+                <small class="form-text text-muted">
+                    Machine settings are defined by the preset you select above. Use this field for any additional notes or adjustments.
+                </small>
+            </div>
+
+            <!-- Notes -->
+            <div class="form-group">
+                <label for="notes">Notes:</label>
+                <textarea id="notes" name="notes" class="form-control" 
+                          rows="3" placeholder="Any additional notes about this run"></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <a href="{{ url_for('projects.detail', id=project.id) }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Log Run</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Phase 5: Preset filtering functionality (simplified)
+(function() {
+    'use strict';
+
+    // Get form elements
+    const materialTypeSelect = document.getElementById('material_type');
+    const materialThicknessInput = document.getElementById('material_thickness');
+    const presetSelect = document.getElementById('preset_id');
+
+    // Filter presets based on material type and thickness
+    function filterPresets() {
+        const selectedMaterial = materialTypeSelect.value;
+        const selectedThickness = materialThicknessInput.value;
+
+        const options = presetSelect.querySelectorAll('option');
+        let matchCount = 0;
+
+        options.forEach(option => {
+            if (option.value === '') {
+                // Keep the placeholder option
+                option.style.display = '';
+                return;
+            }
+
+            const optionMaterial = option.getAttribute('data-material');
+            const optionThickness = option.getAttribute('data-thickness');
+
+            let matches = true;
+
+            // Filter by material type if selected
+            if (selectedMaterial && optionMaterial !== selectedMaterial) {
+                matches = false;
+            }
+
+            // Filter by thickness if entered (with tolerance)
+            if (selectedThickness && optionThickness) {
+                const thickness = parseFloat(selectedThickness);
+                const presetThickness = parseFloat(optionThickness);
+                const tolerance = 0.1; // 0.1mm tolerance
+
+                if (Math.abs(thickness - presetThickness) > tolerance) {
+                    matches = false;
+                }
+            }
+
+            option.style.display = matches ? '' : 'none';
+            if (matches) matchCount++;
+        });
+
+        // Update preset select placeholder
+        const placeholder = presetSelect.querySelector('option[value=""]');
+        if (matchCount === 0) {
+            placeholder.textContent = 'No matching presets found';
+        } else {
+            placeholder.textContent = `Select preset (${matchCount} available)...`;
+        }
+
+        // Clear preset selection if current selection is now hidden
+        const selectedOption = presetSelect.options[presetSelect.selectedIndex];
+        if (selectedOption && selectedOption.value !== '' && selectedOption.style.display === 'none') {
+            presetSelect.value = '';
+        }
+    }
+
+    // Auto-fill material type and thickness from preset selection
+    function updateFromPreset() {
+        const selectedOption = presetSelect.options[presetSelect.selectedIndex];
+
+        if (!selectedOption || selectedOption.value === '') {
+            return;
+        }
+
+        // Update material type and thickness if not set
+        const presetMaterial = selectedOption.getAttribute('data-material');
+        const presetThickness = selectedOption.getAttribute('data-thickness');
+
+        if (presetMaterial && !materialTypeSelect.value) {
+            materialTypeSelect.value = presetMaterial;
+        }
+
+        if (presetThickness && !materialThicknessInput.value) {
+            materialThicknessInput.value = presetThickness;
+        }
+    }
+
+    // Event listeners
+    materialTypeSelect.addEventListener('change', filterPresets);
+    materialThicknessInput.addEventListener('input', filterPresets);
+    presetSelect.addEventListener('change', updateFromPreset);
+
+    // Initial filter on page load
+    filterPresets();
+})();
+</script>
+{% endblock %}
+

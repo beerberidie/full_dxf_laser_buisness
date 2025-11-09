@@ -1,0 +1,483 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Status Codes & Types",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Quick Entry Types",
+      "description": "Sales or purchase quick entries are either of the type INVOICE or CREDIT_NOTE. This API allows only SHOW and INDEX actions on this resource."
+    },
+    {
+      "name": "Artefact Statuses",
+      "description": "An artefact is a general term for one of (purchase or sales) invoice, credit note, quick entry, quote, estimate or corrective invoice (Spain only). The artefact status describes the life cycle of such an object. It can be one of UNPAID, PART_PAID, PAID, VOID, DRAFT, DISPUTED, DECLINED or PRO_FORMA. Most of these statuses can not be set directly, but are the result of a separate operation, e.g. creating a payment for an invoice may change the status from UNPAID to PAID. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/artefact_statuses/\" target=\"_blank\">Key Concepts: Artefact Statuses</a>"
+    },
+    {
+      "name": "EU Goods Services Types",
+      "description": "Line items on artefact objects (invoice, credit note, quick entry, quote, estimate or corrective invoice) can be specified as being either of type GOODS or SERVICES. Although the name suggests it is only for EU contacts, it applies to cross border trades in general. This API allows only SHOW and INDEX actions on this resource."
+    }
+  ],
+  "paths": {
+    "/quick_entry_types": {
+      "get": {
+        "summary": "Returns all Quick Entry Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Batch Entry Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Batch Entry Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Batch Entry Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+       "responses": {
+                    "200": {
+                        "description": "Returns all Quick Entry Types",
+                        "examples": {
+                            "application/json": 
+							{
+								"$total": 2,
+								"$page": 1,
+								"$next": null,
+								"$back": null,
+								"$itemsPerPage": 20,
+								"$items": [
+									{
+										"id": "INVOICE",
+										"displayed_as": "Invoice",
+										"$path": "/quick_entry_types/INVOICE"
+									},
+									{
+										"id": "CREDIT_NOTE",
+										"displayed_as": "Cr Note",
+										"$path": "/quick_entry_types/CREDIT_NOTE"
+									}
+								]
+							}                         
+                        }
+                    }
+                },
+        "tags": [
+          "Quick Entry Types"
+        ],
+        "operationId": "getQuickEntryTypes"
+      },
+      "x-sage-pathtitle": "Quick Entry Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/quick_entry_types/{key}": {
+      "get": {
+        "summary": "Returns a Quick Entry Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Quick Entry Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Batch Entry Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Quick Entry Type",
+            "examples": {
+              "application/json":{
+				
+					"id": "INVOICE",
+					"displayed_as": "Invoice",
+					"$path": "/quick_entry_types/INVOICE"
+				
+			  }
+            }
+          }
+        },
+        "tags": [
+          "Quick Entry Types"
+        ],
+        "operationId": "getQuickEntryTypesKey"
+      },
+      "x-sage-pathtitle": "single Quick Entry Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/artefact_statuses": {
+      "get": {
+        "summary": "Returns all Artefact Statuses",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Artefact Statuses per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Artefact Statuses",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Artefact Statuses (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+                    "200": {
+                        "description": "Returns all Artefact Statuses",
+                        "examples": {
+                            "application/json": 
+								{
+									"$total": 11,
+									"$page": 1,
+									"$next": null,
+									"$back": null,
+									"$itemsPerPage": 20,
+									"$items": [
+										{
+											"id": "UNPAID",
+											"displayed_as": "Unpaid",
+											"$path": "/artefact_statuses/UNPAID"
+										},
+										{
+											"id": "PART_PAID",
+											"displayed_as": "Part Paid",
+											"$path": "/artefact_statuses/PART_PAID"
+										},
+										{
+											"id": "PAID",
+											"displayed_as": "Paid",
+											"$path": "/artefact_statuses/PAID"
+										},
+										{
+											"id": "VOID",
+											"displayed_as": "Void",
+											"$path": "/artefact_statuses/VOID"
+										},
+										{
+											"id": "DRAFT",
+											"displayed_as": "Draft",
+											"$path": "/artefact_statuses/DRAFT"
+										},
+										{
+											"id": "DISPUTED",
+											"displayed_as": "Disputed",
+											"$path": "/artefact_statuses/DISPUTED"
+										},
+										{
+											"id": "DECLINED",
+											"displayed_as": "Declined",
+											"$path": "/artefact_statuses/DECLINED"
+										},
+										{
+											"id": "PRO_FORMA",
+											"displayed_as": "Pro Forma",
+											"$path": "/artefact_statuses/PRO_FORMA"
+										},
+										{
+											"id": "ACCEPTED",
+											"displayed_as": "Accepted",
+											"$path": "/artefact_statuses/ACCEPTED"
+										},
+										{
+											"id": "ACCEPTED_BY_CUSTOMER",
+											"displayed_as": "Accepted by Customer",
+											"$path": "/artefact_statuses/ACCEPTED_BY_CUSTOMER"
+										},
+										{
+											"id": "DECLINED_BY_CUSTOMER",
+											"displayed_as": "Declined by Customer",
+											"$path": "/artefact_statuses/DECLINED_BY_CUSTOMER"
+										}
+									]
+								}
+                        }
+                    }
+                },
+        "tags": [
+          "Artefact Statuses"
+        ],
+        "operationId": "getArtefactStatuses"
+      },
+      "x-sage-pathtitle": "Artefact Status collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/artefact_statuses/{key}": {
+      "get": {
+        "summary": "Returns a Artefact Status",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Artefact Status Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Artefact Status (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an Artefact Status",
+            "examples": {
+              "application/json":{
+				
+					"id": "UNPAID",
+					"displayed_as": "Unpaid",
+					"$path": "/artefact_statuses/UNPAID"
+				
+			  }
+            }
+          }
+        },
+        "tags": [
+          "Artefact Statuses"
+        ],
+        "operationId": "getArtefactStatusesKey"
+      },
+      "x-sage-pathtitle": "single Artefact Status resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/eu_goods_services_types": {
+      "get": {
+        "summary": "Returns all EU Goods Services Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of EU Goods Services Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of EU Goods Services Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the EU Goods Services Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all EU Goods Services Types",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 2,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "GOODS",
+						"displayed_as": "Goods (and related services)",
+						"$path": "/eu_goods_services_types/GOODS"
+					},
+					{
+						"id": "SERVICES",
+						"displayed_as": "Services (standalone)",
+						"$path": "/eu_goods_services_types/SERVICES"
+					}
+				]
+			}
+			  
+            }
+          }
+        },
+        "tags": [
+          "EU Goods Services Types"
+        ],
+        "operationId": "getEuGoodsServicesTypes"
+      },
+      "x-sage-pathtitle": "EU Goods Services Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/eu_goods_services_types/{key}": {
+      "get": {
+        "summary": "Returns a EU Goods Services Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The EU Goods Services Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the EU Goods Services Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a EU Goods Services Type",
+            "examples":{
+				"application/json":{
+					"id": "GOODS",
+					"displayed_as": "Goods (and related services)",
+					"$path": "/eu_goods_services_types/GOODS"
+				}
+			}
+          }
+        },
+        "tags": [
+          "EU Goods Services Types"
+        ],
+        "operationId": "getEuGoodsServicesTypesKey"
+      },
+      "x-sage-pathtitle": "single EU Goods Services Type resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Invoices, Quotes & Credit Notes"
+    },
+	"Test": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "id": "INVOICE",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "displayed_as": "INVOICE",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "/quick_entry_types/INVOICE",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Quick Entry Invoices and Credits"
+    }
+  }
+}

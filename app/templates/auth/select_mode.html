@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Select Mode - Laser OS{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="text-center mb-4">
+                <h1 class="display-4">Welcome, {{ current_user.display_name or current_user.full_name or current_user.username }}!</h1>
+                <p class="lead text-muted">Choose your interface mode</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('auth.select_mode') }}">
+                <div class="row">
+                    <!-- PC Mode Card -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 mode-card {% if recommended_mode == 'pc' %}border-primary{% endif %}" onclick="selectMode('pc')">
+                            <div class="card-body text-center p-4">
+                                <div class="mb-3">
+                                    <i class="fas fa-desktop fa-5x text-primary"></i>
+                                </div>
+                                <h3 class="card-title">PC Mode</h3>
+                                <p class="card-text text-muted">
+                                    Full dashboard with complete access to:
+                                </p>
+                                <ul class="list-unstyled text-start">
+                                    <li><i class="fas fa-check text-success me-2"></i>Dashboard & Analytics</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Client Management</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Project Tracking</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Queue Management</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Reports & Communications</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Inventory & Settings</li>
+                                </ul>
+                                {% if recommended_mode == 'pc' %}
+                                <span class="badge bg-primary">Recommended for you</span>
+                                {% endif %}
+                                <div class="mt-4">
+                                    <button type="submit" name="mode" value="pc" class="btn btn-primary btn-lg w-100">
+                                        <i class="fas fa-desktop me-2"></i>Enter PC Mode
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone Mode Card -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 mode-card {% if recommended_mode == 'phone' %}border-success{% endif %}" onclick="selectMode('phone')">
+                            <div class="card-body text-center p-4">
+                                <div class="mb-3">
+                                    <i class="fas fa-mobile-alt fa-5x text-success"></i>
+                                </div>
+                                <h3 class="card-title">Phone Mode</h3>
+                                <p class="card-text text-muted">
+                                    Mobile-optimized interface for:
+                                </p>
+                                <ul class="list-unstyled text-start">
+                                    <li><i class="fas fa-check text-success me-2"></i>Production Run Logging</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Start/End Laser Runs</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Active Job Tracking</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Material Usage Recording</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Quick & Simple Interface</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Optimized for Touch</li>
+                                </ul>
+                                {% if recommended_mode == 'phone' %}
+                                <span class="badge bg-success">Recommended for you</span>
+                                {% endif %}
+                                <div class="mt-4">
+                                    <button type="submit" name="mode" value="phone" class="btn btn-success btn-lg w-100">
+                                        <i class="fas fa-mobile-alt me-2"></i>Enter Phone Mode
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    You can switch modes anytime from your profile settings
+                </p>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.mode-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-width: 2px;
+}
+
+.mode-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.mode-card.border-primary:hover {
+    border-color: #0056b3 !important;
+    box-shadow: 0 10px 20px rgba(0,86,179,0.2);
+}
+
+.mode-card.border-success:hover {
+    border-color: #157347 !important;
+    box-shadow: 0 10px 20px rgba(21,115,71,0.2);
+}
+
+.mode-card ul {
+    margin: 20px 0;
+}
+
+.mode-card ul li {
+    padding: 5px 0;
+}
+</style>
+
+<script>
+function selectMode(mode) {
+    // Optional: Add visual feedback when card is clicked
+    console.log('Mode selected:', mode);
+}
+</script>
+{% endblock %}
+

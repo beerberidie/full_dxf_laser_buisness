@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightBurnProject AppVersion="2.0.03" DeviceName="No Machine" FormatVersion="1" MaterialHeight="0" MirrorX="False" MirrorY="False">
+    <Thumbnail Source="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"/>
+    <VariableText>
+        <Start Value="0"/>
+        <End Value="999"/>
+        <Current Value="0"/>
+        <Increment Value="1"/>
+        <AutoAdvance Value="0"/>
+    </VariableText>
+    <UIPrefs>
+        <Optimize_ByLayer Value="0"/>
+        <Optimize_ByGroup Value="-1"/>
+        <Optimize_ByPriority Value="1"/>
+        <Optimize_WhichDirection Value="0"/>
+        <Optimize_InnerToOuter Value="1"/>
+        <Optimize_ByDirection Value="0"/>
+        <Optimize_ReduceTravel Value="1"/>
+        <Optimize_HideBacklash Value="0"/>
+        <Optimize_ReduceDirChanges Value="0"/>
+        <Optimize_ChooseCorners Value="0"/>
+        <Optimize_AllowReverse Value="1"/>
+        <Optimize_RemoveOverlaps Value="0"/>
+        <Optimize_OptimalEntryPoint Value="0"/>
+        <Optimize_OverlapDist Value="0.025"/>
+    </UIPrefs>
+    <CutSetting type="Cut">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <maxPower2 Value="20"/>
+        <speed Value="100"/>
+        <priority Value="0"/>
+    </CutSetting>
+    <Shape Type="Group">
+        <XForm>1 0 0 1 -604.42157 -521.61566</XForm>
+        <Children>
+            <Shape Type="Ellipse" CutIndex="0" Rx="6" Ry="6">
+                <XForm>1 0 0 1 654.42157 621.61566</XForm>
+            </Shape>
+            <Shape Type="Ellipse" CutIndex="0" Rx="6" Ry="6">
+                <XForm>1 0 0 1 654.42157 551.61566</XForm>
+            </Shape>
+            <Shape Type="Path" CutIndex="0" VertID="0" PrimID="0">
+                <XForm>1 0 0 1 604.42157 521.61566</XForm>
+                <VertList>V0 0c0x1c1x1V100 0c0x1c1x1V100 120c0x1c1x1V0 120c0x1c1x1</VertList>
+                <PrimList>LineClosed</PrimList>
+            </Shape>
+        </Children>
+    </Shape>
+    <Notes ShowOnLoad="0" Notes=""/>
+</LightBurnProject>

@@ -94,7 +94,7 @@
                 <tr data-id="{{ item.id }}">
                     <td>
                         {% if item.is_active %}
-                        <span class="drag-handle cursor-move">☰</span>
+                        <span class="drag-handle cursor-move">::</span>
                         {% endif %}
                         {{ item.queue_position }}
                     </td>
@@ -105,20 +105,12 @@
                         <br>
                         <small class="text-muted">{{ item.project.name }}</small>
 
-                        {# Phase 9: POP Deadline Warning #}
-                        {% if item.project.pop_received and item.project.pop_deadline %}
-                            {% set days_until_deadline = (item.project.pop_deadline - today).days if today else none %}
-                            {% if days_until_deadline is not none and days_until_deadline < 0 %}
-                                <br>
-                                <span class="badge badge-danger badge-sm">
-                                    ⚠️ POP deadline {{ days_until_deadline|abs }} days overdue
-                                </span>
-                            {% elif days_until_deadline is not none and days_until_deadline <= 2 %}
-                                <br>
-                                <span class="badge badge-warning badge-sm">
-                                    ⏰ POP deadline in {{ days_until_deadline }} days
-                                </span>
-                            {% endif %}
+                        {# Phase 10: POP Status (Auto-Scheduling) #}
+                        {% if item.project.pop_received %}
+                            <br>
+                            <span class="badge badge-success badge-sm">
+                                ✅ POP Received - Auto-scheduled
+                            </span>
                         {% endif %}
                     </td>
                     <td>
@@ -131,12 +123,12 @@
                             {{ item.status }}
                         </span>
                     </td>
-                    <td>{{ item.scheduled_date.strftime('%Y-%m-%d') if item.scheduled_date else '-' }}</td>
+                    <td>{{ item.scheduled_date|date if item.scheduled_date else '-' }}</td>
                     <td>{{ item.estimated_cut_time }} min</td>
-                    <td>{{ item.added_at.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ item.added_at|date }}</td>
                     <td>
                         <a href="{{ url_for('queue.detail', id=item.id) }}" class="btn btn-sm btn-secondary">View</a>
-                        {% if item.is_active %}
+                        {% if item.is_active and (current_user.has_role('admin') or current_user.has_role('manager')) %}
                         <form action="{{ url_for('queue.remove', id=item.id) }}" method="POST" class="inline-form"
                               onsubmit="return confirm('Remove this item from queue?');">
                             <button type="submit" class="btn btn-sm btn-danger">Remove</button>
@@ -219,7 +211,7 @@ function updateQueueOrder() {
         order.push(parseInt(id));
         // Update position display
         row.querySelector('td:first-child').innerHTML =
-            '<span class="drag-handle cursor-move">☰</span> ' + (index + 1);
+            '<span class="drag-handle cursor-move">::</span> ' + (index + 1);
     });
     
     // Send to server

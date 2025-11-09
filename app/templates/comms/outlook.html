@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Outlook Communications{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1>📨 Outlook Communications</h1>
+    <div>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') or current_user.has_role('operator') %}
+        <a href="#" class="btn btn-primary" onclick="alert('Outlook compose feature coming soon!'); return false;">
+            + Compose Email
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Info Banner -->
+<div class="alert alert-info mb-lg">
+    <strong>🚧 Outlook Integration Coming Soon</strong>
+    <p>This page will allow you to send and receive emails through your Outlook/Microsoft 365 account directly from Laser COS. Integration with Microsoft Graph API is currently in development.</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4 mb-xl">
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Total Emails</h3>
+            <p class="stat-card-value">{{ outlook_messages|length }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Sent</h3>
+            <p class="stat-card-value">{{ outlook_messages|selectattr('direction', 'equalto', 'Outbound')|list|length }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Received</h3>
+            <p class="stat-card-value">{{ outlook_messages|selectattr('direction', 'equalto', 'Inbound')|list|length }}</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Unread</h3>
+            <p class="stat-card-value">{{ outlook_messages|selectattr('status', 'equalto', 'Delivered')|list|length }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs mb-lg">
+    <button class="tab-button active" onclick="switchTab('inbox')">📥 Inbox</button>
+    <button class="tab-button" onclick="switchTab('sent')">📤 Sent</button>
+    <button class="tab-button" onclick="switchTab('drafts')">📝 Drafts</button>
+    <button class="tab-button" onclick="switchTab('important')">⭐ Important</button>
+</div>
+
+<!-- Filters and Search -->
+<div class="card mb-lg">
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('comms.index') }}">
+            <input type="hidden" name="channel" value="outlook">
+            <div class="grid grid-3 grid-gap-md mb-md">
+                <div class="form-group form-group-no-margin">
+                    <label for="direction">Direction:</label>
+                    <select id="direction" name="direction" class="form-control" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        <option value="Inbound" {% if request.args.get('direction') == 'Inbound' %}selected{% endif %}>Received</option>
+                        <option value="Outbound" {% if request.args.get('direction') == 'Outbound' %}selected{% endif %}>Sent</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        <option value="Pending" {% if request.args.get('status') == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Sent" {% if request.args.get('status') == 'Sent' %}selected{% endif %}>Sent</option>
+                        <option value="Delivered" {% if request.args.get('status') == 'Delivered' %}selected{% endif %}>Delivered</option>
+                        <option value="Read" {% if request.args.get('status') == 'Read' %}selected{% endif %}>Read</option>
+                        <option value="Failed" {% if request.args.get('status') == 'Failed' %}selected{% endif %}>Failed</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="client_id">Client:</label>
+                    <select id="client_id" name="client_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Clients</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}" {% if request.args.get('client_id')|int == client.id %}selected{% endif %}>
+                            {{ client.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-2 grid-gap-md">
+                <div class="form-group form-group-no-margin">
+                    <label for="search">Search:</label>
+                    <input type="text" id="search" name="search" class="form-control"
+                           value="{{ request.args.get('search', '') }}"
+                           placeholder="Search emails...">
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="date_from">Date From:</label>
+                    <input type="date" id="date_from" name="date_from" class="form-control"
+                           value="{{ request.args.get('date_from', '') }}">
+                </div>
+            </div>
+
+            <div class="mt-md flex-row flex-gap-sm">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a href="{{ url_for('comms.index', channel='outlook') }}" class="btn btn-secondary">Clear Filters</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Outlook Messages List -->
+<div class="card">
+    <div class="card-header">
+        <h2>Outlook Messages ({{ outlook_messages|length }})</h2>
+    </div>
+    <div class="card-body">
+        {% if outlook_messages %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Direction</th>
+                    <th>From/To</th>
+                    <th>Subject</th>
+                    <th>Client/Project</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for email in outlook_messages %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{ 'success' if email.direction == 'Inbound' else 'info' }}">
+                            {{ '📥' if email.direction == 'Inbound' else '📤' }} {{ email.direction }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if email.direction == 'Inbound' %}
+                            <strong>{{ email.from_address[:30] if email.from_address else '-' }}</strong>
+                        {% else %}
+                            <strong>{{ email.to_address[:30] if email.to_address else '-' }}</strong>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('comms.detail', id=email.id) }}" class="link-primary">
+                            {{ email.subject[:50] if email.subject else 'No subject' }}{% if (email.subject or '')|length > 50 %}...{% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        {% if email.client %}
+                            <a href="{{ url_for('clients.detail', id=email.client.id) }}" class="link-primary">
+                                {{ email.client.name }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                        {% if email.project %}
+                            <br><small><a href="{{ url_for('projects.detail', id=email.project.id) }}">{{ email.project.project_code }}</a></small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ email.status|lower }}">
+                            {{ email.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <small>{{ email.comm_date|datetime if email.comm_date else email.created_at|datetime }}</small>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('comms.detail', id=email.id) }}" class="btn btn-sm btn-secondary">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        {% if pagination and pagination.pages > 1 %}
+        <div class="pagination-controls">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('comms.index', channel='outlook', page=pagination.prev_num, **request.args) }}" class="btn btn-secondary">Previous</a>
+            {% endif %}
+
+            <span class="pagination-info">
+                Page {{ pagination.page }} of {{ pagination.pages }}
+            </span>
+
+            {% if pagination.has_next %}
+                <a href="{{ url_for('comms.index', channel='outlook', page=pagination.next_num, **request.args) }}" class="btn btn-secondary">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <p class="empty-state-title">📨 No Outlook messages yet</p>
+            <p class="text-muted">Outlook messages will appear here once the integration is active.</p>
+            {% if request.args and (request.args.get('direction') or request.args.get('status') or request.args.get('search')) %}
+                <p><a href="{{ url_for('comms.index', channel='outlook') }}" class="btn btn-secondary">Clear Filters</a></p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function switchTab(tab) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked tab
+    event.target.classList.add('active');
+    
+    // In future, this will filter messages by tab
+    console.log('Switched to tab:', tab);
+    alert('Tab switching functionality coming soon! Selected: ' + tab);
+}
+</script>
+
+<style>
+.tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: var(--spacing-sm);
+}
+
+.tab-button {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+}
+
+.tab-button:hover {
+    color: var(--primary-color);
+    background: var(--bg-secondary);
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+    font-weight: 600;
+}
+</style>
+
+{% endblock %}
+

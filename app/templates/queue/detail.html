@@ -60,7 +60,7 @@
                 </tr>
                 <tr>
                     <th>Scheduled Date:</th>
-                    <td>{{ queue_item.scheduled_date.strftime('%Y-%m-%d') if queue_item.scheduled_date else 'Not scheduled' }}</td>
+                    <td>{{ queue_item.scheduled_date|date if queue_item.scheduled_date else 'Not scheduled' }}</td>
                 </tr>
                 <tr>
                     <th>Estimated Cut Time:</th>
@@ -79,7 +79,7 @@
             <table class="info-table">
                 <tr>
                     <th>Added At:</th>
-                    <td>{{ queue_item.added_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ queue_item.added_at|datetime }}</td>
                 </tr>
                 <tr>
                     <th>Added By:</th>
@@ -87,11 +87,11 @@
                 </tr>
                 <tr>
                     <th>Started At:</th>
-                    <td>{{ queue_item.started_at.strftime('%Y-%m-%d %H:%M') if queue_item.started_at else 'Not started' }}</td>
+                    <td>{{ queue_item.started_at|datetime if queue_item.started_at else 'Not started' }}</td>
                 </tr>
                 <tr>
                     <th>Completed At:</th>
-                    <td>{{ queue_item.completed_at.strftime('%Y-%m-%d %H:%M') if queue_item.completed_at else 'Not completed' }}</td>
+                    <td>{{ queue_item.completed_at|datetime if queue_item.completed_at else 'Not completed' }}</td>
                 </tr>
                 <tr>
                     <th>Duration in Queue:</th>
@@ -99,11 +99,11 @@
                 </tr>
                 <tr>
                     <th>Created:</th>
-                    <td>{{ queue_item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ queue_item.created_at|datetime }}</td>
                 </tr>
                 <tr>
                     <th>Last Updated:</th>
-                    <td>{{ queue_item.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ queue_item.updated_at|datetime }}</td>
                 </tr>
             </table>
         </div>
@@ -123,7 +123,7 @@
 {% endif %}
 
 <!-- Status Update -->
-{% if queue_item.is_active %}
+{% if queue_item.is_active and (current_user.has_role('admin') or current_user.has_role('manager') or current_user.has_role('operator')) %}
 <div class="card">
     <div class="card-header">
         <h2>Update Status</h2>
@@ -166,8 +166,13 @@
             <tbody>
                 {% for run in runs %}
                 <tr>
-                    <td>{{ run.run_date.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td>{{ run.operator or 'N/A' }}</td>
+                    <td>{{ run.run_date|datetime }}</td>
+                    <td>
+                        {{ run.operator_display }}
+                        {% if run.preset %}
+                        <br><small class="text-muted">{{ run.preset.preset_name }}</small>
+                        {% endif %}
+                    </td>
                     <td>{{ run.cut_time_minutes }} min</td>
                     <td>{{ run.material_type }} ({{ run.material_thickness }}mm)</td>
                     <td>{{ run.parts_produced or 'N/A' }}</td>
@@ -201,7 +206,7 @@
             <tbody>
                 {% for log in logs %}
                 <tr>
-                    <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ log.created_at|datetime }}</td>
                     <td>
                         <span class="badge badge-{{ 'success' if log.action == 'ADDED' else 'info' if log.action == 'STATUS_CHANGED' else 'danger' if log.action == 'REMOVED' else 'secondary' }}">
                             {{ log.action }}

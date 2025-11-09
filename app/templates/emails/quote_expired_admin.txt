@@ -1,0 +1,45 @@
+QUOTE AUTO-CANCELLED (ADMIN NOTICE)
+{{ '=' * 60 }}
+
+Hello Admin,
+
+🤖 AUTOMATED ACTION TAKEN
+
+A quote has been automatically cancelled due to expiry. The client 
+has been notified.
+
+PROJECT DETAILS
+{{ '-' * 60 }}
+Project Code:        {{ project.project_code }}
+Project Name:        {{ project.name }}
+Client:              {{ client.name }} ({{ client.client_code }})
+Client Email:        {{ client.email }}
+Quote Date:          {{ project.quote_date.strftime('%d %B %Y') if project.quote_date else 'N/A' }}
+Expiry Date:         {{ project.quote_expiry_date.strftime('%d %B %Y') if project.quote_expiry_date else 'N/A' }}
+Quoted Price:        R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}
+New Status:          Cancelled
+Cancellation Reason: Quote expired - no POP received within 30 days
+
+SUMMARY
+{{ '-' * 60 }}
+Reminder Sent:    {{ 'Yes' if project.quote_reminder_sent else 'No' }} (25-day reminder)
+Days Since Quote: {{ days_since_quote }} days
+Client Notified:  Yes (quote_expired email sent)
+
+RECOMMENDED ACTIONS
+{{ '-' * 60 }}
+• Review if client has been in contact recently
+• Consider following up if this was a high-value project
+• Project can be reinstated if client contacts you
+
+VIEW PROJECT IN LASER OS
+{{ '-' * 60 }}
+{{ project_url }}
+
+Note: This project has been marked as "can_reinstate=True" and can 
+be easily reinstated if the client contacts you.
+
+{{ '-' * 60 }}
+This is an automated admin notification from Laser OS.
+© {{ current_year }} {{ company_name }}. All rights reserved.
+

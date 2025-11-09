@@ -4,17 +4,54 @@ Laser OS Tier 1 - Products/SKU Routes
 This module handles all product/SKU-related routes.
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, send_file, current_app
+from flask_login import login_required
 from app import db
-from app.models import Product, ProjectProduct, Setting, ActivityLog
+from app.models import Product, ProjectProduct, ProductFile, Setting, ActivityLog
 from app.services.activity_logger import log_activity
+from app.utils.decorators import role_required
 from datetime import datetime
 from decimal import Decimal
+from werkzeug.utils import secure_filename
+from pathlib import Path
+import os
+import uuid
 
 bp = Blueprint('products', __name__, url_prefix='/products')
 
 
+# Helper functions for file handling
+def allowed_file(filename):
+    """Check if file extension is allowed."""
+    allowed_extensions = {'.dxf', '.DXF', '.lbrn2', '.LBRN2'}
+    return os.path.splitext(filename)[1] in allowed_extensions
+
+
+def get_upload_folder(product_id):
+    """Get upload folder for a product."""
+    base_folder = current_app.config.get('UPLOAD_FOLDER', 'data/files/products')
+    product_folder = os.path.join(base_folder, str(product_id))
+
+    # Create folder if it doesn't exist
+    os.makedirs(product_folder, exist_ok=True)
+
+    return product_folder
+
+
+def generate_stored_filename(original_filename):
+    """Generate a unique stored filename."""
+    # Get file extension
+    ext = os.path.splitext(original_filename)[1]
+
+    # Generate unique filename with timestamp and UUID
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    unique_id = str(uuid.uuid4())[:8]
+
+    return f"{timestamp}_{unique_id}{ext}"
+
+
 @bp.route('/')
+@login_required
 def index():
     """
     List all products with optional filtering.
@@ -73,6 +110,7 @@ def index():
 
 
 @bp.route('/new', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def new_product():
     """Create a new product."""
     if request.method == 'POST':
@@ -139,28 +177,34 @@ def new_product():
 
 
 @bp.route('/<int:id>')
+@login_required
 def detail(id):
     """View product details."""
     product = Product.query.get_or_404(id)
-    
+
     # Get projects using this product
     project_products = ProjectProduct.query.filter_by(product_id=id).all()
-    
+
+    # Get product files
+    product_files = ProductFile.query.filter_by(product_id=id).order_by(ProductFile.upload_date.desc()).all()
+
     # Get activity log
     activity_logs = ActivityLog.query.filter_by(
         entity_type='PRODUCT',
         entity_id=id
     ).order_by(ActivityLog.created_at.desc()).limit(20).all()
-    
+
     return render_template(
         'products/detail.html',
         product=product,
         project_products=project_products,
+        product_files=product_files,
         activity_logs=activity_logs
     )
 
 
 @bp.route('/<int:id>/edit', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def edit(id):
     """Edit a product."""
     product = Product.query.get_or_404(id)
@@ -254,18 +298,30 @@ def edit(id):
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
+@role_required('admin', 'manager')
 def delete(id):
     """Delete a product."""
     product = Product.query.get_or_404(id)
-    
+
     try:
-        # Check if product is used in any projects
-        project_count = ProjectProduct.query.filter_by(product_id=id).count()
-        
-        if project_count > 0:
-            flash(f'Cannot delete product "{product.name}" - it is used in {project_count} project(s)', 'error')
+        # Check if product is used in any ACTIVE projects (ignore orphaned records)
+        # Join with projects table to ensure we only count valid relationships
+        from app.models import Project
+        active_project_count = db.session.query(ProjectProduct)\
+            .join(Project, ProjectProduct.project_id == Project.id)\
+            .filter(ProjectProduct.product_id == id)\
+            .count()
+
+        if active_project_count > 0:
+            flash(f'Cannot delete product "{product.name}" - it is used in {active_project_count} active project(s)', 'error')
             return redirect(url_for('products.detail', id=id))
-        
+
+        # Clean up any orphaned project_products records before deletion
+        orphaned_count = ProjectProduct.query.filter_by(product_id=id).count()
+        if orphaned_count > 0:
+            ProjectProduct.query.filter_by(product_id=id).delete()
+            db.session.flush()  # Flush the deletion but don't commit yet
+
         # Log before deletion
         log_activity(
             entity_type='PRODUCT',
@@ -273,16 +329,224 @@ def delete(id):
             action='DELETED',
             details=f'Deleted product: {product.name} ({product.sku_code})'
         )
-        
+
         product_name = product.name
         db.session.delete(product)
         db.session.commit()
-        
+
         flash(f'Product "{product_name}" deleted successfully', 'success')
         return redirect(url_for('products.index'))
-        
+
     except Exception as e:
         db.session.rollback()
         flash(f'Error deleting product: {str(e)}', 'error')
         return redirect(url_for('products.detail', id=id))
+
+
+@bp.route('/<int:product_id>/upload-file', methods=['POST'])
+@role_required('admin', 'manager', 'operator')
+def upload_file(product_id):
+    """Upload one or more files to a product."""
+    # Get product
+    product = Product.query.get_or_404(product_id)
+
+    # Check if files were uploaded (support both 'files' and 'file' for backward compatibility)
+    files = request.files.getlist('files')
+    if not files or (len(files) == 1 and files[0].filename == ''):
+        # Fallback to single file upload for backward compatibility
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                files = [file]
+            else:
+                flash('No file selected', 'error')
+                return redirect(url_for('products.detail', id=product_id))
+        else:
+            flash('No file selected', 'error')
+            return redirect(url_for('products.detail', id=product_id))
+
+    # Get notes from form (applies to all files)
+    notes = request.form.get('notes', '').strip()
+
+    # Track upload results
+    uploaded_count = 0
+    failed_count = 0
+    error_messages = []
+
+    # Process each file
+    for file in files:
+        # Skip empty filenames
+        if file.filename == '':
+            continue
+
+        # Check if file type is allowed
+        if not allowed_file(file.filename):
+            failed_count += 1
+            error_messages.append(f'{file.filename}: Only DXF and LightBurn (.lbrn2) files are allowed')
+            continue
+
+        try:
+            # Get original filename
+            original_filename = secure_filename(file.filename)
+
+            # Generate stored filename
+            stored_filename = generate_stored_filename(original_filename)
+
+            # Get upload folder
+            upload_folder = get_upload_folder(product_id)
+
+            # Full file path for saving
+            full_file_path = os.path.join(upload_folder, stored_filename)
+
+            # Save file
+            file.save(full_file_path)
+
+            # Get file size
+            file_size = os.path.getsize(full_file_path)
+
+            # Store relative path in database (relative to UPLOAD_FOLDER)
+            # Format: {product_id}/{stored_filename}
+            relative_path = os.path.join(str(product_id), stored_filename)
+
+            # Detect file type from extension
+            file_ext = os.path.splitext(original_filename)[1].lower()
+            if file_ext in ['.lbrn2']:
+                file_type = 'lbrn2'
+            else:
+                file_type = 'dxf'
+
+            # Create database record
+            product_file = ProductFile(
+                product_id=product_id,
+                original_filename=original_filename,
+                stored_filename=stored_filename,
+                file_path=relative_path,  # Store relative path
+                file_size=file_size,
+                file_type=file_type,  # Set correct file type
+                uploaded_by='System',  # TODO: Add user authentication
+                notes=notes if notes else None
+            )
+
+            db.session.add(product_file)
+            db.session.commit()
+
+            # Log activity
+            log_activity(
+                entity_type='PRODUCT',
+                entity_id=product.id,
+                action='FILE_UPLOADED',
+                details=f'Uploaded file: {original_filename} ({product_file.file_size_mb} MB) to product {product.sku_code}'
+            )
+
+            uploaded_count += 1
+
+        except Exception as e:
+            db.session.rollback()
+            failed_count += 1
+            error_messages.append(f'{file.filename}: {str(e)}')
+
+            # Clean up file if it was saved
+            if 'full_file_path' in locals() and os.path.exists(full_file_path):
+                os.remove(full_file_path)
+
+    # Display appropriate flash messages
+    if uploaded_count > 0:
+        if uploaded_count == 1:
+            flash(f'1 file uploaded successfully', 'success')
+        else:
+            flash(f'{uploaded_count} files uploaded successfully', 'success')
+
+    if failed_count > 0:
+        if failed_count == 1:
+            flash(f'1 file failed to upload', 'error')
+        else:
+            flash(f'{failed_count} files failed to upload', 'error')
+
+        # Show individual error messages
+        for error_msg in error_messages[:5]:  # Limit to first 5 errors
+            flash(error_msg, 'error')
+
+        if len(error_messages) > 5:
+            flash(f'... and {len(error_messages) - 5} more errors', 'error')
+
+    return redirect(url_for('products.detail', id=product_id))
+
+
+@bp.route('/file/<int:file_id>/download')
+@login_required
+def download_file(file_id):
+    """Download a product file."""
+    product_file = ProductFile.query.get_or_404(file_id)
+
+    # Construct full file path from relative path stored in database
+    base_folder = current_app.config.get('UPLOAD_FOLDER', 'data/files/products')
+
+    # Ensure we use absolute path with proper normalization
+    full_file_path = os.path.abspath(os.path.join(base_folder, product_file.file_path))
+
+    # Check if file exists
+    if not os.path.exists(full_file_path):
+        flash(f'File not found on disk: {product_file.original_filename}', 'error')
+        return redirect(url_for('products.detail', id=product_file.product_id))
+
+    try:
+        # Log activity
+        log_activity(
+            entity_type='PRODUCT',
+            entity_id=product_file.product_id,
+            action='FILE_DOWNLOADED',
+            details=f'Downloaded file: {product_file.original_filename}'
+        )
+
+        # Send file with absolute path - use Path for better Windows compatibility
+        file_path_obj = Path(full_file_path)
+
+        return send_file(
+            file_path_obj,
+            as_attachment=True,
+            download_name=product_file.original_filename
+        )
+
+    except Exception as e:
+        current_app.logger.error(f"Error downloading file {file_id}: {str(e)}")
+        flash(f'Error downloading file: {str(e)}', 'error')
+        return redirect(url_for('products.detail', id=product_file.product_id))
+
+
+@bp.route('/file/<int:file_id>/delete', methods=['POST'])
+@role_required('admin', 'manager')
+def delete_file(file_id):
+    """Delete a product file."""
+    product_file = ProductFile.query.get_or_404(file_id)
+    product_id = product_file.product_id
+    original_filename = product_file.original_filename
+
+    # Construct full file path from relative path
+    base_folder = current_app.config.get('UPLOAD_FOLDER', 'data/files/products')
+    full_file_path = os.path.join(base_folder, product_file.file_path)
+
+    try:
+        # Delete file from disk
+        if os.path.exists(full_file_path):
+            os.remove(full_file_path)
+
+        # Delete database record
+        db.session.delete(product_file)
+        db.session.commit()
+
+        # Log activity
+        log_activity(
+            entity_type='PRODUCT',
+            entity_id=product_id,
+            action='FILE_DELETED',
+            details=f'Deleted file: {original_filename}'
+        )
+
+        flash(f'File "{original_filename}" deleted successfully', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error deleting file: {str(e)}', 'error')
+
+    return redirect(url_for('products.detail', id=product_id))
 

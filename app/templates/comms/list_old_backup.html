@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Communications{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Communications</h1>
+    <div>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') or current_user.has_role('operator') %}
+        <a href="{{ url_for('comms.new_communication') }}" class="btn btn-primary">
+            + New Communication
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4 mb-xl">
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Total</h3>
+            <p class="stat-card-value">
+                {{ pagination.total }}
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Linked</h3>
+            <p class="stat-card-value">
+                {{ communications|selectattr('is_linked')|list|length }}
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Unlinked</h3>
+            <p class="stat-card-value">
+                {{ communications|rejectattr('is_linked')|list|length }}
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body stat-card">
+            <h3 class="stat-card-title">Pending</h3>
+            <p class="stat-card-value">
+                {{ communications|selectattr('status', 'equalto', 'Pending')|list|length }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="card mb-lg">
+    <div class="card-body">
+        <form method="GET">
+            <div class="grid grid-3 grid-gap-md mb-md">
+                <div class="form-group form-group-no-margin">
+                    <label for="comm_type">Type:</label>
+                    <select id="comm_type" name="comm_type" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Types</option>
+                        <option value="Email" {% if request.args.get('comm_type') == 'Email' %}selected{% endif %}>Email</option>
+                        <option value="WhatsApp" {% if request.args.get('comm_type') == 'WhatsApp' %}selected{% endif %}>WhatsApp</option>
+                        <option value="Notification" {% if request.args.get('comm_type') == 'Notification' %}selected{% endif %}>Notification</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="direction">Direction:</label>
+                    <select id="direction" name="direction" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Directions</option>
+                        <option value="Inbound" {% if request.args.get('direction') == 'Inbound' %}selected{% endif %}>Inbound</option>
+                        <option value="Outbound" {% if request.args.get('direction') == 'Outbound' %}selected{% endif %}>Outbound</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Statuses</option>
+                        <option value="Pending" {% if request.args.get('status') == 'Pending' %}selected{% endif %}>Pending</option>
+                        <option value="Sent" {% if request.args.get('status') == 'Sent' %}selected{% endif %}>Sent</option>
+                        <option value="Delivered" {% if request.args.get('status') == 'Delivered' %}selected{% endif %}>Delivered</option>
+                        <option value="Read" {% if request.args.get('status') == 'Read' %}selected{% endif %}>Read</option>
+                        <option value="Failed" {% if request.args.get('status') == 'Failed' %}selected{% endif %}>Failed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-3 grid-gap-md">
+                <div class="form-group form-group-no-margin">
+                    <label for="client_id">Client:</label>
+                    <select id="client_id" name="client_id" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Clients</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}" {% if request.args.get('client_id')|int == client.id %}selected{% endif %}>
+                            {{ client.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="is_linked">Linked Status:</label>
+                    <select id="is_linked" name="is_linked" class="form-control" onchange="this.form.submit()">
+                        <option value="">All</option>
+                        <option value="1" {% if request.args.get('is_linked') == '1' %}selected{% endif %}>Linked</option>
+                        <option value="0" {% if request.args.get('is_linked') == '0' %}selected{% endif %}>Unlinked</option>
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="search">Search:</label>
+                    <input type="text" id="search" name="search" class="form-control"
+                           value="{{ request.args.get('search', '') }}"
+                           placeholder="Search subject, body, addresses...">
+                </div>
+            </div>
+
+            <div class="mt-md flex-row flex-gap-sm">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+                <a href="{{ url_for('comms.index') }}" class="btn btn-secondary">Clear Filters</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Communications List -->
+<div class="card">
+    <div class="card-header">
+        <h2>Communications ({{ pagination.total }})</h2>
+    </div>
+    <div class="card-body">
+        {% if communications %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Direction</th>
+                    <th>Subject</th>
+                    <th>From/To</th>
+                    <th>Client/Project</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comm in communications %}
+                <tr>
+                    <td>
+                        <span class="badge badge-{{ comm.comm_type|lower }}">
+                            {{ comm.comm_type }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if comm.direction == 'Inbound' else 'info' }}">
+                            {{ comm.direction }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('comms.detail', id=comm.id) }}" class="link-primary">
+                            {{ comm.subject[:50] }}{% if comm.subject|length > 50 %}...{% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        {% if comm.direction == 'Inbound' %}
+                            <small>{{ comm.from_address[:30] if comm.from_address else '-' }}</small>
+                        {% else %}
+                            <small>{{ comm.to_address[:30] if comm.to_address else '-' }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if comm.client %}
+                            <a href="{{ url_for('clients.detail', id=comm.client.id) }}" class="link-primary">
+                                {{ comm.client.name }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                        {% if comm.project %}
+                            <br><small><a href="{{ url_for('projects.detail', id=comm.project.id) }}">{{ comm.project.project_code }}</a></small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ comm.status|lower }}">
+                            {{ comm.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <small>{{ comm.comm_date|datetime if comm.comm_date else comm.created_at|datetime }}</small>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('comms.detail', id=comm.id) }}" class="btn btn-sm btn-secondary">View</a>
+                        {% if not comm.is_linked %}
+                        <span class="badge badge-warning font-size-sm">Unlinked</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+        <div class="pagination-controls">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('comms.index', page=pagination.prev_num, **request.args) }}" class="btn btn-secondary">Previous</a>
+            {% endif %}
+
+            <span class="pagination-info">
+                Page {{ pagination.page }} of {{ pagination.pages }}
+            </span>
+
+            {% if pagination.has_next %}
+                <a href="{{ url_for('comms.index', page=pagination.next_num, **request.args) }}" class="btn btn-secondary">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <p class="empty-state-title">No communications found</p>
+            <p>
+                {% if request.args %}
+                    Try adjusting your filters or <a href="{{ url_for('comms.index') }}">clear all filters</a>
+                {% else %}
+                    <a href="{{ url_for('comms.new_communication') }}" class="btn btn-primary">+ New Communication</a>
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+

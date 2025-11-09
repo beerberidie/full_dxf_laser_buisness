@@ -1,0 +1,1990 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Opening Balances",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Contact Opening Balances",
+      "description": "Invoices or credit notes which were created in a previous system and are outstanding at the point of transferring to Sage Business Cloud Accounting are treated as Contact Opening Balances. Contact Opening Balances must be dated prior to the Start Date (the date the business started entering data into Sage Business Cloud Accounting). The resource at this endpoint enables creation of customer or supplier Opening Balances, return details of Opening Balances recorded or update/deletion these values."
+    },
+    {
+      "name": "Contact Opening Balance Types",
+      "description": "This endpoint provides you with type IDs that you can dynamically insert into POST data to <pre>/contact_opening_balances</pre>, i.e. at the property <pre>contact_opening_balance_type_id</pre>. Currently there are two possible types: <pre>INVOICE</pre> and <pre>CREDIT_NOTE</pre>."
+    },
+    {
+      "name": "Bank Opening Balances",
+      "description": "The balance of a bank account brought forward from a previous system at the point of transferring to Sage Business Cloud Accounting is treated as a Bank Opening Balance. A Bank Opening Balance must be dated prior to the Start Date (the date the business started entering data into Sage Business Cloud Accounting). The resource at this endpoint enables creation of Bank Opening Balances, return details of Opening Balances recorded or update/deletion of these values. Where a balance is added to an account after the Start Date, a bank transfer should be used instead of an Opening Balance."
+    },
+    {
+      "name": "Ledger Account Opening Balances",
+      "description": "A balance on ledger accounts brought forward from a previous system at the point of transferring to Sage Business Cloud Accounting can be entered as a Ledger Account Opening Balances. A Ledger Account Opening Balance must be dated prior to the Start Date (the date the business started entering data into Sage Business Cloud Accounting). The resource at this endpoint enables creation of a single ledger account Opening Balances at a point in time, updating or deleting such balances. Where multiple Opening Balances are to be entered, for example, bringing forward a trial balance from a previous system, use Journal Opening Balances instead."
+    },
+    {
+      "name": "Opening Balance Journals",
+      "description": "The balances on ledger accounts brought forward from a previous system at the point of transferring to Sage Business Cloud Accounting can be entered as Journal Opening Balances. A Journal Opening Balance must be dated prior to the Start Date (the date the business started entering data into Sage Business Cloud Accounting). The resource at this endpoint enables creation of Journal Opening Balances which give the balances of multiple ledger accounts at a point in time, updating or deleting such balances. These values are normally brought forward from a Trial Balance produced from the previous system."
+    }
+  ],
+  "paths": {
+    "/contact_opening_balances": {
+      "get": {
+        "summary": "Returns all Contact Opening Balances",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings`, `Sales`, and `Purchases`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Batch Entries changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Batch Entries deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "contact_type_id",
+            "description": "Use this to filter by contact type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Batch Entries per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Batch Entries",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Batch Entries (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact Opening Balances",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 28,
+				"$page": 1,
+				"$next": "/contact_opening_balances?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "d2b7ed37544e444887e49f3f74482474",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/d2b7ed37544e444887e49f3f74482474"
+					},
+					{
+						"id": "5ed6ca8f15dc4556a3d09a8687e4bb24",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/5ed6ca8f15dc4556a3d09a8687e4bb24"
+					},
+					{
+						"id": "6442c8cd4f6041b0ba0be74a58e55032",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/6442c8cd4f6041b0ba0be74a58e55032"
+					},
+					{
+						"id": "bd5cddbe044a48e5828e0a97409ee006",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/bd5cddbe044a48e5828e0a97409ee006"
+					},
+					{
+						"id": "46edee13628b4215ab120478154b9673",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/46edee13628b4215ab120478154b9673"
+					},
+					{
+						"id": "e846488332684285bb1cbb43d47c1f73",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/e846488332684285bb1cbb43d47c1f73"
+					},
+					{
+						"id": "ce1bed1009df47d2a1f6f5d7741efcb6",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/ce1bed1009df47d2a1f6f5d7741efcb6"
+					},
+					{
+						"id": "fdcf1052687d4334b71ac61ddd3edaa6",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/fdcf1052687d4334b71ac61ddd3edaa6"
+					},
+					{
+						"id": "3351928d486641a0bacab1b578bbfc55",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/3351928d486641a0bacab1b578bbfc55"
+					},
+					{
+						"id": "1c033ecbe5ff410f9eb45ae523e7a4e6",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/contact_opening_balances/1c033ecbe5ff410f9eb45ae523e7a4e6"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Opening Balances"
+        ],
+        "operationId": "getContactOpeningBalances"
+      },
+      "x-sage-pathtitle": "Contact Opening Balance collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Contact Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings`, `Sales`, and `Purchases`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ContactOpeningBalances",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postContactOpeningBalances"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Contact Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/ContactOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Contact Opening Balances"
+        ],
+        "operationId": "postContactOpeningBalances"
+      }
+    },
+    "/contact_opening_balances/{key}": {
+      "get": {
+        "summary": "Returns a Contact Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings`, `Sales`, and `Purchases`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Opening Balance Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Batch Entry (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Opening Balance",
+            "examples": {
+              "application/json":
+			  {
+				"id": "6442c8cd4f6041b0ba0be74a58e55032",
+				"displayed_as": "OB-O/BAL",
+				"$path": "/contact_opening_balances/6442c8cd4f6041b0ba0be74a58e55032",
+				"created_at": "2022-12-30T14:02:07Z",
+				"updated_at": "2022-12-30T14:02:07Z",
+				"transaction": {
+					"id": "63c43414ea2445b9a255847d9fcb22a1",
+					"displayed_as": "O/BAL",
+					"$path": "/transactions/63c43414ea2445b9a255847d9fcb22a1"
+				},
+				"transaction_type": {
+					"id": "VENDOR_OPENING_BALANCE_INVOICE",
+					"displayed_as": "Supplier OB Invoice",
+					"$path": "/transaction_types/VENDOR_OPENING_BALANCE_INVOICE"
+				},
+				"contact_opening_balance_type": {
+					"id": "INVOICE",
+					"displayed_as": "Invoice",
+					"$path": "/contact_opening_balance_types/INVOICE"
+				},
+				"contact": {
+					"id": "a41acf06dbd148fd8cf32a46220e3135",
+					"displayed_as": "Wise Electricals Ltd (WIS001)",
+					"$path": "/contacts/a41acf06dbd148fd8cf32a46220e3135"
+				},
+				"date": "2021-12-31",
+				"reference": "O/BAL",
+				"details": null,
+				"net_amount": "35.01",
+				"tax_rate": {
+					"id": "GB_NO_TAX",
+					"displayed_as": "No VAT",
+					"$path": "/tax_rates/GB_NO_TAX"
+				},
+				"tax_amount": "0.0",
+				"tax_breakdown": [],
+				"total_amount": "35.01",
+				"currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"exchange_rate": "1.0",
+				"base_currency_net_amount": "35.01",
+				"base_currency_tax_amount": "0.0",
+				"base_currency_tax_breakdown": [],
+				"base_currency_total_amount": "35.01"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Opening Balances"
+        ],
+        "operationId": "getContactOpeningBalancesKey"
+      },
+      "x-sage-pathtitle": "single Contact Opening Balance resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Contact Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings`, `Sales`, and `Purchases`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Opening Balance Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "ContactOpeningBalances",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putContactOpeningBalances"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Contact Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/ContactOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Contact Opening Balances"
+        ],
+        "operationId": "putContactOpeningBalancesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Contact Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings`, `Sales`, and `Purchases`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Opening Balance Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Contact Opening Balance"
+          }
+        },
+        "tags": [
+          "Contact Opening Balances"
+        ],
+        "operationId": "deleteContactOpeningBalancesKey"
+      }
+    },
+    "/contact_opening_balance_types": {
+      "get": {
+        "summary": "Returns all Contact Opening Balance Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Batch Entry Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Batch Entry Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Batch Entry Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact Opening Balance Types",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 2,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "INVOICE",
+						"displayed_as": "Invoice",
+						"$path": "/contact_opening_balance_types/INVOICE"
+					},
+					{
+						"id": "CREDIT_NOTE",
+						"displayed_as": "Cr Note",
+						"$path": "/contact_opening_balance_types/CREDIT_NOTE"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Opening Balance Types"
+        ],
+        "operationId": "getContactOpeningBalanceTypes"
+      },
+      "x-sage-pathtitle": "Contact Opening Balance Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/contact_opening_balance_types/{key}": {
+      "get": {
+        "summary": "Returns a Contact Opening Balance Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Opening Balance Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Batch Entry Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Opening Balance Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "INVOICE",
+				"displayed_as": "Invoice",
+				"$path": "/contact_opening_balance_types/INVOICE"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Opening Balance Types"
+        ],
+        "operationId": "getContactOpeningBalanceTypesKey"
+      },
+      "x-sage-pathtitle": "single Contact Opening Balance Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/bank_opening_balances": {
+      "get": {
+        "summary": "Returns all Bank Opening Balances",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings` and `Bank`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Bank Opening Balances changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "bank_account_id",
+            "description": "Use this to filter by bank account id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Bank Opening Balances per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Bank Opening Balances",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Opening Balances (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Bank Opening Balances",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/BankOpeningBalance"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Bank Opening Balances"
+        ],
+        "operationId": "getBankOpeningBalances"
+      },
+      "x-sage-pathtitle": "Bank Opening Balance collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Bank Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings` and `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "BankOpeningBalances",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postBankOpeningBalances"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Bank Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/BankOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Bank Opening Balances"
+        ],
+        "operationId": "postBankOpeningBalances"
+      }
+    },
+    "/bank_opening_balances/{key}": {
+      "get": {
+        "summary": "Returns a Bank Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings` and `Bank`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Opening Balance Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Bank Opening Balance (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Bank Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/BankOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Bank Opening Balances"
+        ],
+        "operationId": "getBankOpeningBalancesKey"
+      },
+      "x-sage-pathtitle": "single Bank Opening Balance resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Bank Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings` and `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Opening Balance Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "BankOpeningBalances",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putBankOpeningBalances"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Bank Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/BankOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Bank Opening Balances"
+        ],
+        "operationId": "putBankOpeningBalancesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Bank Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings` and `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Bank Opening Balance Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Bank Opening Balance"
+          }
+        },
+        "tags": [
+          "Bank Opening Balances"
+        ],
+        "operationId": "deleteBankOpeningBalancesKey"
+      }
+    },
+    "/ledger_account_opening_balances": {
+      "get": {
+        "summary": "Returns all Ledger Account Opening Balances",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Journal Opening Balance Lines changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Journal Opening Balance Lines per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Journal Opening Balance Lines",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Journal Opening Balance Lines (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Ledger Account Opening Balances",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/LedgerAccountOpeningBalance"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Opening Balances"
+        ],
+        "operationId": "getLedgerAccountOpeningBalances"
+      },
+      "x-sage-pathtitle": "Ledger Account Opening Balance collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Ledger Account Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "LedgerAccountOpeningBalances",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postLedgerAccountOpeningBalances"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Ledger Account Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/LedgerAccountOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Opening Balances"
+        ],
+        "operationId": "postLedgerAccountOpeningBalances"
+      }
+    },
+    "/ledger_account_opening_balances/{key}": {
+      "get": {
+        "summary": "Returns a Ledger Account Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Opening Balance Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Journal Opening Balance Line (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Ledger Account Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/LedgerAccountOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Opening Balances"
+        ],
+        "operationId": "getLedgerAccountOpeningBalancesKey"
+      },
+      "x-sage-pathtitle": "single Ledger Account Opening Balance resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Ledger Account Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Opening Balance Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "LedgerAccountOpeningBalances",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putLedgerAccountOpeningBalances"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Ledger Account Opening Balance",
+            "schema": {
+              "$ref": "#/definitions/LedgerAccountOpeningBalance"
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Opening Balances"
+        ],
+        "operationId": "putLedgerAccountOpeningBalancesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Ledger Account Opening Balance",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Opening Balance Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Ledger Account Opening Balance"
+          }
+        },
+        "tags": [
+          "Ledger Account Opening Balances"
+        ],
+        "operationId": "deleteLedgerAccountOpeningBalancesKey"
+      }
+    },
+    "/opening_balance_journals": {
+      "get": {
+        "summary": "Returns all Opening Balance Journals",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Journal Opening Balances per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Journal Opening Balances",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Journal Opening Balances (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Opening Balance Journals",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OpeningBalanceJournal"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Opening Balance Journals"
+        ],
+        "operationId": "getOpeningBalanceJournals"
+      },
+      "x-sage-pathtitle": "Opening Balance Journal collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Opening Balance Journal",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "OpeningBalanceJournals",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postOpeningBalanceJournals"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Opening Balance Journal",
+            "schema": {
+              "$ref": "#/definitions/OpeningBalanceJournal"
+            }
+          }
+        },
+        "tags": [
+          "Opening Balance Journals"
+        ],
+        "operationId": "postOpeningBalanceJournals"
+      }
+    },
+    "/opening_balance_journals/{key}": {
+      "get": {
+        "summary": "Returns a Opening Balance Journal",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Opening Balance Journal Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Journal Opening Balance (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Opening Balance Journal",
+            "schema": {
+              "$ref": "#/definitions/OpeningBalanceJournal"
+            }
+          }
+        },
+        "tags": [
+          "Opening Balance Journals"
+        ],
+        "operationId": "getOpeningBalanceJournalsKey"
+      },
+      "x-sage-pathtitle": "single Opening Balance Journal resource",
+      "x-sage-changelog": [
+
+      ],
+      "delete": {
+        "summary": "Deletes a Opening Balance Journal",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory reporting`, `Products & Services`, and `Reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Opening Balance Journal Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Opening Balance Journal"
+          }
+        },
+        "tags": [
+          "Opening Balance Journals"
+        ],
+        "operationId": "deleteOpeningBalanceJournalsKey"
+      }
+    }
+  },
+  "definitions": {
+    "ContactOpeningBalance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the contact opening balance"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "contact_opening_balance_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The type of contact opening balance e.g. invoice or credit note"
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The contact the opening balance relates to"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the opening balance"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The reference for the opening balance"
+        },
+        "details": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "A description of the opening balance"
+        },
+        "net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the opening balance"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax rate for the opening balance"
+        },
+        "tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the opening balance"
+        },
+        "tax_breakdown": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxBreakdown"
+          },
+          "description": "The tax breakdown for the opening balance"
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the opening balance"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency for the opening balance"
+        },
+        "exchange_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The exchange rate for the opening balance"
+        },
+        "base_currency_net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the opening balance in base currency"
+        },
+        "base_currency_tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the opening balance in base currency"
+        },
+        "base_currency_tax_breakdown": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxBreakdown"
+          },
+          "description": "The tax breakdown for the opening balance in base currency"
+        },
+        "base_currency_total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the opening balance in base currency"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings`, `Sales`, and `Purchases`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Settings"
+    },
+    "TaxBreakdown": {
+      "type": "object",
+      "properties": {
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax rate"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax rate percentage"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount for the given tax rate"
+        }
+      }
+    },
+    "postContactOpeningBalances": {
+      "type": "object",
+      "properties": {
+        "contact_opening_balance": {
+          "type": "object",
+          "properties": {
+            "contact_opening_balance_type_id": {
+              "type": "string",
+              "description": "The type of contact opening balance e.g. invoice or credit note"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the opening balance"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The contact the opening balance relates to"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference for the opening balance"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the opening balance"
+            },
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The ID of the Transaction Type."
+            },
+            "details": {
+              "type": "string",
+              "description": "A description of the opening balance"
+            },
+            "net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the opening balance"
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            },
+            "tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the opening balance"
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The exchange rate for the opening balance"
+            },
+            "base_currency_net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the opening balance in base currency"
+            },
+            "base_currency_tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the opening balance in base currency"
+            },
+            "base_currency_total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the opening balance in base currency"
+            }
+          },
+          "required": [
+            "contact_opening_balance_type_id",
+            "date",
+            "contact_id",
+            "reference",
+            "total_amount"
+          ]
+        }
+      },
+      "required": [
+        "contact_opening_balance"
+      ],
+      "description": "Creates a Contact Opening Balance"
+    },
+    "putContactOpeningBalances": {
+      "type": "object",
+      "properties": {
+        "contact_opening_balance": {
+          "type": "object",
+          "properties": {
+            "contact_opening_balance_type_id": {
+              "type": "string",
+              "description": "The type of contact opening balance e.g. invoice or credit note"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the opening balance"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The contact the opening balance relates to"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference for the opening balance"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the opening balance"
+            },
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The ID of the Transaction Type."
+            },
+            "details": {
+              "type": "string",
+              "description": "A description of the opening balance"
+            },
+            "net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the opening balance"
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            },
+            "tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the opening balance"
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The exchange rate for the opening balance"
+            },
+            "base_currency_net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the opening balance in base currency"
+            },
+            "base_currency_tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the opening balance in base currency"
+            },
+            "base_currency_total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the opening balance in base currency"
+            }
+          }
+        }
+      },
+      "required": [
+        "contact_opening_balance"
+      ],
+      "description": "Updates a Contact Opening Balance"
+    },
+    "BankOpeningBalance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the opening balance"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The bank account the opening balance relates to"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the opening balance"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit amount of the opening balance"
+        },
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit amount of the opening balance"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Settings` and `Bank`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "postBankOpeningBalances": {
+      "type": "object",
+      "properties": {
+        "bank_opening_balance": {
+          "type": "object",
+          "properties": {
+            "bank_account_id": {
+              "type": "string",
+              "description": "The bank account the opening balance relates to"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the opening balance"
+            },
+            "debit": {
+              "type": "number",
+              "format": "double",
+              "description": "The debit amount of the opening balance"
+            },
+            "credit": {
+              "type": "number",
+              "format": "double",
+              "description": "The credit amount of the opening balance"
+            },
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The ID of the Transaction Type."
+            }
+          },
+          "required": [
+            "bank_account_id",
+            "date",
+            "debit",
+            "credit"
+          ]
+        }
+      },
+      "required": [
+        "bank_opening_balance"
+      ],
+      "description": "Creates a Bank Opening Balance"
+    },
+    "putBankOpeningBalances": {
+      "type": "object",
+      "properties": {
+        "bank_opening_balance": {
+          "type": "object",
+          "properties": {
+            "bank_account_id": {
+              "type": "string",
+              "description": "The bank account the opening balance relates to"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the opening balance"
+            },
+            "debit": {
+              "type": "number",
+              "format": "double",
+              "description": "The debit amount of the opening balance"
+            },
+            "credit": {
+              "type": "number",
+              "format": "double",
+              "description": "The credit amount of the opening balance"
+            },
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The ID of the Transaction Type."
+            }
+          }
+        }
+      },
+      "required": [
+        "bank_opening_balance"
+      ],
+      "description": "Updates a Bank Opening Balance"
+    },
+    "LedgerAccountOpeningBalance": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account the opening balance relates to"
+        },
+        "details": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "A description of the opening balance"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit amount of the opening balance"
+        },
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit amount of the opening balance"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory Reporting`, `Products & Services`, and `Reporting`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "postLedgerAccountOpeningBalances": {
+      "type": "object",
+      "properties": {
+        "ledger_account_opening_balance": {
+          "type": "object",
+          "properties": {
+            "ledger_account_id": {
+              "type": "string",
+              "description": "The ledger account the opening balance relates to"
+            },
+            "debit": {
+              "type": "number",
+              "format": "double",
+              "description": "The debit amount of the opening balance"
+            },
+            "credit": {
+              "type": "number",
+              "format": "double",
+              "description": "The credit amount of the opening balance"
+            },
+            "details": {
+              "type": "string",
+              "description": "A description of the opening balance"
+            }
+          },
+          "required": [
+            "ledger_account_id",
+            "debit",
+            "credit"
+          ]
+        }
+      },
+      "required": [
+        "ledger_account_opening_balance"
+      ],
+      "description": "Creates a Ledger Account Opening Balance"
+    },
+    "putLedgerAccountOpeningBalances": {
+      "type": "object",
+      "properties": {
+        "ledger_account_opening_balance": {
+          "type": "object",
+          "properties": {
+            "ledger_account_id": {
+              "type": "string",
+              "description": "The ledger account the opening balance relates to"
+            },
+            "debit": {
+              "type": "number",
+              "format": "double",
+              "description": "The debit amount of the opening balance"
+            },
+            "credit": {
+              "type": "number",
+              "format": "double",
+              "description": "The credit amount of the opening balance"
+            },
+            "details": {
+              "type": "string",
+              "description": "A description of the opening balance"
+            }
+          }
+        }
+      },
+      "required": [
+        "ledger_account_opening_balance"
+      ],
+      "description": "Updates a Ledger Account Opening Balance"
+    },
+    "OpeningBalanceJournal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the item"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the opening balance journal"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "A reference for the opening balance journal"
+        },
+        "journal_lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BaseJournalLine"
+          },
+          "description": "The journal lines"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, `Contacts`, `Journals`, `Settings`, `Bank`, `Statutory Reporting`, `Products & Services`, and `Reporting`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "BaseJournalLine": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The ledger account of the journal line"
+        },
+        "details": {
+          "type": "string",
+          "description": "A description of the journal line"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit amount of the journal line"
+        },
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit amount of the journal line"
+        }
+      }
+    },
+    "LedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The display name for the ledger account"
+        },
+        "visible_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The visible scopes for the ledger account.\n\nThis indicates in which of the UI's areas the ledger account is displayed and available for user\nselection. Possible entries in this array are `bank`, `sales`, `purchasing`, `other_payment`,\n`other_receipt`, `reporting`, `journals`, `sales_eu`, `sales_row`, `purchasing_eu`, `purchasing_row`\nand `purchasing_hrc`.\n"
+        },
+        "included_in_chart": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is included in the chart of accounts"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the ledger account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the ledger account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the ledger account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the ledger account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "visible_in_banking": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+        },
+        "visible_in_expenses": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+        },
+        "visible_in_journals": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+        },
+        "visible_in_other_payments": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+        },
+        "visible_in_other_receipts": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+        },
+        "visible_in_reporting": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+        },
+        "visible_in_sales": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+        },
+        "balance_details": {
+          "$ref": "#/definitions/LedgerAccountBalanceDetails",
+          "description": "The ledger account balance details for the date range provided"
+        },
+        "is_control_account": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is a control account.\n\nControl accounts cannot be removed. See also `control_name`.\n"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+        },
+        "display_formatted": {
+          "type": "string",
+          "description": "The display name formatted based on coa_list_order in settings"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "non_recoverable_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The non-recoverable ledger account (Canada Only)"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Materials"
+        },
+        "tax_instalment": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for Tax Intalment (Canada only)"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Labour"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        }
+      }
+    },
+    "CoaGroupType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        }
+      }
+    },
+    "LedgerAccountBalanceDetails": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The account balance"
+        },
+        "credit_or_debit": {
+          "type": "string",
+          "description": "Is the balance a debit or credit"
+        },
+        "credits": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit balance"
+        },
+        "debits": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit balance"
+        },
+        "from_date": {
+          "type": "string",
+          "description": "The from date filter"
+        },
+        "to_date": {
+          "type": "string",
+          "description": "The to date filter"
+        }
+      }
+    },
+    "postOpeningBalanceJournals": {
+      "type": "object",
+      "properties": {
+        "opening_balance_journal": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the opening balance journal"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference for the opening balance journal"
+            },
+            "journal_lines": {
+              "type": "array",
+              "description": "The journal lines",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ledger_account_id": {
+                    "type": "string",
+                    "description": "The ID of the Ledger Account."
+                  },
+                  "debit": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The debit amount of the journal line"
+                  },
+                  "credit": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The credit amount of the journal line"
+                  },
+                  "details": {
+                    "type": "string",
+                    "description": "A description of the journal line"
+                  }
+                },
+                "required": [
+                  "ledger_account_id",
+                  "debit",
+                  "credit"
+                ]
+              }
+            }
+          },
+          "required": [
+            "journal_lines"
+          ]
+        }
+      },
+      "required": [
+        "opening_balance_journal"
+      ],
+      "description": "Creates a Opening Balance Journal"
+    }
+  }
+}

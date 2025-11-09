@@ -1,0 +1,35 @@
+industry,item,file,size,thickness,notes
+Structural steel & construction,Base plate,base_plate_200x200_t10_4x18_on160.dxf,200x200,10 mm,20 mm margins implied by 160 mm PCD
+Structural steel & construction,Gusset plate,gusset_triangle_300x300_t12.dxf,300x300 right triangle,12 mm,Starter hole pattern; customize per connection
+Structural steel & construction,Beam end plate (partial),beam_end_plate_150x200_t10_4x18.dxf,150x200,10 mm,2x2 bolt layout
+Structural steel & construction,Splice/Cover plate,splice_plate_150x300_t10_6x18.dxf,150x300,10 mm,2 rows of 3 bolts
+Structural steel & construction,Stiffener L-bracket,stiffener_L_200x200_w80_t8.dxf,"200x200 legs, 80 leg width",8 mm,Starter L profile with lightening hole
+Petrochem/O&G/Mining,Flange (generic PN16 starter),flange_d300_t12_8x18_on240.dxf,Ø300,12 mm,Generic starter; confirm exact standard before cutting
+Petrochem/O&G/Mining,Baffle (circular),baffle_circular_d800_t8_4x22.dxf,Ø800,8 mm,Perimeter lift holes on 700 PCD
+Petrochem/O&G/Mining,Baffle (rectangular),baffle_rect_800x1200_t6_4cornerHoles.dxf,800x1200,6 mm,Corner holes Ø22 mm
+Petrochem/O&G/Mining,Manhole cover,manhole_cover_d450_t10_8x16_on400.dxf,Ø450,10 mm,Bolt circle 8xØ16 on 400 PCD
+Petrochem/O&G/Mining,Support bracket/saddle,saddle_trapezoid_200x300_t10.dxf,200 (top) x 300 (bottom) x 200 (h),10 mm,Generic trapezoid
+Food/Beverage/Chem/Pharma,Tank end disk,tank_end_disk_d800_t4.dxf,Ø800,4 mm,Blank for forming
+Food/Beverage/Chem/Pharma,Rectangular panel/channel cover,panel_500x800_t3_perimeterHoles.dxf,500x800,3 mm,Perimeter Ø8 holes
+Food/Beverage/Chem/Pharma,Sanitary flange blank,sanitary_flange_blank_d200_t5.dxf,Ø200,5 mm,No bolt holes; smooth edge
+Food/Beverage/Chem/Pharma,Filter plate/sieve,filter_plate_300x500_t2_d5_grid20.dxf,300x500,2 mm,"Ø5 holes @20 pitch, 25 mm margin"
+Sugar,Rotor blade,rotor_blade_trapezoid_150x500_t10.dxf,150 base x 100 top x 500 length,10 mm,Starter blank
+Sugar,Wear plate,wear_plate_200x400_t10_4x18.dxf,200x400,10 mm,Corner bolt holes Ø18
+Sugar,Gear-housing cover,gear_cover_d350_t12_12x14_on300.dxf,Ø350,12 mm,"Center bore Ø150, bolt circle 12xØ14 on 300 PCD"
+Sugar,Sprocket guard/screen,sprocket_guard_500x800_window.dxf,500x800,—,Window cut-out 300x500 centered
+Automotive & transport,Mounting bracket (plate),mount_bracket_plate_100x150_t6_2x10.dxf,100x150,6 mm,Two M10 clearance holes
+Automotive & transport,Chassis gusset,chassis_gusset_100x200_t8.dxf,100x200 right triangle,8 mm,Starter gusset
+Automotive & transport,Foot/tie-down plate,foot_plate_100x200_t8_4x14.dxf,100x200,8 mm,4xØ14
+Automotive & transport,Mudguard strap,mudguard_strap_50x300_t3_2holes.dxf,50x300,3 mm,Starter with two holes (convert to slots as needed)
+Marine & offshore,Hull stiffener/flat bar,flatbar_300x1000_t10_staggered.dxf,300x1000,10 mm,Staggered Ø14 holes
+Marine & offshore,Deck plate,deck_plate_1000x1500_t10_8x18.dxf,1000x1500,10 mm,Perimeter holes
+Marine & offshore,Circular deck flange,deck_flange_d300_t12_8x18_on260.dxf,Ø300,12 mm,Bolt circle generic
+Marine & offshore,Bulkhead bracket,bulkhead_bracket_200x300_t12.dxf,200x300 right triangle,12 mm,Starter bracket
+Architecture/Furniture/Arts,Decorative panel/screen,decor_screen_1000x2000_t3_blank.dxf,1000x2000,3 mm,Pattern placeholder
+Architecture/Furniture/Arts,Balustrade infill panel,balustrade_infill_1200x900_t3.dxf,1200x900,3 mm,Radius corners to be applied if required
+Architecture/Furniture/Arts,Gate/door panel,gate_panel_1000x1800_t3_window700x1400.dxf,1000x1800,3 mm,Window 700x1400 @ centered margins
+Architecture/Furniture/Arts,Room divider/privacy screen,room_divider_800x1800_t3_3slots.dxf,800x1800,3 mm,Three vertical slots
+Electronics & small parts,Enclosure panel,enclosure_panel_150x300_t2_cutout80x40.dxf,150x300,2 mm,Rectangular cutout 80x40
+Electronics & small parts,Instrument face/bezel,instrument_bezel_50x100_t2_window30x60.dxf,50x100,2 mm,Window 30x60
+Electronics & small parts,Mounting L-bracket (blank),L_bracket_blank_50x50_t2_2x5.dxf,50x50,2 mm,Bend line in press; 2xØ5 holes
+Electronics & small parts,Heat-sink plate,heatsink_plate_80x200_t3_6x6.dxf,80x200,3 mm,Slots approximated by Ø6 holes

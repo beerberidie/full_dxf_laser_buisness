@@ -4,8 +4,10 @@ Handles quote management operations
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 from app import db
 from app.models import Quote, QuoteItem, Client, Project, ActivityLog
+from app.utils.decorators import role_required
 from datetime import datetime, timedelta
 from decimal import Decimal
 
@@ -13,6 +15,7 @@ bp = Blueprint('quotes', __name__, url_prefix='/quotes')
 
 
 @bp.route('/')
+@login_required
 def index():
     """Display quotes list."""
     # Get filter parameters
@@ -37,6 +40,7 @@ def index():
 
 
 @bp.route('/new', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def new_quote():
     """Create a new quote."""
     if request.method == 'POST':
@@ -116,6 +120,7 @@ def new_quote():
 
 
 @bp.route('/<int:id>')
+@login_required
 def detail(id):
     """Display quote details."""
     quote = Quote.query.get_or_404(id)
@@ -123,6 +128,7 @@ def detail(id):
 
 
 @bp.route('/<int:id>/edit', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def edit(id):
     """Edit a quote."""
     quote = Quote.query.get_or_404(id)
@@ -156,6 +162,7 @@ def edit(id):
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
+@role_required('admin', 'manager')
 def delete(id):
     """Delete a quote."""
     quote = Quote.query.get_or_404(id)

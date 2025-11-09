@@ -102,25 +102,96 @@ def generate_unique_filename(original_filename: str, project_id: int, document_t
 def get_document_folder(document_type: str) -> Path:
     """
     Get the folder path for a document type.
-    
+
     Args:
-        document_type: Type of document (Quote, Invoice, Proof of Payment, Delivery Note)
-    
+        document_type: Type of document (Quote, Invoice, Proof of Payment, Delivery Note, Other, Image)
+
     Returns:
         Path: Path to the document folder
     """
     base_folder = Path(current_app.config['DOCUMENTS_FOLDER'])
-    
+
     # Map document types to folder names
     folder_map = {
         'Quote': 'quotes',
         'Invoice': 'invoices',
         'Proof of Payment': 'pops',
-        'Delivery Note': 'delivery_notes'
+        'Delivery Note': 'delivery_notes',
+        'Other': 'other',
+        'Image': 'images'
     }
-    
+
     folder_name = folder_map.get(document_type, 'other')
     return base_folder / folder_name
+
+
+def save_documents(
+    files: list,
+    project_id: int,
+    document_type: str,
+    notes: Optional[str] = None,
+    uploaded_by: str = 'admin'
+) -> Dict[str, Any]:
+    """
+    Save multiple document files and create database records.
+
+    Args:
+        files: List of FileStorage objects from request.files.getlist()
+        project_id: Project ID to link the documents
+        document_type: Type of document (Quote, Invoice, Proof of Payment, Delivery Note)
+        notes: Optional notes about the documents (applies to all)
+        uploaded_by: Username of uploader (default: 'admin')
+
+    Returns:
+        dict: Result with 'success', 'message', 'uploaded_count', 'failed_count', 'errors'
+
+    Example:
+        >>> files = request.files.getlist('files')
+        >>> result = save_documents(files, project_id=1, document_type='Quote')
+        >>> print(f"Uploaded {result['uploaded_count']} files")
+    """
+    uploaded_count = 0
+    failed_count = 0
+    error_messages = []
+    document_ids = []
+
+    for file in files:
+        # Skip empty filenames
+        if not file or file.filename == '':
+            continue
+
+        # Use the single file save_document function
+        result = save_document(file, project_id, document_type, notes, uploaded_by)
+
+        if result['success']:
+            uploaded_count += 1
+            document_ids.append(result['document_id'])
+        else:
+            failed_count += 1
+            error_messages.append(f"{file.filename}: {result['message']}")
+
+    # Build response message
+    if uploaded_count > 0 and failed_count == 0:
+        message = f'{uploaded_count} document(s) uploaded successfully'
+        success = True
+    elif uploaded_count > 0 and failed_count > 0:
+        message = f'{uploaded_count} document(s) uploaded, {failed_count} failed'
+        success = True  # Partial success
+    elif failed_count > 0:
+        message = f'{failed_count} document(s) failed to upload'
+        success = False
+    else:
+        message = 'No files to upload'
+        success = False
+
+    return {
+        'success': success,
+        'message': message,
+        'uploaded_count': uploaded_count,
+        'failed_count': failed_count,
+        'errors': error_messages,
+        'document_ids': document_ids
+    }
 
 
 def save_document(
@@ -132,17 +203,17 @@ def save_document(
 ) -> Dict[str, Any]:
     """
     Save a document file and create database record.
-    
+
     Args:
         file: FileStorage object from request.files
         project_id: Project ID to link the document
         document_type: Type of document (Quote, Invoice, Proof of Payment, Delivery Note)
         notes: Optional notes about the document
         uploaded_by: Username of uploader (default: 'admin')
-    
+
     Returns:
         dict: Result with 'success', 'message', and optionally 'document_id', 'document'
-    
+
     Example:
         >>> from werkzeug.datastructures import FileStorage
         >>> file = request.files['file']
@@ -193,22 +264,25 @@ def save_document(
         
         # Save file to disk
         file.save(str(file_path))
-        
+
+        # Get actual file size in bytes after saving
+        file_size_bytes = file_path.stat().st_size
+
         # Create database record
         document = ProjectDocument(
             project_id=project_id,
             document_type=document_type,
-            filename=unique_filename,
+            stored_filename=unique_filename,
             original_filename=original_filename,
             file_path=str(file_path),
-            file_size_mb=round(file_size_mb, 2),
+            file_size=file_size_bytes,
             notes=notes,
             uploaded_by=uploaded_by
         )
         
         db.session.add(document)
         db.session.commit()
-        
+
         # Log activity
         log_activity(
             'PROJECT_DOCUMENT',
@@ -219,7 +293,7 @@ def save_document(
                 'project_code': project.project_code,
                 'document_type': document_type,
                 'filename': original_filename,
-                'size_mb': file_size_mb
+                'size_mb': round(file_size_bytes / (1024 * 1024), 2)
             },
             user=uploaded_by
         )
@@ -324,11 +398,11 @@ def get_project_documents(project_id: int, document_type: Optional[str] = None) 
         ...     print(f"{doc.document_type}: {doc.original_filename}")
     """
     query = ProjectDocument.query.filter_by(project_id=project_id)
-    
+
     if document_type:
         query = query.filter_by(document_type=document_type)
-    
-    return query.order_by(ProjectDocument.uploaded_at.desc()).all()
+
+    return query.order_by(ProjectDocument.upload_date.desc()).all()
 
 
 def validate_document_upload(file: FileStorage, document_type: str) -> Tuple[bool, Optional[str]]:
@@ -364,9 +438,9 @@ def validate_document_upload(file: FileStorage, document_type: str) -> Tuple[boo
         return False, f'File too large. Maximum size: {max_size_mb:.1f} MB'
     
     # Check document type is valid
-    valid_types = ['Quote', 'Invoice', 'Proof of Payment', 'Delivery Note']
-    if document_type not in valid_types:
-        return False, f'Invalid document type. Must be one of: {", ".join(valid_types)}'
-    
+    from app.models import ProjectDocument
+    if document_type not in ProjectDocument.VALID_TYPES:
+        return False, f'Invalid document type. Must be one of: {", ".join(ProjectDocument.VALID_TYPES)}'
+
     return True, None
 

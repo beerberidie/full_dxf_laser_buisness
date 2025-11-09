@@ -4,8 +4,10 @@ Handles invoice management operations
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 from app import db
 from app.models import Invoice, InvoiceItem, Client, Project, Quote, ActivityLog
+from app.utils.decorators import role_required
 from datetime import datetime, timedelta
 from decimal import Decimal
 
@@ -13,6 +15,7 @@ bp = Blueprint('invoices', __name__, url_prefix='/invoices')
 
 
 @bp.route('/')
+@login_required
 def index():
     """Display invoices list."""
     # Get filter parameters
@@ -37,6 +40,7 @@ def index():
 
 
 @bp.route('/new', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def new_invoice():
     """Create a new invoice."""
     if request.method == 'POST':
@@ -119,6 +123,7 @@ def new_invoice():
 
 
 @bp.route('/<int:id>')
+@login_required
 def detail(id):
     """Display invoice details."""
     invoice = Invoice.query.get_or_404(id)
@@ -126,6 +131,7 @@ def detail(id):
 
 
 @bp.route('/<int:id>/edit', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def edit(id):
     """Edit an invoice."""
     invoice = Invoice.query.get_or_404(id)
@@ -160,6 +166,7 @@ def edit(id):
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
+@role_required('admin', 'manager')
 def delete(id):
     """Delete an invoice."""
     invoice = Invoice.query.get_or_404(id)

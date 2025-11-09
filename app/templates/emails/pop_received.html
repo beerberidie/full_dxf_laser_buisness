@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Received - {{ project.project_code }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #28a745;
+            margin: 0;
+            font-size: 24px;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success-box h2 {
+            color: #155724;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .project-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .project-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .project-details td {
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .project-details td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #495057;
+        }
+        .project-details tr:last-child td {
+            border-bottom: none;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+        .timeline-box {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .timeline-box h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .timeline-step {
+            padding: 10px 0;
+            border-left: 3px solid #28a745;
+            padding-left: 15px;
+            margin-bottom: 10px;
+        }
+        .timeline-step.completed {
+            opacity: 0.6;
+        }
+        .timeline-step.current {
+            background-color: #d4edda;
+            border-radius: 4px;
+            padding: 10px 15px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .contact-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">⚡ Laser OS</div>
+            <h1>Payment Received - Order Confirmed!</h1>
+        </div>
+
+        <p>Dear {{ client.name }},</p>
+
+        <div class="success-box">
+            <h2>✅ Payment Confirmed!</h2>
+            <p>We have received your proof of payment for <strong>{{ project.name }}</strong>. Your order is now confirmed and will be scheduled for production.</p>
+        </div>
+
+        <div class="project-details">
+            <table>
+                <tr>
+                    <td>Project Code:</td>
+                    <td><strong>{{ project.project_code }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Project Name:</td>
+                    <td>{{ project.name }}</td>
+                </tr>
+                <tr>
+                    <td>Order Amount:</td>
+                    <td><strong>R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Payment Received:</td>
+                    <td>{{ project.pop_received_date.strftime('%d %B %Y') if project.pop_received_date else 'Today' }}</td>
+                </tr>
+                {% if project.due_date %}
+                <tr>
+                    <td>Expected Completion:</td>
+                    <td><strong>{{ project.due_date.strftime('%d %B %Y') }}</strong></td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <div class="timeline-box">
+            <h3>📋 What Happens Next?</h3>
+            <div class="timeline-step completed">
+                <strong>✓ Quote Approved</strong> - Quote accepted and payment received
+            </div>
+            <div class="timeline-step current">
+                <strong>→ Scheduling</strong> - Your project will be added to our production queue
+            </div>
+            <div class="timeline-step">
+                <strong>⚙️ Production</strong> - Laser cutting and processing
+            </div>
+            <div class="timeline-step">
+                <strong>✅ Completion</strong> - Quality check and notification
+            </div>
+            <div class="timeline-step">
+                <strong>📦 Collection/Delivery</strong> - Ready for pickup or delivery
+            </div>
+        </div>
+
+        <p><strong>Important Information:</strong></p>
+        <ul>
+            <li>You will receive updates as your project progresses through production</li>
+            <li>We'll notify you when cutting begins and when the project is completed</li>
+            <li>If you have any questions, feel free to contact us at any time</li>
+        </ul>
+
+        <div style="text-align: center;">
+            <a href="{{ project_url }}" class="cta-button">Track Your Project</a>
+        </div>
+
+        <div class="contact-info">
+            <p><strong>Questions or concerns?</strong></p>
+            <p>📧 Email: {{ company_email }}</p>
+            <p>📞 Phone: {{ company_phone }}</p>
+            <p>🕒 Business Hours: Monday - Friday, 8:00 AM - 5:00 PM</p>
+        </div>
+
+        <p>Thank you for choosing us for your laser cutting needs!</p>
+
+        <div class="footer">
+            <p>This is an automated confirmation from Laser OS.</p>
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightBurnProject AppVersion="2.0.03" DeviceName="Test Laser" FormatVersion="1" MaterialHeight="3.0" MirrorX="False" MirrorY="False">
+    <CutSetting type="Cut">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <speed Value="100"/>
+    </CutSetting>
+    <CutSetting type="Engrave">
+        <index Value="1"/>
+        <name Value="E01"/>
+        <maxPower Value="15"/>
+        <speed Value="200"/>
+    </CutSetting>
+    <Shape Type="Path" CutIndex="0">
+        <XForm>1 0 0 1 50 50</XForm>
+    </Shape>
+    <Shape Type="Circle" CutIndex="0">
+        <XForm>1 0 0 1 100 100</XForm>
+    </Shape>
+    <Shape Type="Text" CutIndex="1">
+        <Text>Test Part - MS 3mm</Text>
+        <XForm>1 0 0 1 150 150</XForm>
+    </Shape>
+</LightBurnProject>
+

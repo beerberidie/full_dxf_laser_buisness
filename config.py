@@ -33,7 +33,7 @@ class Config:
     UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER') or str(basedir / 'data' / 'files')
     DOCUMENTS_FOLDER = os.environ.get('DOCUMENTS_FOLDER') or str(basedir / 'data' / 'documents')  # Phase 9: Project documents
     MAX_UPLOAD_SIZE = int(os.environ.get('MAX_UPLOAD_SIZE', 52428800))  # 50MB default
-    ALLOWED_EXTENSIONS = {'dxf', 'pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'}
+    ALLOWED_EXTENSIONS = {'dxf', 'lbrn2', 'pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'}  # Phase 10: Added lbrn2
     ALLOWED_DOCUMENT_EXTENSIONS = {'pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx', 'xlsx', 'xls'}  # Phase 9: Document types
     
     # Company Settings
@@ -48,16 +48,26 @@ class Config:
 
     # Phase 9: Scheduling Configuration
     MAX_HOURS_PER_DAY = int(os.environ.get('MAX_HOURS_PER_DAY', 8))  # Maximum working hours per day for capacity planning
+
+    # Module N: File Ingest & Extract System
+    MODULE_N_ENABLED = os.environ.get('MODULE_N_ENABLED', 'false').lower() == 'true'
+    MODULE_N_URL = os.environ.get('MODULE_N_URL', 'http://localhost:8081')
+    MODULE_N_TIMEOUT = int(os.environ.get('MODULE_N_TIMEOUT', 30))
+    MODULE_N_AUTO_PROCESS = os.environ.get('MODULE_N_AUTO_PROCESS', 'true').lower() == 'true'
     UPCOMING_DEADLINE_DAYS = int(os.environ.get('UPCOMING_DEADLINE_DAYS', 3))  # Days ahead to check for upcoming deadlines
 
     # Phase 9: Material Types (configurable list)
+    # Phase 10: Added Carbon Steel and Zinc
     MATERIAL_TYPES = [
-        'Mild Steel',
-        'Stainless Steel',
         'Aluminum',
         'Brass',
+        'Carbon Steel',
         'Copper',
         'Galvanized Steel',
+        'Mild Steel',
+        'Stainless Steel',
+        'Vastrap',
+        'Zinc',
         'Other'
     ]
 
@@ -67,7 +77,8 @@ class Config:
         'Invoice',
         'Proof of Payment',
         'Delivery Note',
-        'Other'
+        'Other',
+        'Image'
     ]
 
     # Phase 9: Communication Types (configurable list)
@@ -87,6 +98,11 @@ class Config:
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', 587))
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'True').lower() in ('true', '1', 'yes')
+
+    # Sage Business Cloud Accounting Integration
+    SAGE_CLIENT_ID = os.environ.get('SAGE_CLIENT_ID')
+    SAGE_CLIENT_SECRET = os.environ.get('SAGE_CLIENT_SECRET')
+    SAGE_REDIRECT_URI = os.environ.get('SAGE_REDIRECT_URI', 'http://127.0.0.1:5000/sage/oauth/callback')
     MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'False').lower() in ('true', '1', 'yes')
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
@@ -96,7 +112,32 @@ class Config:
     # Phase 9: Pagination Configuration
     ITEMS_PER_PAGE = int(os.environ.get('ITEMS_PER_PAGE', 20))  # Default items per page for lists
     COMMUNICATIONS_PER_PAGE = int(os.environ.get('COMMUNICATIONS_PER_PAGE', 25))  # Communications list pagination
-    
+
+    # V12.0: Status System Redesign Configuration
+    AUTO_ADVANCE_TO_QUOTE = os.environ.get('AUTO_ADVANCE_TO_QUOTE', 'True').lower() in ('true', '1', 'yes')
+    QUOTE_EXPIRY_DAYS = int(os.environ.get('QUOTE_EXPIRY_DAYS', 30))  # Days until quote expires
+    QUOTE_REMINDER_DAYS = int(os.environ.get('QUOTE_REMINDER_DAYS', 25))  # Send reminder at this many days
+    AUTO_CANCEL_EXPIRED_QUOTES = os.environ.get('AUTO_CANCEL_EXPIRED_QUOTES', 'True').lower() in ('true', '1', 'yes')
+    AUTO_QUEUE_ON_POP = os.environ.get('AUTO_QUEUE_ON_POP', 'True').lower() in ('true', '1', 'yes')
+
+    # V12.0: Notification Configuration
+    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@laseros.com')
+    SCHEDULER_EMAIL = os.environ.get('SCHEDULER_EMAIL', 'scheduler@laseros.com')
+    ENABLE_EMAIL_NOTIFICATIONS = os.environ.get('ENABLE_EMAIL_NOTIFICATIONS', 'True').lower() in ('true', '1', 'yes')
+    ENABLE_SMS_NOTIFICATIONS = os.environ.get('ENABLE_SMS_NOTIFICATIONS', 'False').lower() in ('true', '1', 'yes')
+    ENABLE_WHATSAPP_NOTIFICATIONS = os.environ.get('ENABLE_WHATSAPP_NOTIFICATIONS', 'False').lower() in ('true', '1', 'yes')
+
+    # V12.0: Background Scheduler Configuration
+    ENABLE_BACKGROUND_SCHEDULER = os.environ.get('ENABLE_BACKGROUND_SCHEDULER', 'True').lower() in ('true', '1', 'yes')
+    QUOTE_EXPIRY_CHECK_HOUR = int(os.environ.get('QUOTE_EXPIRY_CHECK_HOUR', 9))  # Check at 9 AM daily
+    QUOTE_REMINDER_CHECK_HOUR = int(os.environ.get('QUOTE_REMINDER_CHECK_HOUR', 10))  # Send reminders at 10 AM daily
+
+    # Logging Configuration
+    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+    LOG_FILE = os.environ.get('LOG_FILE', 'logs/laser_os.log')
+    LOG_MAX_BYTES = int(os.environ.get('LOG_MAX_BYTES', 10485760))  # 10MB default
+    LOG_BACKUP_COUNT = int(os.environ.get('LOG_BACKUP_COUNT', 10))  # Keep 10 backups
+
     @staticmethod
     def init_app(app):
         """Initialize application with this configuration."""
@@ -105,6 +146,9 @@ class Config:
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
         os.makedirs(Path(app.config['UPLOAD_FOLDER']) / 'clients', exist_ok=True)
         os.makedirs(Path(app.config['UPLOAD_FOLDER']) / 'reports', exist_ok=True)
+
+        # Create logs directory
+        os.makedirs('logs', exist_ok=True)
 
         # Phase 9: Create documents directory structure
         os.makedirs(app.config['DOCUMENTS_FOLDER'], exist_ok=True)

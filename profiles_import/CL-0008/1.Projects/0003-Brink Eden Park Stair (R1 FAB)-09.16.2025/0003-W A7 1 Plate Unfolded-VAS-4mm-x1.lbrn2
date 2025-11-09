@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightBurnProject AppVersion="2.0.03" DeviceName="No Machine" FormatVersion="1" MaterialHeight="0" MirrorX="False" MirrorY="False">
+    <Thumbnail Source="iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAABJ0AAASdAHeZh94AAAHKUlEQVR4nO3cP4hUhxrG4W91HUdWja7BwiAKikJUhFhaLSESE0QrERFRIQHBIk3URrtolaAQBCWBNEEEidiFoGgxhBXBRmFBBYUEWbUQ/6CFbs4tLinuvUyRXe6c4n2eduHbt1h+HGbYM9Q0TVNApFltDwDaIwAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACPYfAXj69GlbO4AWDP/444918ODBGhkZqefPn1dV1XvvvdfyrDzv3r2rBQsW1KNHj9qeQpDhNWvW1EcffVS//vpr/fDDD/X111/XgwcP6qeffqqbN2/WgQMHatOmTdP+BWfOnKk7d+7UoUOH6sMPP5z2nW+//bbu379fR48erRUrVkz7zokTJ+qPP/6ob775pkZHR6d95/jx4/XkyZM6depUdbvdad85fPhwvXz5snbt2lWnTp2a9h2Yll6v12zevLn5bxs3bmzmzZvXHD9+/H9+9k+sWrWq6Xa7zffffz+jO8uWLWs6nU7zyy+/zOjO6OhoMzw83Ny4cWNGd0ZGRppZs2Y1k5OTM7rT6XSaoaGh5sqVK83HH388o1vwTw33C8P27dur1+vV5s2bZxSYHTt21K1bt2b0FPH3nomJiVq7du2M7mzbtq0ePnxYH3zwwYzufPbZZzU5OVkjIyMzurNly5Z68eLFjG7AdA31er3myJEj1ev12t4S7erVq3Xy5Mm6cuVK21MI4mtACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDB+r4PYHx8vO7evVtjY2O1fPnyQW6KcvHixXrz5k0tW7as7SkE6vsE8OWXX9YXX3xR586dG+SeOLt37669e/e2PYNQfZ8ANmzYUM+fP681a9YMck+clStX1qtXr9qeQai+Afj5558HuSPW3bt3q+rfbwSCQfMhIAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYH3/HXhqaqqmpqZqzpw5NTQ0NMhNUd6+fdv2BIL1fQJYv359dbvdOnbs2CD3xOl2u9XpdNqeQai+AViyZEnNnTu3Fi9ePMg9cebNm1fDw30fxOD/qu9fXq/XG+SOWH+/DswbgWiDDwEhmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAjWNwBjY2M1f/78On369CD3xFm0aFF1u922ZxCq7wtBHj9+XG/evKmnT58Ock+cV69e1dTUVNszCNU3AOPj4/X69esaHR0d5J44k5OT9ddff9Xt27fbnkKgvgFYuHBhLVy4cJBbIr3//vttTyCYDwEhmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAATrG4B9+/bV6tWr6/z584PcE2fdunW1YsWKtmcQqu/7AG7dulV//vlnTUxMDHJPnHv37tXbt2/bnkGovgE4ffp0TUxM1NatWwe5J87Zs2fr9evXbc8gVN8AjI2N1djY2CC3RNq/f39VVV29erXlJSTyISAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGB9A3Dy5Mn6/PPP69q1a4PcE2fnzp316aeftj2DUH0DcOHChbp27Vpdv359gHPyXL58uX777be2ZxCq7wtB9u/fX7///nt98skng9wTZ8+ePfXixYu2ZxBq6NKlS81XX31VBw8erO+++646nU4dOnSo7V1x7t+/X+Pj43X79u22pxBkeOnSpbV27dp69uxZzZkzpzqdTj179qztXXFmz55dmzZtansGYYaapmnaHgG0w9eAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQLB/AY8q3O2syvWhAAAAAElFTkSuQmCC"/>
+    <VariableText>
+        <Start Value="0"/>
+        <End Value="999"/>
+        <Current Value="0"/>
+        <Increment Value="1"/>
+        <AutoAdvance Value="0"/>
+    </VariableText>
+    <UIPrefs>
+        <Optimize_ByLayer Value="0"/>
+        <Optimize_ByGroup Value="-1"/>
+        <Optimize_ByPriority Value="1"/>
+        <Optimize_WhichDirection Value="0"/>
+        <Optimize_InnerToOuter Value="1"/>
+        <Optimize_ByDirection Value="0"/>
+        <Optimize_ReduceTravel Value="1"/>
+        <Optimize_HideBacklash Value="0"/>
+        <Optimize_ReduceDirChanges Value="0"/>
+        <Optimize_ChooseCorners Value="0"/>
+        <Optimize_AllowReverse Value="1"/>
+        <Optimize_RemoveOverlaps Value="0"/>
+        <Optimize_OptimalEntryPoint Value="0"/>
+        <Optimize_OverlapDist Value="0.025"/>
+    </UIPrefs>
+    <CutSetting type="Cut">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <maxPower2 Value="20"/>
+        <speed Value="100"/>
+        <priority Value="0"/>
+    </CutSetting>
+    <CutSetting type="Cut">
+        <index Value="1"/>
+        <name Value="C01"/>
+        <maxPower Value="20"/>
+        <maxPower2 Value="20"/>
+        <speed Value="100"/>
+        <runBlower Value="0"/>
+        <priority Value="1"/>
+        <doOutput Value="0"/>
+        <hide Value="1"/>
+    </CutSetting>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 76.392334 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 301.89233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 527.39233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 752.89233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 978.39233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 1203.8923 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 1203.8923 946.42847</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 1203.8923 717.85864</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 1203.8923 489.28857</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 1203.8923 260.72571</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 1203.8923 32.14856</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 76.392334 32.14856</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 76.392334 260.72571</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 76.392334 489.28857</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 76.392334 717.85864</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 76.392334 946.43579</XForm>
+    </Shape>
+    <Shape Type="Path" CutIndex="0" VertID="0" PrimID="0">
+        <XForm>1 0 0 1 -2420.9287 -344.104</XForm>
+        <VertList>V2456.4287 1544.1041c0x2456.4287c0y1544.104c1x1V2456.4287 1544.104c0x2456.4287c0y1543.2756c1x2456.4287c1y1544.104V2454.9287 1542.604c0x2454.1003c0y1542.604c1x2455.7571c1y1542.604SV2453.4287 1544.104c0x1c1x2453.4287c1y1543.2756SV2420.9287 1544.104c0x2403.9287c0y148.354c1x2403.9287c1y148.354V2420.9287 344.104c0x2403.9287c0y148.354c1x2403.9287c1y148.354V2453.4287 344.104c0x2453.4287c0y344.93243c1x2403.9287c1y148.354SV2454.9287 345.604c0x2455.7571c0y345.604c1x2454.1003c1y345.604SV2456.4287 344.104c0x2403.9287c0y148.354c1x2456.4287c1y344.93243SV3652.321 344.104c0x2403.9287c0y148.354c1x2403.9287c1y148.354V3652.321 1544.104c0x2403.9287c0y148.354c1x2403.9287c1y148.354</VertList>
+        <PrimList>B0 1B1 2B2 3L3 4L4 5L5 6B6 7B7 8L8 9L9 10L10 0</PrimList>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2051.4302 1276.1208</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2276.9302 1276.1208</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2502.4302 1276.1208</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2727.9302 1276.1208</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2953.4302 1276.1208</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 3178.9302 1276.1208</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 3178.9302 1047.5493</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 3178.9302 818.97949</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 3178.9302 590.40942</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 3178.9302 361.84656</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 3178.9302 133.26941</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2051.4302 133.26941</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2051.4302 361.84656</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2051.4302 590.40942</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2051.4302 818.97949</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="1" W="14" H="14" Cr="0">
+        <XForm>1 0 0 1 2051.4302 1047.5566</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 76.392334 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 301.89233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 527.39233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 752.89233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 978.39233 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 1203.8923 1175</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 1203.8923 946.42847</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 1203.8923 717.85864</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 1203.8923 489.28857</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 1203.8923 260.72571</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 1203.8923 32.14856</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 76.392334 32.14856</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 76.392334 260.72571</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 76.392334 489.28857</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 76.392334 717.85864</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="11.2" H="11.2" Cr="0">
+        <XForm>1 0 0 1 76.392334 946.42847</XForm>
+    </Shape>
+    <Notes ShowOnLoad="0" Notes=""/>
+</LightBurnProject>

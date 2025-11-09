@@ -1,0 +1,222 @@
+{% extends "phone/base_phone.html" %}
+
+{% block page_title %}Active Run{% endblock %}
+
+{% block header_actions %}
+<span class="badge bg-danger" style="font-size: 1rem; padding: 8px 12px;">
+    <i class="fas fa-circle fa-fade me-1"></i>RUNNING
+</span>
+{% endblock %}
+
+{% block content %}
+<!-- Project Info Card -->
+<div class="card mb-3 border-danger">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">
+            <i class="fas fa-fire me-2"></i>{{ project.project_code }}
+        </h5>
+    </div>
+    <div class="card-body">
+        <h6 class="card-title">{{ project.name }}</h6>
+        <p class="card-text text-muted mb-2">
+            <i class="fas fa-user me-1"></i>{{ project.client.name }}
+        </p>
+        
+        <!-- Material Details -->
+        <div class="row g-2 mt-3">
+            {% if run.material_type %}
+            <div class="col-6">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Material</small>
+                    <strong>{{ run.material_type }}</strong>
+                </div>
+            </div>
+            {% endif %}
+            {% if run.thickness_mm %}
+            <div class="col-6">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Thickness</small>
+                    <strong>{{ run.thickness_mm }} mm</strong>
+                </div>
+            </div>
+            {% endif %}
+            {% if run.sheet_size %}
+            <div class="col-6">
+                <div class="p-2 bg-light rounded">
+                    <small class="text-muted d-block">Sheet Size</small>
+                    <strong>{{ run.sheet_size }}</strong>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Timer Card -->
+<div class="card mb-3 bg-primary text-white">
+    <div class="card-body text-center">
+        <h6 class="card-title mb-2">
+            <i class="fas fa-clock me-2"></i>Elapsed Time
+        </h6>
+        <div class="display-4" id="elapsedTime">{{ elapsed_minutes }} min</div>
+        <small>Started: {{ run.started_at.strftime('%H:%M') }}</small>
+    </div>
+</div>
+
+<!-- Preset Info (Read-Only) -->
+{% if preset %}
+<div class="card mb-3">
+    <div class="card-header bg-secondary text-white">
+        <h6 class="mb-0">
+            <i class="fas fa-cog me-2"></i>Machine Settings (Auto-Selected)
+        </h6>
+    </div>
+    <div class="card-body">
+        <p class="mb-2"><strong>{{ preset.preset_name }}</strong></p>
+        <div class="row g-2 small">
+            {% if preset.power %}
+            <div class="col-6">
+                <i class="fas fa-bolt text-warning me-1"></i>
+                Power: {{ preset.power }}%
+            </div>
+            {% endif %}
+            {% if preset.speed %}
+            <div class="col-6">
+                <i class="fas fa-tachometer-alt text-info me-1"></i>
+                Speed: {{ preset.speed }}
+            </div>
+            {% endif %}
+            {% if preset.frequency %}
+            <div class="col-6">
+                <i class="fas fa-wave-square text-success me-1"></i>
+                Frequency: {{ preset.frequency }}
+            </div>
+            {% endif %}
+            {% if preset.gas_pressure %}
+            <div class="col-6">
+                <i class="fas fa-wind text-primary me-1"></i>
+                Gas: {{ preset.gas_pressure }}
+            </div>
+            {% endif %}
+        </div>
+        <div class="alert alert-info mt-3 mb-0 small">
+            <i class="fas fa-lock me-1"></i>
+            Settings are read-only in Phone Mode
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- End Run Form -->
+<div class="card border-success">
+    <div class="card-header bg-success text-white">
+        <h6 class="mb-0">
+            <i class="fas fa-stop-circle me-2"></i>End Run
+        </h6>
+    </div>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('phone.end_run', run_id=run.id) }}" id="endRunForm">
+            <!-- Sheets Used -->
+            <div class="mb-3">
+                <label for="sheets_used" class="form-label">
+                    <i class="fas fa-copy me-1"></i>Sheets Used <span class="text-danger">*</span>
+                </label>
+                <input type="number" 
+                       class="form-control" 
+                       id="sheets_used" 
+                       name="sheets_used" 
+                       min="0" 
+                       step="1" 
+                       required
+                       placeholder="Enter number of sheets"
+                       value="{{ project.sheets_required or '' }}">
+                <small class="form-text text-muted">
+                    {% if project.sheets_required %}
+                    Expected: {{ project.sheets_required }} sheets
+                    {% else %}
+                    Enter actual sheets consumed
+                    {% endif %}
+                </small>
+            </div>
+            
+            <!-- Parts Produced -->
+            <div class="mb-3">
+                <label for="parts_produced" class="form-label">
+                    <i class="fas fa-box me-1"></i>Parts Produced
+                </label>
+                <input type="number" 
+                       class="form-control" 
+                       id="parts_produced" 
+                       name="parts_produced" 
+                       min="0" 
+                       step="1"
+                       placeholder="Enter number of parts (optional)"
+                       value="{{ project.parts_quantity or '' }}">
+            </div>
+            
+            <!-- Notes -->
+            <div class="mb-3">
+                <label for="notes" class="form-label">
+                    <i class="fas fa-sticky-note me-1"></i>Notes (Optional)
+                </label>
+                <textarea class="form-control" 
+                          id="notes" 
+                          name="notes" 
+                          rows="3"
+                          placeholder="Any issues, observations, or comments..."></textarea>
+            </div>
+            
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success btn-phone w-100" id="endRunBtn">
+                <i class="fas fa-check-circle me-2"></i>Complete Run
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Warning Card -->
+<div class="alert alert-warning mt-3">
+    <i class="fas fa-exclamation-triangle me-2"></i>
+    <strong>Important:</strong> Completing this run will automatically deduct sheets from inventory.
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Update elapsed time every minute
+let startTime = new Date("{{ run.started_at.isoformat() }}");
+let elapsedMinutes = {{ elapsed_minutes }};
+
+function updateElapsedTime() {
+    elapsedMinutes++;
+    document.getElementById('elapsedTime').textContent = elapsedMinutes + ' min';
+}
+
+// Update every 60 seconds
+setInterval(updateElapsedTime, 60000);
+
+// Confirm before ending run
+document.getElementById('endRunForm').addEventListener('submit', function(e) {
+    const sheetsUsed = document.getElementById('sheets_used').value;
+    
+    if (!sheetsUsed || sheetsUsed === '0') {
+        e.preventDefault();
+        alert('Please enter the number of sheets used.');
+        return false;
+    }
+    
+    const confirmed = confirm(
+        `Complete this run?\n\n` +
+        `Sheets used: ${sheetsUsed}\n` +
+        `Time: ${elapsedMinutes} minutes\n\n` +
+        `This will deduct ${sheetsUsed} sheets from inventory.`
+    );
+    
+    if (!confirmed) {
+        e.preventDefault();
+        return false;
+    }
+});
+</script>
+{% endblock %}
+

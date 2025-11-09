@@ -1,0 +1,17 @@
+{
+  "package_name": "Laser OS Tier 1 - UI Package",
+  "extraction_date": "2025-10-18T15:35:08.611845",
+  "version": "1.0",
+  "statistics": {
+    "html_templates": 51,
+    "css_files": 1,
+    "js_files": 1
+  },
+  "structure": {
+    "templates": "templates/",
+    "css": "static/css/",
+    "js": "static/js/",
+    "template_hierarchy": "template_hierarchy.json",
+    "design_system": "design_system.json"
+  }
+}

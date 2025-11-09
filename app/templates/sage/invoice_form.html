@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}New Invoice - Sage Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Create Invoice</h1>
+        <p class="page-subtitle">Create a new sales invoice in {{ business.displayed_as or business.name }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('sage.invoices') }}" class="btn btn-secondary">
+            <span class="icon">←</span> Back to Invoices
+        </a>
+    </div>
+</div>
+
+<div class="form-container">
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('sage.new_invoice') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contact_id" class="form-label">Customer *</label>
+                        <select name="contact_id" id="contact_id" class="form-control" required>
+                            <option value="">Select a customer...</option>
+                            {% for contact in contacts %}
+                            <option value="{{ contact.id }}">{{ contact.displayed_as or contact.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reference" class="form-label">Reference</label>
+                        <input type="text" name="reference" id="reference" class="form-control" placeholder="Invoice reference">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date" class="form-label">Invoice Date *</label>
+                        <input type="date" name="date" id="date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="due_date" class="form-label">Due Date *</label>
+                        <input type="date" name="due_date" id="due_date" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea name="notes" id="notes" class="form-control" rows="4" placeholder="Additional notes..."></textarea>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Note:</strong> Line items and advanced invoice features will be added in a future update. 
+                    For now, you can create basic invoices which can be completed in Sage.
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon">✓</span> Create Invoice
+                    </button>
+                    <a href="{{ url_for('sage.invoices') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-gray-700);
+}
+
+.form-control {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-gray-200);
+}
+</style>
+
+<script>
+// Set today's date as default
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date').value = today;
+    
+    // Set due date to 30 days from now (South African default)
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 30);
+    document.getElementById('due_date').value = dueDate.toISOString().split('T')[0];
+});
+</script>
+{% endblock %}
+

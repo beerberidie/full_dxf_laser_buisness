@@ -36,11 +36,23 @@ venv.bak/
 *.db
 *.sqlite
 *.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
 data/laser_os.db
+data/*.db
+data/*.backup_*
+data/laser_os_backup_*.db
 
 # File Storage
+data/files/
 data/files/clients/
 data/files/reports/
+data/documents/
+data/exports/
+data/backups/
+data/module_n_storage/
+data/templates/
 
 # Logs
 logs/
@@ -69,9 +81,25 @@ instance/
 *.tmp
 *.bak
 *.backup
+*.backup_*
 ~*
+temp_preset_extract/
 
 # OS
 Thumbs.db
 desktop.ini
 
+# ZIP files
+*.zip
+
+# Instance folder
+instance/
+
+# Sensitive configuration
+email_ingest_starter_with_orders_api_ui_labels/Email ingest application client and secret code.txt
+
+# Module N storage
+module_n/storage/
+
+# Profiles import (customer data)
+profiles_import/

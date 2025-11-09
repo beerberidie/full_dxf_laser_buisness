@@ -1,0 +1,2623 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Transactions",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Journals",
+      "description": "The resource found at /journals is used for recording non-regular transactions, for example, the depreciation of a fixed asset or writing off a bad debt. You can also use journal entries to transfer values from one account to another.(https://help.sageone.com/en_uk/accounting/extra-create-journals.html). The SHOW action will return a single entry; the INDEX action all of them. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/journals\" target=\"_blank\">Key Concepts: Journals</a>"
+    },
+    {
+      "name": "Ledger Entries",
+      "description": "A ledger entry is a movement on a ledger account. Whenever a journal entry or an invoice is created, or a payment is registered, and in many other cases, at least two ledger entries are created, representing the credit and debit accounts' movements in a double entry bookkeeping system."
+    },
+    {
+      "name": "Transactions",
+      "description": "Transactions occur when accounting relevant events are registered such as the creation of a Sales Invoice. In order to ensure balanced ledger accounts a transaction is used as a logical encapsulation for multiple ledger entries. Transactions all have an 'origin' attribute, which associates the transaction to the event that has triggered it. Requesting INDEX on the transaction_types endpoint gives you an idea which events trigger transactions. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/transactions/\" target=\"_blank\">Key Concepts: Transactions</a>"
+    },
+    {
+      "name": "Transaction Types",
+      "description": "Transaction types are read-only and should serve as a reference for you when you create a transaction. For example when creating a Purchase Invoice the transaction type PURCHASE_INVOICE should be used. They are only used at this occasion, i.e. as a subresource to a transaction. Only SHOW and INDEX actions are allowed. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/transactions/\" target=\"_blank\">Key Concepts: Transactions</a>"
+    }
+  ],
+  "paths": {
+    "/journals": {
+      "get": {
+        "summary": "Returns all Journals",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Journals changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Journals deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Journals per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Journals",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Journals (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Journals",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 48,
+				"$page": 1,
+				"$next": "/journals?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "f7c2f990bd0d432bb4c77f6bcf3f875e",
+						"displayed_as": "Example journals",
+						"$path": "/journals/f7c2f990bd0d432bb4c77f6bcf3f875e"
+					},
+					{
+						"id": "221bab6dd8dc43d2a7b0a35b66d921ab",
+						"displayed_as": "Example journals",
+						"$path": "/journals/221bab6dd8dc43d2a7b0a35b66d921ab"
+					},
+					{
+						"id": "5e6f90e97fba4de29d9c494e39f33029",
+						"displayed_as": "Example journals",
+						"$path": "/journals/5e6f90e97fba4de29d9c494e39f33029"
+					},
+					{
+						"id": "58d3aa3e624244c887736ab565698f53",
+						"displayed_as": "Example journals",
+						"$path": "/journals/58d3aa3e624244c887736ab565698f53"
+					},
+					{
+						"id": "fb000a778d8247a5a9d8530b26e7ea73",
+						"displayed_as": "Example journals",
+						"$path": "/journals/fb000a778d8247a5a9d8530b26e7ea73"
+					},
+					{
+						"id": "81c5210d10aa40c4940c01b3fed19c7f",
+						"displayed_as": "Example journals",
+						"$path": "/journals/81c5210d10aa40c4940c01b3fed19c7f"
+					},
+					{
+						"id": "b781538ccd6847a3a2f347a546b1b9e2",
+						"displayed_as": "Example journals",
+						"$path": "/journals/b781538ccd6847a3a2f347a546b1b9e2"
+					},
+					{
+						"id": "455e6216e523433ba4ed3344c9486a22",
+						"displayed_as": "Example journals",
+						"$path": "/journals/455e6216e523433ba4ed3344c9486a22"
+					},
+					{
+						"id": "68c5438f1e2841d1971dec9987025ea4",
+						"displayed_as": "Example journals",
+						"$path": "/journals/68c5438f1e2841d1971dec9987025ea4"
+					},
+					{
+						"id": "14095860915641428a1e4f990e5e82f6",
+						"displayed_as": "Example journals",
+						"$path": "/journals/14095860915641428a1e4f990e5e82f6"
+					}
+				]
+			}
+			}
+          }
+        },
+        "tags": [
+          "Journals"
+        ],
+        "operationId": "getJournals"
+      },
+      "x-sage-pathtitle": "Journal collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Journal",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Journals",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postJournals"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Journal",
+            "schema": {
+              "$ref": "#/definitions/Journal"
+            }
+          }
+        },
+        "tags": [
+          "Journals"
+        ],
+        "operationId": "postJournals"
+      }
+    },
+    "/journals/{key}": {
+      "get": {
+        "summary": "Returns a Journal",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Journal Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Journal (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_analysis_types",
+            "description": "Use this to show the line item analysis types",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Journal (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Journal",
+            "examples": {
+              "application/json":
+			  {
+				"id": "5e6f90e97fba4de29d9c494e39f33029",
+				"displayed_as": "Example journals",
+				"$path": "/journals/5e6f90e97fba4de29d9c494e39f33029",
+				"created_at": "2022-12-30T14:22:01Z",
+				"updated_at": "2022-12-30T14:22:01Z",
+				"transaction": {
+					"id": "03e130c52cf14807a1cb3153f580462e",
+					"displayed_as": "Example journals",
+					"$path": "/transactions/03e130c52cf14807a1cb3153f580462e"
+				},
+				"transaction_type": {
+					"id": "JOURNAL",
+					"displayed_as": "Journal",
+					"$path": "/transaction_types/JOURNAL"
+				},
+				"date": "2022-01-01",
+				"reference": "Example journals",
+				"description": "null",
+				"total": "350.0",
+				"journal_code": null,
+				"journal_lines": [
+					{
+						"id": "42db7e49412640b8bb6f9e7b7993d688",
+						"ledger_account": {
+							"id": "7a5a8952884911ed84fa0252b90cda0d",
+							"displayed_as": "Motor Vehicles - Accumulated Depreciation (0051)",
+							"$path": "/ledger_accounts/7a5a8952884911ed84fa0252b90cda0d"
+						},
+						"details": "BMW 3165i",
+						"debit": "0.0",
+						"credit": "350.0",
+						"include_on_tax_return": false,
+						"tax_reconciled": false,
+						"cleared": false,
+						"bank_reconciled": false,
+						"journal_line_foreign_currency": {
+							"currency_debit": null,
+							"currency_credit": null,
+							"exchange_rate": null
+						}
+					},
+					{
+						"id": "74de32e9b8de42e882cb3280febf21f2",
+						"ledger_account": {
+							"id": "7a6b6a32884911ed84fa0252b90cda0d",
+							"displayed_as": "Motor Vehicles Depreciation (8050)",
+							"$path": "/ledger_accounts/7a6b6a32884911ed84fa0252b90cda0d"
+						},
+						"details": "BMW 3165i",
+						"debit": "350.0",
+						"credit": "0.0",
+						"include_on_tax_return": false,
+						"tax_reconciled": false,
+						"cleared": false,
+						"bank_reconciled": false,
+						"journal_line_foreign_currency": {
+							"currency_debit": null,
+							"currency_credit": null,
+							"exchange_rate": null
+						}
+					}
+				],
+				"migrated": false
+			} 
+            }
+          }
+        },
+        "tags": [
+          "Journals"
+        ],
+        "operationId": "getJournalsKey"
+      },
+      "x-sage-pathtitle": "single Journal resource",
+      "x-sage-changelog": [
+
+      ],
+      "delete": {
+        "summary": "Deletes a Journal",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Journal Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Journal"
+          }
+        },
+        "tags": [
+          "Journals"
+        ],
+        "operationId": "deleteJournalsKey"
+      }
+    },
+    "/journals/{key}/reissue": {
+      "post": {
+        "summary": "Reissues an existing Journal by voiding the existing one and creating a new one",
+        "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Journal GUID.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Reissues an existing Journal by voiding the existing one and creating a new one",
+            "schema": {
+              "$ref": "#/definitions/Journal"
+            }
+          }
+        },
+        "tags": [
+          "Journals"
+        ],
+        "operationId": "postJournalsKeyReissue"
+      }
+    },
+    "/ledger_entries": {
+      "get": {
+        "summary": "Returns all Ledger Entries",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Ledger Entries dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Ledger Entries dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "transaction_id",
+            "description": "Use this to filter by transaction id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "transaction_type_id",
+            "description": "Use this to filter by transaction type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "journal_code_id",
+            "description": "Use this to filter by journal code id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Ledger Entries changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Ledger Entries per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Ledger Entries",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Entries (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "ledger_account_id",
+            "description": "Use this to filter by ledger account id",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Ledger Entries",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 6285,
+				"$page": 1,
+				"$next": "/ledger_entries?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "0e612bc5fdf14a4db1659923d66e21b6",
+						"displayed_as": "2024-09-18",
+						"$path": "/ledger_entries/0e612bc5fdf14a4db1659923d66e21b6"
+					},
+					{
+						"id": "926fa341a1624e73ad4d97a7bbd03c6a",
+						"displayed_as": "2024-09-18",
+						"$path": "/ledger_entries/926fa341a1624e73ad4d97a7bbd03c6a"
+					},
+					{
+						"id": "b002406af2c3477aa76b71976fcf7a97",
+						"displayed_as": "2024-09-18",
+						"$path": "/ledger_entries/b002406af2c3477aa76b71976fcf7a97"
+					},
+					{
+						"id": "dcb128be83244ff698bbf1a194cf528a",
+						"displayed_as": "Google Sheet",
+						"$path": "/ledger_entries/dcb128be83244ff698bbf1a194cf528a"
+					},
+					{
+						"id": "84643729fd93413787b5ae32514143a3",
+						"displayed_as": "Google Sheet",
+						"$path": "/ledger_entries/84643729fd93413787b5ae32514143a3"
+					},
+					{
+						"id": "462b1dbd35664d3f927a384f052b54bd",
+						"displayed_as": "Google Sheet",
+						"$path": "/ledger_entries/462b1dbd35664d3f927a384f052b54bd"
+					},
+					{
+						"id": "56cb05ac3d524099aafc2eacd727c606",
+						"displayed_as": "Zapier Contact Payment",
+						"$path": "/ledger_entries/56cb05ac3d524099aafc2eacd727c606"
+					},
+					{
+						"id": "06dc77722719444b96ce4adfcb402388",
+						"displayed_as": "Zapier Contact Payment",
+						"$path": "/ledger_entries/06dc77722719444b96ce4adfcb402388"
+					},
+					{
+						"id": "e3e9348724ab4f30869135fa784416d3",
+						"displayed_as": "Zapier Payment",
+						"$path": "/ledger_entries/e3e9348724ab4f30869135fa784416d3"
+					},
+					{
+						"id": "a32a68c296024d8883dddf9e2b10d89c",
+						"displayed_as": "Zapier Payment",
+						"$path": "/ledger_entries/a32a68c296024d8883dddf9e2b10d89c"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Ledger Entries"
+        ],
+        "operationId": "getLedgerEntries"
+      },
+      "x-sage-pathtitle": "Ledger Entry collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/ledger_entries/{key}": {
+      "get": {
+        "summary": "Returns a Ledger Entry",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Entry Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Ledger Entry (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Entry (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Ledger Entry",
+            "examples": {
+              "application/json": 
+			  {
+				"id": "0e612bc5fdf14a4db1659923d66e21b6",
+				"displayed_as": "2024-09-18",
+				"$path": "/ledger_entries/0e612bc5fdf14a4db1659923d66e21b6",
+				"created_at": "2024-09-18T01:08:28Z",
+				"updated_at": "2024-09-18T01:08:28Z",
+				"date": "2024-09-18",
+				"credit": "0.0",
+				"debit": "60.0",
+				"ledger_account": {
+					"id": "7a5ad74c884911ed84fa0252b90cda0d",
+					"displayed_as": "Trade Debtors (1100)",
+					"$path": "/ledger_accounts/7a5ad74c884911ed84fa0252b90cda0d"
+				},
+				"transaction": {
+					"id": "98d5c2ff03c44671b6ed5b6c0ee89f86",
+					"displayed_as": "",
+					"$path": "/transactions/98d5c2ff03c44671b6ed5b6c0ee89f86"
+				},
+				"contact": {
+					"id": "521229b29af04f3682d85b0d43ef5361",
+					"displayed_as": "ABS Garages Ltd (ABS001)",
+					"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+				},
+				"deleted": false,
+				"tax_rate": null,
+				"description": null,
+				"journal_code": null
+			}
+            }
+          }
+        },
+        "tags": [
+          "Ledger Entries"
+        ],
+        "operationId": "getLedgerEntriesKey"
+      },
+      "x-sage-pathtitle": "single Ledger Entry resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/transactions": {
+      "get": {
+        "summary": "Returns all Transactions",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Transactions changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Transactions dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Transactions dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_from_date",
+            "description": "Use this to filter Transactions by the date they were last updated",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_to_date",
+            "description": "Use this to filter Transactions by the date they were last updated",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "has_attachments",
+            "description": "Use this to filter Transactions by whether they have attachments or not",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Transactions per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Transactions",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Transactions (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "transaction_type_id",
+            "description": "Use this to filter by transaction type id",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Transactions",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 1100,
+				"$page": 1,
+				"$next": "/transactions?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "d19766617dbd48e78700723c64fdcf50",
+						"displayed_as": "Test ledger balance",
+						"$path": "/transactions/d19766617dbd48e78700723c64fdcf50"
+					},
+					{
+						"id": "91ed5bdafc96447fa6f199474eaed1fc",
+						"displayed_as": "Multi Currency Transfer",
+						"$path": "/transactions/91ed5bdafc96447fa6f199474eaed1fc"
+					},
+					{
+						"id": "f935de7ff17a4d2bb04e6dc8e194637e",
+						"displayed_as": null,
+						"$path": "/transactions/f935de7ff17a4d2bb04e6dc8e194637e"
+					},
+					{
+						"id": "7d0fa68950364061a52cf481e504b357",
+						"displayed_as": "",
+						"$path": "/transactions/7d0fa68950364061a52cf481e504b357"
+					},
+					{
+						"id": "d3447f86040f4f23bc0d27b79dbcf88a",
+						"displayed_as": null,
+						"$path": "/transactions/d3447f86040f4f23bc0d27b79dbcf88a"
+					},
+					{
+						"id": "a431f913e81d4f668f3edbb4245e3de7",
+						"displayed_as": "Estimate",
+						"$path": "/transactions/a431f913e81d4f668f3edbb4245e3de7"
+					},
+					{
+						"id": "fc63af206f634a5c80e0b39515398f3f",
+						"displayed_as": "",
+						"$path": "/transactions/fc63af206f634a5c80e0b39515398f3f"
+					},
+					{
+						"id": "a34811e4129d497b93344bd88118938d",
+						"displayed_as": "",
+						"$path": "/transactions/a34811e4129d497b93344bd88118938d"
+					},
+					{
+						"id": "5876e869ca544e0eb93ad43e3975dfde",
+						"displayed_as": "RB12972968870",
+						"$path": "/transactions/5876e869ca544e0eb93ad43e3975dfde"
+					},
+					{
+						"id": "4d490164c32c460ab8b1f1fc148dd215",
+						"displayed_as": "CIS SUPP REF",
+						"$path": "/transactions/4d490164c32c460ab8b1f1fc148dd215"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "getTransactions"
+      },
+      "x-sage-pathtitle": "Transaction collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/transactions/{key}": {
+      "get": {
+        "summary": "Returns a Transaction",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Transaction Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "expand_origin",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Transaction (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Transaction",
+            "examples": {
+              "application/json":
+			  {
+				"id": "a431f913e81d4f668f3edbb4245e3de7",
+				"displayed_as": "Estimate",
+				"$path": "/transactions/a431f913e81d4f668f3edbb4245e3de7",
+				"created_at": "2024-07-15T13:47:33Z",
+				"updated_at": "2024-07-15T13:47:33Z",
+				"date": "2024-07-15",
+				"deleted": false,
+				"reference": "Estimate",
+				"total": "120.0",
+				"total_in_transaction_currency": "120.0",
+				"contact": {
+					"id": "521229b29af04f3682d85b0d43ef5361",
+					"displayed_as": "ABS Garages Ltd (ABS001)",
+					"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+				},
+				"transaction_type": {
+					"id": "SALES_INVOICE",
+					"displayed_as": "Sales Invoice",
+					"$path": "/transaction_types/SALES_INVOICE"
+				},
+				"origin": {
+					"id": "bf4021cd27ec4693a7f95418c424b33f",
+					"displayed_as": "SI-370",
+					"$path": "/sales_invoices/bf4021cd27ec4693a7f95418c424b33f",
+					"links": [
+						{
+							"href": "https://accounts-extra.sageone.com/invoicing/sales_invoices/bf4021cd27ec4693a7f95418c424b33f",
+							"rel": "alternate",
+							"type": "text/html"
+						},
+						{
+							"href": "https://accounts-extra.sageone.com/advanced_uk/online_payment/gb173d7da32bb99625b4af278582cfb937517a41144076b4aa515174424d8dc509eb57e91f8efa32bb7e9f7a54bdbafa574836e072de3445beaec8a71dda3b795119542353b5ce5d796543f33d30c2feb502b3b505ea3a2bee1b760e608a7b36353794728fc9c3f96bc052dbc19406d9f1",
+							"rel": "bookmark",
+							"type": "text/html"
+						}
+					]
+				},
+				"audit_trail_id": 1086,
+				"number_of_attachments": 0
+			}
+			  
+            }
+          }
+        },
+        "tags": [
+          "Transactions"
+        ],
+        "operationId": "getTransactionsKey"
+      },
+      "x-sage-pathtitle": "single Transaction resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/transaction_types": {
+      "get": {
+        "summary": "Returns all Transaction Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "valid_for_business",
+            "description": "Use this to filter the transaction types to a business's locale and service",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Transaction Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Transaction Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Transaction Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Transaction Types",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 42,
+				"$page": 1,
+				"$next": "/transaction_types?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "BANK_OPENING_BALANCE",
+						"displayed_as": "Bank Opening Balance",
+						"$path": "/transaction_types/BANK_OPENING_BALANCE"
+					},
+					{
+						"id": "BANK_PAYMENT",
+						"displayed_as": "Bank Payment",
+						"$path": "/transaction_types/BANK_PAYMENT"
+					},
+					{
+						"id": "BANK_RECEIPT",
+						"displayed_as": "Bank Receipt",
+						"$path": "/transaction_types/BANK_RECEIPT"
+					},
+					{
+						"id": "BANK_TRANSFER",
+						"displayed_as": "Bank Transfer",
+						"$path": "/transaction_types/BANK_TRANSFER"
+					},
+					{
+						"id": "CORRECTION",
+						"displayed_as": "Correction",
+						"$path": "/transaction_types/CORRECTION"
+					},
+					{
+						"id": "CUSTOMER_ALLOCATION",
+						"displayed_as": "Customer Allocation",
+						"$path": "/transaction_types/CUSTOMER_ALLOCATION"
+					},
+					{
+						"id": "CUSTOMER_RECEIPT",
+						"displayed_as": "Customer Receipt",
+						"$path": "/transaction_types/CUSTOMER_RECEIPT"
+					},
+					{
+						"id": "CUSTOMER_REFUND",
+						"displayed_as": "Customer Refund",
+						"$path": "/transaction_types/CUSTOMER_REFUND"
+					},
+					{
+						"id": "DEPOSIT",
+						"displayed_as": "Deposit",
+						"$path": "/transaction_types/DEPOSIT"
+					},
+					{
+						"id": "JOURNAL",
+						"displayed_as": "Journal",
+						"$path": "/transaction_types/JOURNAL"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Transaction Types"
+        ],
+        "operationId": "getTransactionTypes"
+      },
+      "x-sage-pathtitle": "Transaction Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/transaction_types/{key}": {
+      "get": {
+        "summary": "Returns a Transaction Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Transaction Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Transaction Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Transaction Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "CUSTOMER_RECEIPT",
+				"displayed_as": "Customer Receipt",
+				"$path": "/transaction_types/CUSTOMER_RECEIPT"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Transaction Types"
+        ],
+        "operationId": "getTransactionTypesKey"
+      },
+      "x-sage-pathtitle": "single Transaction Type resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "Journal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the item"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the journal"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "A reference for the journal"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "A description of the journal"
+        },
+        "total": {
+          "type": "number",
+          "format": "double",
+          "description": "The total for the journal"
+        },
+        "journal_lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JournalLine"
+          },
+          "description": "The journal lines"
+        },
+        "migrated": {
+          "type": "boolean",
+          "description": "Indicates if the journal was migrated from another system."
+        }
+      },
+      "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Full Access",
+      "x-sage-menusection": "Financial Accounts & Entries"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "JournalLine": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The ledger account of the journal line"
+        },
+        "details": {
+          "type": "string",
+          "description": "A description of the journal line"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit amount of the journal line"
+        },
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit amount of the journal line"
+        },
+        "analysis_type_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisTypeLineItem"
+          },
+          "description": "The analysis types information"
+        },
+        "include_on_tax_return": {
+          "type": "boolean",
+          "description": "Indicates whether the journal line should affect the tax return"
+        },
+        "tax_reconciled": {
+          "type": "boolean",
+          "description": "Indicates if the journal line is tax reconciled or not."
+        },
+        "cleared": {
+          "type": "boolean",
+          "description": "Indicates if the journal line is cleared or not.\n\nWill be true when a journal item has been matched with a bank feed or statement.\n"
+        },
+        "bank_reconciled": {
+          "type": "boolean",
+          "description": "Indicates if the journal line is bank reconciled or not."
+        },
+        "journal_line_foreign_currency": {
+          "type": "string",
+          "description": "Indicates if the journal line is with a foreign currency bank account."
+        }
+      }
+    },
+    "LedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The display name for the ledger account"
+        },
+        "visible_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The visible scopes for the ledger account.\n\nThis indicates in which of the UI's areas the ledger account is displayed and available for user\nselection. Possible entries in this array are `bank`, `sales`, `purchasing`, `other_payment`,\n`other_receipt`, `reporting`, `journals`, `sales_eu`, `sales_row`, `purchasing_eu`, `purchasing_row`\nand `purchasing_hrc`.\n"
+        },
+        "included_in_chart": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is included in the chart of accounts"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the ledger account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the ledger account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the ledger account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the ledger account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "visible_in_banking": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+        },
+        "visible_in_expenses": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+        },
+        "visible_in_journals": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+        },
+        "visible_in_other_payments": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+        },
+        "visible_in_other_receipts": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+        },
+        "visible_in_reporting": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+        },
+        "visible_in_sales": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+        },
+        "balance_details": {
+          "$ref": "#/definitions/LedgerAccountBalanceDetails",
+          "description": "The ledger account balance details for the date range provided"
+        },
+        "is_control_account": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is a control account.\n\nControl accounts cannot be removed. See also `control_name`.\n"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+        },
+        "display_formatted": {
+          "type": "string",
+          "description": "The display name formatted based on coa_list_order in settings"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "non_recoverable_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The non-recoverable ledger account (Canada Only)"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Materials"
+        },
+        "tax_instalment": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for Tax Intalment (Canada only)"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Labour"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        }
+      }
+    },
+    "CoaGroupType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        }
+      }
+    },
+    "LedgerAccountBalanceDetails": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The account balance"
+        },
+        "credit_or_debit": {
+          "type": "string",
+          "description": "Is the balance a debit or credit"
+        },
+        "credits": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit balance"
+        },
+        "debits": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit balance"
+        },
+        "from_date": {
+          "type": "string",
+          "description": "The from date filter"
+        },
+        "to_date": {
+          "type": "string",
+          "description": "The to date filter"
+        }
+      }
+    },
+    "AnalysisTypeLineItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "analysis_type": {
+          "$ref": "#/definitions/AnalysisType",
+          "description": "The analysis type category"
+        }
+      }
+    },
+    "AnalysisType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "active_areas": {
+          "type": "array",
+          "description": "The areas for which the analysis type is available"
+        },
+        "analysis_type_level": {
+          "type": "array",
+          "description": "The analysis type level"
+        },
+        "analysis_type_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisTypeCategory"
+          },
+          "description": "The analysis type categories for the analysis type"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the analysis type"
+        }
+      }
+    },
+    "AnalysisTypeCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The code for the analysis type category"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the analysis type category"
+        },
+        "combined_id": {
+          "type": "string",
+          "description": "The combined_id of the analysis type category"
+        },
+        "analysis_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The analysis type for the analysis type category"
+        }
+      }
+    },
+    "postJournals": {
+      "type": "object",
+      "properties": {
+        "journal": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the journal"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference for the journal"
+            },
+            "description": {
+              "type": "string",
+              "description": "A description of the journal"
+            },
+            "total": {
+              "type": "number",
+              "format": "double",
+              "description": "The total for the journal"
+            },
+            "journal_code": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the journal code"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "The code of the journal code"
+                },
+                "journal_code_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Journal Code Type."
+                },
+                "control_name": {
+                  "type": "string",
+                  "description": "The control name of the journal code\n\nControl names are identifiers for a journal codes with a specific meaning. Some examples are `AC` for\npurchases, `VE` for sales, `OD` for other transactions and `REPBAL` for opening balances.\n"
+                },
+                "reserved": {
+                  "type": "boolean",
+                  "description": "Indicates whether the journal code is reserved.\n\nReserved journal codes cannot be deleted. A journal code is reserved when it has a control name.\nPlease note that journal codes can also not be deleted when there is any journal that is using\nthe code.\n"
+                }
+              }
+            },
+            "journal_lines": {
+              "type": "array",
+              "description": "The journal lines",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ledger_account_id": {
+                    "type": "string",
+                    "description": "The ID of the Ledger Account."
+                  },
+                  "debit": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The debit amount of the journal line"
+                  },
+                  "credit": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The credit amount of the journal line"
+                  },
+                  "details": {
+                    "type": "string",
+                    "description": "A description of the journal line"
+                  },
+                  "analysis_type_categories": {
+                    "type": "array",
+                    "description": "The analysis types information",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "include_on_tax_return": {
+                    "type": "boolean",
+                    "description": "Indicates whether the journal line should affect the tax return"
+                  }
+                },
+                "required": [
+                  "ledger_account_id",
+                  "debit",
+                  "credit"
+                ]
+              }
+            }
+          },
+          "required": [
+            "date",
+            "reference",
+            "journal_lines"
+          ]
+        }
+      },
+      "required": [
+        "journal"
+      ],
+      "description": "Creates a Journal"
+    },
+    "LedgerEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the ledger entry"
+        },
+        "credit": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit amount of the ledger entry"
+        },
+        "debit": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit amount of the ledger entry"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The ledger account of the ledger entry"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Transaction",
+          "description": "The ledger entry transaction record"
+        },
+        "contact": {
+          "$ref": "#/definitions/Contact",
+          "description": "The contact for the ledger entry"
+        },
+        "deleted": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger entry has been deleted or not"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/TaxRate",
+          "description": "The ledger entry tax rate"
+        },
+        "description": {
+          "type": "string",
+          "description": "The ledger entry description"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+      "x-sage-menusection": "Financial Accounts & Entries"
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the transaction"
+        },
+        "deleted": {
+          "type": "boolean",
+          "description": "Indicates whether the transaction has been deleted"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The transaction reference"
+        },
+        "total": {
+          "type": "number",
+          "format": "double",
+          "description": "The transaction total in the base currency"
+        },
+        "total_in_transaction_currency": {
+          "type": "number",
+          "format": "double",
+          "description": "The transaction total in the transaction's origin's currency. This is null for some origin types."
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The contact for the transaction"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type"
+        },
+        "origin": {
+          "$ref": "#/definitions/TransactionOrigin",
+          "description": "The original entity that generated the transaction"
+        },
+        "audit_trail_id": {
+          "type": "string",
+          "description": "The original entity that generated the transaction"
+        },
+        "number_of_attachments": {
+          "type": "string",
+          "description": "The number of attachments related to the transaction"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "TransactionOrigin": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "due_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The due date of the associated item, e.g. an invoice\nThis attribute is only part of the response when the GET paremeter `expand_origin=true` is set in the request URL. Even then, it is only available on transaction origins found at the following endpoints: [\"/contact_opening_balance\", \"/purchase_corrective_invoice\", \"/sales_corrective_invoice\", \"/purchase_credit_note\", \"/purchase_invoice\", \"/purchase_quick_entry\", \"/sales_credit_note\", \"/sales_estimate\", \"/sales_invoice\", \"/sales_quick_entry\", \"/sales_quote\"]. There are other resources, e.g. bank transfers, bank opening balances, or journals, which--though possibly origins of a transaction--can never have this attribute."
+        },
+        "outstanding_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The outstanding amount of the associated item, e.g. an invoice\nThis attribute is only part of the response when the GET paremeter `expand_origin=true` is set in the request URL. Even then, it is only available on transaction origins found at the following endpoints: [\"/contact_opening_balance\", \"/purchase_corrective_invoice\", \"/sales_corrective_invoice\", \"/purchase_credit_note\", \"/purchase_invoice\", \"/purchase_quick_entry\", \"/sales_credit_note\", \"/sales_estimate\", \"/sales_invoice\", \"/sales_quick_entry\", \"/sales_quote\"]. There are other resources, e.g. bank transfers, bank opening balances, or journals, which--though possibly origins of a transaction--can never have this attribute."
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency of the transaction\nThis attribute is only part of the response when the GET paremeter `expand_origin=true` is set in the request URL. Even then, it is only available on transaction origins found at the following endpoints: [\"/contact_opening_balance\", \"/purchase_corrective_invoice\", \"/sales_corrective_invoice\", \"/purchase_credit_note\", \"/purchase_invoice\", \"/purchase_quick_entry\", \"/sales_credit_note\", \"/sales_estimate\", \"/sales_invoice\", \"/sales_quick_entry\", \"/sales_quote\"]. There are other resources, e.g. bank transfers, bank opening balances, or journals, which--though possibly origins of a transaction--can never have this attribute."
+        },
+        "status": {
+          "$ref": "#/definitions/Base",
+          "description": "The status of the associated item, e.g. an invoice\nThis attribute is only part of the response when the GET paremeter `expand_origin=true` is set in the request URL. Even then, it is only available on transaction origins found at the following endpoints: [\"/contact_opening_balance\", \"/purchase_corrective_invoice\", \"/sales_corrective_invoice\", \"/purchase_credit_note\", \"/purchase_invoice\", \"/purchase_quick_entry\", \"/sales_credit_note\", \"/sales_estimate\", \"/sales_invoice\", \"/sales_quick_entry\", \"/sales_quote\"]. There are other resources, e.g. bank transfers, bank opening balances, or journals, which--though possibly origins of a transaction--can never have this attribute."
+        },
+        "sent": {
+          "type": "boolean",
+          "description": "Indicates whether the associated item, e.g. an invoice, has been sent. This attribute is only present for sales items (not purchase)\nThis attribute is only part of the response when the GET paremeter `expand_origin=true` is set in the request URL. Even then, it is only available on transaction origins found at the following endpoints: [\"/contact_opening_balance\", \"/purchase_corrective_invoice\", \"/sales_corrective_invoice\", \"/purchase_credit_note\", \"/purchase_invoice\", \"/purchase_quick_entry\", \"/sales_credit_note\", \"/sales_estimate\", \"/sales_invoice\", \"/sales_quick_entry\", \"/sales_quote\"]. There are other resources, e.g. bank transfers, bank opening balances, or journals, which--though possibly origins of a transaction--can never have this attribute."
+        }
+      }
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "The link path"
+        },
+        "rel": {
+          "type": "string",
+          "description": "The relationship of the link to the resource"
+        },
+        "type": {
+          "type": "string",
+          "description": "The content-type of the link"
+        }
+      }
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The contact balance"
+        },
+        "contact_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Base"
+          },
+          "description": "The type of the contact. It has to be either CUSTOMER or VENDOR"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The contact's full name or business name"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Unique reference for the contact"
+        },
+        "default_sales_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default sales ledger account for the contact <br><i>Customers only</i>"
+        },
+        "default_sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default sales tax rate for the contact <br><i>Customers only</i>"
+        },
+        "default_purchase_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default purchase ledger account for the contact <br><i>Vendors only</i>"
+        },
+        "tax_number": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The VAT registration number of the contact. The format will be validated."
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "The notes for the contact"
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The locale for the contact"
+        },
+        "main_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The main address associated with the contact"
+        },
+        "delivery_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The delivery address <br><i>Customers only</i>"
+        },
+        "main_contact_person": {
+          "$ref": "#/definitions/ContactPerson",
+          "description": "The main contact person of the contact."
+        },
+        "bank_account_details": {
+          "$ref": "#/definitions/BankAccountDetails",
+          "description": "The account details for the contact's bank account"
+        },
+        "credit_limit": {
+          "type": "number",
+          "format": "double",
+          "description": "Custom credit limit amount for the contact <br><i>not applicable to Start</i>"
+        },
+        "credit_days": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Custom credit days for the contact.<br>\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_days'/'vendor_credit_days' as default/fallback according\nto your use case.\n"
+        },
+        "credit_terms": {
+          "type": "string",
+          "enum": [
+            "month_end_invoice",
+            "date_from_invoice",
+            "immediate_invoice",
+            "month_end_payment",
+            "date_from_payment",
+            "immediate_payment"
+          ],
+          "description": "Credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice, month_end_payment,\ndate_from_payment, immediate_payment are valid values.\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_terms'/'vendor_credit_terms' as default.\n"
+        },
+        "credit_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Custom terms and conditions for the contact. If set will override global /invoice_settings\ndefault terms and conditions.\n<br><i>Customers only</i>\n"
+        },
+        "product_sales_price_type": {
+          "$ref": "#/definitions/Base",
+          "description": "All default product_sales_price_type defaults.\n<a\n  href=\"https://developer.sage.com/api/accounting/guides/inventory/#product-sales-prices--service-rates\"\n  target=\"_blank\">Learn more about sales price types\n</a>\n<br><i>Customers only, not applicable to Start<i>\n"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing contacts from external sources"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency that the contact trades in <br><i>not applicable to Start</i>"
+        },
+        "aux_reference": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "Auxiliary reference. Used for German \"Kreditorennummer\" and \"Debitorennummer\".\n<br>\n<a href=\"https://developer.sage.com/accounting/reference/settings/#tag/Datev-Settings\">\n  See Datev Settings endpoint reference\n</a>\n"
+        },
+        "registered_number": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The registered number of the contact's business. Only used for German businesses and represents the \"Steuernummer\" there (not the \"USt-ID\")."
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the contact can be deleted successfully"
+        },
+        "tax_treatment": {
+          "$ref": "#/definitions/ContactTaxTreatment",
+          "description": "The tax treatment - indicates which tax rules to apply for a contact"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address for the given contact"
+        },
+        "tax_calculation": {
+          "type": "string",
+          "description": "<b>France:</b> The tax calculation method used to define tax\ntreatment <i>Vendors only</i>\n<br>\n<b>Spain:</b> Defines if contact is a retailer and tax is subject\nto Recargo de Equivalencia <i>Customers only</i>\n<b>United Kingdom:</b> Defines if contact tax treatment is domestic reverse\ncharge <i>Customers & Suppliers</i>\n"
+        },
+        "auxiliary_account": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "Auxiliary account - used when auxiliary accounting is enabled in business settings.\n<br><i>Available only in Spain and France</i>\n"
+        },
+        "gdpr_obfuscated": {
+          "type": "boolean",
+          "description": "General Data Protection Regulation (GDPR) came into effect on 25th May 2018. It introduces new rules for how business owners manage their contacts' personal data. When this field returns 'true', means that the contact has been requested to be obfuscated and you can not create any artifact (sales invoices, purchase invoices, ...) but you can still check previously created artifacts."
+        },
+        "system": {
+          "type": "boolean",
+          "description": "Identifies a contact as being a system contact used for processing specific transaction types and reserved specifically for those transaction types such as tax return payments/refunds."
+        },
+        "has_unfinished_recurring_invoices": {
+          "type": "boolean",
+          "description": "Indicates whether the contact is associated with any unfinished recurring invoices"
+        },
+        "cis_registered": {
+          "type": "boolean",
+          "description": "Identifies a contact as being registered as CIS.<br><i>only applicable to UK business</i>"
+        },
+        "ni_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Northern Ireland."
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "Identifies a contact as being active"
+        },
+        "gb_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Great Britain."
+        },
+        "cis_settings": {
+          "$ref": "#/definitions/ContactCisSettings",
+          "description": "The CIS Settings for the contact"
+        },
+        "destination_vat_blocking": {
+          "type": "boolean",
+          "description": "Identifies a contact should be blocked due to destination vat"
+        }
+      }
+    },
+    "Address": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "address_line_1": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The first line of the address"
+        },
+        "address_line_2": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address town/city"
+        },
+        "postal_code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The address postal code/zipcode"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The address country"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The related bank account of the address, if the address belongs to a bank account."
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The related contact of the address, if the address belongs to a contact."
+        },
+        "address_type": {
+          "$ref": "#/definitions/Base",
+          "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The custom name of the address"
+        },
+        "region": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address state/province/region"
+        },
+        "country_group": {
+          "$ref": "#/definitions/Base",
+          "description": "Country group allows countries to be filtered for selection.<br>Set it to e.g. EU if the address is within the EEC."
+        },
+        "is_main_address": {
+          "type": "boolean",
+          "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+        }
+      }
+    },
+    "ContactPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "contact_person_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContactPersonType"
+          },
+          "description": "The contact person types for the contact person. Get possible types by retrieving\n<a href=\"https://developer.sage.com/accounting/reference/contacts/#operation/getContactPersonTypes\">\n  all available contact person types\n</a>.\n"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the contact person"
+        },
+        "job_title": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The job title of the contact person"
+        },
+        "telephone": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The telephone number of the contact person"
+        },
+        "mobile": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The mobile number of the contact person"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address of the contact person"
+        },
+        "fax": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The fax number of the contact person"
+        },
+        "is_main_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+        },
+        "address": {
+          "$ref": "#/definitions/Base",
+          "description": "The address of the contact person"
+        },
+        "is_preferred_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this contact person is a preferred contact"
+        }
+      }
+    },
+    "ContactPersonType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "BankAccountDetails": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string",
+          "description": "The account name"
+        },
+        "account_number": {
+          "type": "string",
+          "description": "The account number"
+        },
+        "sort_code": {
+          "type": "string",
+          "description": "The sort code"
+        },
+        "bic": {
+          "type": "string",
+          "description": "The bic"
+        },
+        "iban": {
+          "type": "string",
+          "description": "The iban"
+        }
+      }
+    },
+    "ContactTaxTreatment": {
+      "type": "object",
+      "properties": {
+        "home_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where home country tax rules should be applied"
+        },
+        "eu_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates a contact where EC tax rules should be applied"
+        },
+        "eu_not_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates an EU contact without a tax number - home tax rules should be applied"
+        },
+        "rest_of_world_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where rest of world tax rules should be applied"
+        },
+        "is_importer": {
+          "type": "boolean",
+          "description": "Indicates a contact where import rules should be appliedOnly used for suppliers and FR, ES, IE and UK businesses"
+        }
+      }
+    },
+    "ContactCisSettings": {
+      "type": "object",
+      "properties": {
+        "registered_cis_name": {
+          "type": "string",
+          "description": "the CIS name for the Contact"
+        },
+        "subcontractor_verification_number": {
+          "type": "string",
+          "description": "The CIS Verification number for the contact"
+        },
+        "deduction_rate": {
+          "$ref": "#/definitions/ContactCisDeductionRate",
+          "description": "The CIS Deduction rate for the contact"
+        }
+      }
+    },
+    "ContactCisDeductionRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "TaxRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the tax rate"
+        },
+        "agency": {
+          "type": "string",
+          "description": "The agency name (US Only)"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The current tax rate percentage"
+        },
+        "percentages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxRatePercentage"
+          },
+          "description": "The tax rate percentage and date ranges they apply to"
+        },
+        "is_visible": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is displayed in the application"
+        },
+        "retailer": {
+          "type": "boolean",
+          "description": "Indicates if tax rate is a retailer rate or not"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be deleted"
+        },
+        "is_combined_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is made up of component tax rates"
+        },
+        "component_tax_rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComponentTaxRate"
+          },
+          "description": "The component tax rates which make up a combined rate"
+        }
+      }
+    },
+    "TaxRatePercentage": {
+      "type": "object",
+      "properties": {
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The percentage of the rate"
+        },
+        "from_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The start date for the rate"
+        },
+        "to_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The end date for the rate"
+        }
+      }
+    },
+    "ComponentTaxRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the tax rate"
+        },
+        "agency": {
+          "type": "string",
+          "description": "The agency name (US Only)"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The current tax rate percentage"
+        },
+        "percentages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxRatePercentage"
+          },
+          "description": "The tax rate percentage and date ranges they apply to"
+        },
+        "is_visible": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is displayed in the application"
+        },
+        "retailer": {
+          "type": "boolean",
+          "description": "Indicates if tax rate is a retailer rate or not"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be deleted"
+        },
+        "is_combined_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is made up of component tax rates"
+        }
+      }
+    },
+    "UnpostedTransaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unposted transaction id"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the transaction"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "The date when the transaction was created as RFC3339 compliant string"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "The date when the transaction was updated as RFC3339 compliant string"
+        },
+        "transaction_date": {
+          "type": "string",
+          "description": "The string of the transactions transaction date"
+        },
+        "transaction_type": {
+          "type": "string",
+          "description": "The string of the transactions transaction type"
+        },
+        "description": {
+          "type": "string",
+          "description": "The string of the transactions description"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/BankAccount",
+          "description": "The bank account"
+        },
+        "amount": {
+          "type": "string",
+          "description": "The string representation of a decimal value of the transactions amount"
+        },
+        "bank_feed_category_name": {
+          "type": "string",
+          "description": "The string of the transactions bank feed category"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Journals`: Read Only, Full Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "BankAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "bank_account_details": {
+          "$ref": "#/definitions/BankAccountDetails",
+          "description": "The account details for the bank account"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account for the bank account"
+        },
+        "bank_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The bank account type for the bank account"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The bank account balance"
+        },
+        "main_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The main address for the bank account"
+        },
+        "main_contact_person": {
+          "$ref": "#/definitions/BankAccountContact",
+          "description": "The main contact for the bank account"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the bank account"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether or not the bank account can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether or not the bank account can be deleted"
+        },
+        "default_payment_method": {
+          "$ref": "#/definitions/Base",
+          "description": "The default payment method of the bank account"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the bank ledger account'\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "Indicates whether the Bank account is active or inactive."
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency for the bank account"
+        }
+      }
+    },
+    "BankAccountContact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the contact"
+        },
+        "job_title": {
+          "type": "string",
+          "description": "The job title of the contact"
+        },
+        "telephone": {
+          "type": "string",
+          "description": "The telephone of the contact"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "The mobile of the contact"
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of the contact"
+        },
+        "fax": {
+          "type": "string",
+          "description": "The fax number of the contact"
+        }
+      }
+    }
+  }
+}

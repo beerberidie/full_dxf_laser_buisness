@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Login History - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📊 System Login History</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('admin.users') }}" class="btn btn-secondary">
+            ← Back to Users
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>All Login Attempts</h2>
+    </div>
+    <div class="card-body">
+        {% if pagination.items %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Username</th>
+                    <th>User</th>
+                    <th>Status</th>
+                    <th>IP Address</th>
+                    <th>User Agent</th>
+                    <th>Failure Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in pagination.items %}
+                <tr>
+                    <td>{{ entry.login_time|datetime }}</td>
+                    <td>
+                        <strong>{{ entry.username }}</strong>
+                    </td>
+                    <td>
+                        {% if entry.user %}
+                            <a href="{{ url_for('admin.user_detail', id=entry.user.id) }}">
+                                {{ entry.user.username }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entry.success %}
+                            <span class="badge badge-success">Success</span>
+                        {% else %}
+                            <span class="badge badge-danger">Failed</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.ip_address or '-' }}</td>
+                    <td>
+                        <small>{{ entry.user_agent[:50] + '...' if entry.user_agent and entry.user_agent|length > 50 else (entry.user_agent or '-') }}</small>
+                    </td>
+                    <td>
+                        {% if not entry.success %}
+                            <span class="text-danger">{{ entry.failure_reason or 'Unknown' }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
+        <div class="pagination">
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('admin.login_history', page=pagination.prev_num) }}" class="btn btn-sm btn-secondary">
+                    ← Previous
+                </a>
+            {% endif %}
+            
+            <span class="pagination-info">
+                Page {{ pagination.page }} of {{ pagination.pages }}
+                ({{ pagination.total }} total entries)
+            </span>
+            
+            {% if pagination.has_next %}
+                <a href="{{ url_for('admin.login_history', page=pagination.next_num) }}" class="btn btn-sm btn-secondary">
+                    Next →
+                </a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <p class="text-muted">No login history available.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.pagination-info {
+    color: #666;
+    font-size: 14px;
+}
+</style>
+{% endblock %}
+

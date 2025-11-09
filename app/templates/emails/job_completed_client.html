@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Completed - {{ project.project_code }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #28a745;
+            margin: 0;
+            font-size: 24px;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .celebration {
+            text-align: center;
+            font-size: 48px;
+            margin: 20px 0;
+        }
+        .success-box {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .success-box h2 {
+            color: #155724;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .project-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .project-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .project-details td {
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .project-details td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #495057;
+        }
+        .project-details tr:last-child td {
+            border-bottom: none;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background-color: #218838;
+        }
+        .progress-bar {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .next-steps {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .next-steps h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .contact-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">⚡ Laser OS</div>
+            <h1>Your Project is Complete!</h1>
+        </div>
+
+        <div class="celebration">🎉 ✨ 🎊</div>
+
+        <p>Dear {{ client.name }},</p>
+
+        <div class="success-box">
+            <h2>✅ Project Completed Successfully!</h2>
+            <p>Excellent news! We've completed <strong>{{ project.name }}</strong> and it's ready for collection or delivery.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill">
+                ✓ 100% Complete
+            </div>
+        </div>
+
+        <div class="project-details">
+            <table>
+                <tr>
+                    <td>Project Code:</td>
+                    <td><strong>{{ project.project_code }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Project Name:</td>
+                    <td>{{ project.name }}</td>
+                </tr>
+                <tr>
+                    <td>Status:</td>
+                    <td><strong style="color: #28a745;">Completed</strong></td>
+                </tr>
+                <tr>
+                    <td>Completed:</td>
+                    <td>{{ project.completion_date.strftime('%d %B %Y') if project.completion_date else 'Today' }}</td>
+                </tr>
+                {% if project.final_price %}
+                <tr>
+                    <td>Final Price:</td>
+                    <td><strong>R{{ "%.2f"|format(project.final_price) }}</strong></td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <div class="next-steps">
+            <h3>📦 Next Steps - Collection/Delivery</h3>
+            <p><strong>Please arrange to collect your completed project or confirm delivery details.</strong></p>
+        </div>
+
+        <p><strong>What you need to know:</strong></p>
+        <ul>
+            <li>Your project has passed our quality inspection</li>
+            <li>All items are packaged and ready for collection</li>
+            <li>Please contact us to arrange a convenient collection time</li>
+            <li>Bring your project code ({{ project.project_code }}) when collecting</li>
+        </ul>
+
+        <div style="text-align: center;">
+            <a href="{{ project_url }}" class="cta-button">View Project Details</a>
+        </div>
+
+        <div class="contact-info">
+            <p><strong>Arrange Collection or Delivery:</strong></p>
+            <p>📧 Email: {{ company_email }}</p>
+            <p>📞 Phone: {{ company_phone }}</p>
+            <p>🕒 Collection Hours: Monday - Friday, 8:00 AM - 5:00 PM</p>
+            <p>📍 Address: {{ company_address }}</p>
+        </div>
+
+        <p>Thank you for choosing us for your laser cutting project! We hope you're delighted with the results.</p>
+
+        <p><em>We'd love to hear your feedback! If you're happy with our service, please consider leaving us a review or referring us to others.</em></p>
+
+        <div class="footer">
+            <p>This is an automated completion notification from Laser OS.</p>
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

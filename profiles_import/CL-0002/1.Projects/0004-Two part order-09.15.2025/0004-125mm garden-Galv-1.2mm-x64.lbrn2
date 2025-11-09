@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightBurnProject AppVersion="2.0.03" DeviceName="No Machine" FormatVersion="1" MaterialHeight="0" MirrorX="False" MirrorY="False">
+    <Thumbnail Source="iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAACXBIWXMAABJ0AAASdAHeZh94AAAGIElEQVR4nO3cvUvVfx/H8XceG5Io0O6GTAmCVikSS7rBoYKm9oiiv0BokKLFlqAlipaWBv8AaahJhKLhFBQRNdSSdoMRRdTQjZi/Ta7D74Jr6NITvR6P7XyOw2s5T758PLpqcXFxsYBIHe0eALSPAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIFjnw4cP69KlSzUwMNDuLcAKefToUZ07d646X79+Xc1ms3bu3NnuTcAKaTab9ebNm+rcvHlz9fX11cWLF9u9CVghU1NTtWnTptY7gIWFhXbtAZbZ5ORkff36teWsJQAnT56sRqNRN2/eXMldwDK7fv16HT9+vM6cOdNy3hKAZrNZv379qunp6RUdByyve/fu1apVq+r58+ct553/+aLZbNbTp09r//79KzoOWF4TExP19u3bunHjRst5SwC6u7vrwIEDKzoMltv8/HytXr263TPaqtFo1N27d/917otA/8Xly5fr4MGD9fHjx3ZP4Te8ePGi1q1bV6Ojo+2e8seKDsDt27drdHS05bcfr169qrNnz9b9+/draGiojev4XYcOHaodO3bUtWvX6tOnT0vnnz9/rv7+/hofH2/juj9DbAAeP35cx44dqytXrtTu3buXznt7e+v8+fM1MDBQU1NTbVzI77p161Y9e/asTp8+XevXr18637t3b61Zs6YuXLhQs7OzbVzYfrEB6O3trcOHD9fWrVtbvgTVaDRqfHy8Hjx4UL29vW1cyO/atWtXff/+va5evVqNRmPpfGxsrF6+fFnDw8O1du3aNi5sv87//SN/pw0bNtSdO3faPYMV0NXV1fL6xIkTdeTIkero6Kju7u42rfoztDwBzM3N1eTkZM3Pz7drD6yIjRs3Vk9PT7tnrJhv377Vnj176smTJy3nS08AX758qf7+/vr582dt2bKl3r17t+IjgeWxffv26urqqqGhofrw4cPS+dITwPz8fA0ODlZXV1cdPXq0FhcX2zIU+P9aWFiokZGRmpmZqYGBgfrx48fSe0tPAD09PTU9PV0dHbH3gvBXajQaNTExUadOnarBwcGWi8+WS0Affvh7jYyM/OvMJx6CCQAEEwAIJgAQTAAgmABAMAGAYAIAwTrn5uZqZmamxsbG2r0FWCGzs7P1/v376uzr66t9+/a1/MME4O82PDxc27Ztq1WL/uoHYrkDgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYAIAwQQAggkABBMACCYAEEwAIJgAQDABgGACAMEEAIIJAAQTAAgmABBMACCYAEAwAYBgAgDBBACCCQAEEwAIJgAQTAAgmABAMAGAYP8AkurddUENeiEAAAAASUVORK5CYII="/>
+    <VariableText>
+        <Start Value="0"/>
+        <End Value="999"/>
+        <Current Value="0"/>
+        <Increment Value="1"/>
+        <AutoAdvance Value="0"/>
+    </VariableText>
+    <UIPrefs>
+        <Optimize_ByLayer Value="0"/>
+        <Optimize_ByGroup Value="-1"/>
+        <Optimize_ByPriority Value="1"/>
+        <Optimize_WhichDirection Value="0"/>
+        <Optimize_InnerToOuter Value="1"/>
+        <Optimize_ByDirection Value="0"/>
+        <Optimize_ReduceTravel Value="1"/>
+        <Optimize_HideBacklash Value="0"/>
+        <Optimize_ReduceDirChanges Value="0"/>
+        <Optimize_ChooseCorners Value="0"/>
+        <Optimize_AllowReverse Value="1"/>
+        <Optimize_RemoveOverlaps Value="0"/>
+        <Optimize_OptimalEntryPoint Value="0"/>
+        <Optimize_OverlapDist Value="0.025"/>
+    </UIPrefs>
+    <CutSetting type="Cut">
+        <index Value="0"/>
+        <name Value="C00"/>
+        <maxPower Value="20"/>
+        <maxPower2 Value="20"/>
+        <speed Value="100"/>
+        <priority Value="0"/>
+    </CutSetting>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 1205 105.05005</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 1205 58.550049</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 912 78.5</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 883 84</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 303 78.5</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 332 84</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 15 105.05005</XForm>
+    </Shape>
+    <Shape Type="Ellipse" CutIndex="0" Rx="3" Ry="3">
+        <XForm>1 0 0 1 15 58.550049</XForm>
+    </Shape>
+    <Shape Type="Rect" CutIndex="0" W="1220" H="125" Cr="0">
+        <XForm>1 0 0 1 610 62.5</XForm>
+    </Shape>
+    <Notes ShowOnLoad="0" Notes=""/>
+</LightBurnProject>

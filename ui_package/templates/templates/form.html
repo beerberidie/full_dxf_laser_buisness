@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}{% if template %}Edit Template{% else %}New Template{% endif %} - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% if template %}Edit Template{% else %}New Template{% endif %}</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('templates.list_templates') }}" class="btn btn-secondary">
+            <i class="icon">←</i> Back to Templates
+        </a>
+    </div>
+</div>
+
+<div class="form-container">
+    <form method="post" class="template-form">
+        <!-- Template Name -->
+        <div class="form-group">
+            <label for="name" class="required">Template Name</label>
+            <input 
+                type="text" 
+                id="name" 
+                name="name" 
+                value="{{ template.name if template else '' }}" 
+                required
+                placeholder="e.g., Collection Ready, Quote Sent"
+                maxlength="100"
+            >
+            <small class="form-text">A descriptive name for this template</small>
+        </div>
+
+        <!-- Template Type -->
+        <div class="form-group">
+            <label for="template_type" class="required">Template Type</label>
+            <select id="template_type" name="template_type" required>
+                <option value="">Select a type...</option>
+                {% for type_value, type_label in template_types %}
+                <option value="{{ type_value }}" {% if template and template.template_type == type_value %}selected{% endif %}>
+                    {{ type_label }}
+                </option>
+                {% endfor %}
+            </select>
+            <small class="form-text">Category for this template</small>
+        </div>
+
+        <!-- Subject Template -->
+        <div class="form-group">
+            <label for="subject_template" class="required">Subject Template</label>
+            <input 
+                type="text" 
+                id="subject_template" 
+                name="subject_template" 
+                value="{{ template.subject_template if template else '' }}" 
+                required
+                placeholder="e.g., Your order {{project_code}} is ready for collection"
+                maxlength="500"
+            >
+            <small class="form-text">Email subject line with placeholders</small>
+        </div>
+
+        <!-- Body Template -->
+        <div class="form-group">
+            <label for="body_template" class="required">Body Template</label>
+            <textarea 
+                id="body_template" 
+                name="body_template" 
+                rows="12" 
+                required
+                placeholder="Dear {{client_name}},&#10;&#10;Your order {{project_code}} is ready for collection.&#10;&#10;Best regards,&#10;{{company_name}}"
+            >{{ template.body_template if template else '' }}</textarea>
+            <small class="form-text">Email body with placeholders</small>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+                id="description" 
+                name="description" 
+                rows="3"
+                placeholder="Optional description of when to use this template"
+            >{{ template.description if template else '' }}</textarea>
+            <small class="form-text">Optional notes about this template</small>
+        </div>
+
+        <!-- Active Status -->
+        <div class="form-group">
+            <label class="checkbox-label">
+                <input 
+                    type="checkbox" 
+                    id="is_active" 
+                    name="is_active"
+                    {% if not template or template.is_active %}checked{% endif %}
+                >
+                <span>Active (available for use)</span>
+            </label>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if template %}Update Template{% else %}Create Template{% endif %}
+            </button>
+            <a href="{{ url_for('templates.list_templates') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+
+    <!-- Placeholders Reference -->
+    <div class="placeholders-reference">
+        <h3>Available Placeholders</h3>
+        <p class="text-muted">Click a placeholder to copy it to your clipboard</p>
+        
+        <div class="placeholder-categories">
+            <!-- System Placeholders -->
+            <div class="placeholder-category">
+                <h4>System</h4>
+                <div class="placeholder-list">
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('company_name')">
+                        <code>{{company_name}}</code>
+                        <span class="placeholder-desc">Your company name</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('current_date')">
+                        <code>{{current_date}}</code>
+                        <span class="placeholder-desc">Current date</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('current_time')">
+                        <code>{{current_time}}</code>
+                        <span class="placeholder-desc">Current time</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Client Placeholders -->
+            <div class="placeholder-category">
+                <h4>Client</h4>
+                <div class="placeholder-list">
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('client_name')">
+                        <code>{{client_name}}</code>
+                        <span class="placeholder-desc">Client company name</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('client_code')">
+                        <code>{{client_code}}</code>
+                        <span class="placeholder-desc">Client code</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('client_contact')">
+                        <code>{{client_contact}}</code>
+                        <span class="placeholder-desc">Contact person</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('client_email')">
+                        <code>{{client_email}}</code>
+                        <span class="placeholder-desc">Client email</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('client_phone')">
+                        <code>{{client_phone}}</code>
+                        <span class="placeholder-desc">Client phone</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Project Placeholders -->
+            <div class="placeholder-category">
+                <h4>Project</h4>
+                <div class="placeholder-list">
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('project_code')">
+                        <code>{{project_code}}</code>
+                        <span class="placeholder-desc">Project code</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('project_name')">
+                        <code>{{project_name}}</code>
+                        <span class="placeholder-desc">Project name</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('project_status')">
+                        <code>{{project_status}}</code>
+                        <span class="placeholder-desc">Project status</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('collection_date')">
+                        <code>{{collection_date}}</code>
+                        <span class="placeholder-desc">Collection date</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('project_quantity')">
+                        <code>{{project_quantity}}</code>
+                        <span class="placeholder-desc">Quantity</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quote/Invoice Placeholders -->
+            <div class="placeholder-category">
+                <h4>Quote & Invoice</h4>
+                <div class="placeholder-list">
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('quote_total')">
+                        <code>{{quote_total}}</code>
+                        <span class="placeholder-desc">Quote total</span>
+                    </button>
+                    <button type="button" class="placeholder-btn" onclick="copyPlaceholder('invoice_total')">
+                        <code>{{invoice_total}}</code>
+                        <span class="placeholder-desc">Invoice total</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyPlaceholder(placeholder) {
+    const text = '{{' + placeholder + '}}';
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success feedback
+        const btn = event.target.closest('.placeholder-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span style="color: #28a745;">✓ Copied!</span>';
+        
+        setTimeout(function() {
+            btn.innerHTML = originalText;
+        }, 2000);
+    }).catch(function(err) {
+        alert('Failed to copy: ' + err);
+    });
+}
+</script>
+
+<style>
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    max-width: 1400px;
+}
+
+.template-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-group label.required::after {
+    content: ' *';
+    color: #dc3545;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    font-family: 'Courier New', monospace;
+    resize: vertical;
+}
+
+.form-text {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dee2e6;
+}
+
+.placeholders-reference {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    height: fit-content;
+    position: sticky;
+    top: 2rem;
+}
+
+.placeholders-reference h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.placeholder-categories {
+    margin-top: 1rem;
+}
+
+.placeholder-category {
+    margin-bottom: 1.5rem;
+}
+
+.placeholder-category h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.placeholder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.placeholder-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.5rem;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.placeholder-btn:hover {
+    background: #e7f3ff;
+    border-color: #007bff;
+}
+
+.placeholder-btn code {
+    font-family: 'Courier New', monospace;
+    color: #d63384;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.placeholder-desc {
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+@media (max-width: 1024px) {
+    .form-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .placeholders-reference {
+        position: static;
+    }
+}
+</style>
+{% endblock %}
+

@@ -21,11 +21,11 @@
         <div class="stat-label">Total Projects</div>
     </div>
     <div class="card stat-card">
-        <div class="stat-value">${{ "%.2f"|format(stats.total_value) }}</div>
+        <div class="stat-value">R{{ "%.2f"|format(stats.total_value) }}</div>
         <div class="stat-label">Total Project Value</div>
     </div>
     <div class="card stat-card">
-        <div class="stat-value">${{ "%.2f"|format(stats.avg_value_per_client) }}</div>
+        <div class="stat-value">R{{ "%.2f"|format(stats.avg_value_per_client) }}</div>
         <div class="stat-label">Avg Value per Client</div>
     </div>
 </div>
@@ -66,7 +66,7 @@
                         {{ data.active_projects }}
                         {% endif %}
                     </td>
-                    <td><strong>${{ "%.2f"|format(data.total_value) }}</strong></td>
+                    <td><strong>R{{ "%.2f"|format(data.total_value) }}</strong></td>
                     <td>{{ data.total_runs }}</td>
                     <td>{{ data.total_cut_hours }}</td>
                 </tr>
@@ -88,12 +88,13 @@
 .stat-value {
     font-size: 2rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--color-primary);
 }
 
 .stat-label {
-    color: var(--text-muted);
+    color: var(--text-secondary);
     margin-top: 0.5rem;
+    font-size: 0.875rem;
 }
 
 .badge-success {

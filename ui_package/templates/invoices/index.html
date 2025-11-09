@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <nav class="breadcrumb">
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <span>/</span>
+            <span>Invoices</span>
+        </nav>
+        <h1>Invoices</h1>
+    </div>
+    <div>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <a href="{{ url_for('invoices.new_invoice') }}" class="btn btn-primary">+ New Invoice</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>All Invoices ({{ invoices|length }})</h2>
+    </div>
+
+    {% if invoices %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Invoice #</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Due Date</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Balance</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td><a href="{{ url_for('invoices.detail', id=invoice.id) }}" class="link">{{ invoice.invoice_number }}</a></td>
+                <td>{{ invoice.client.name if invoice.client else '-' }}</td>
+                <td>{{ invoice.invoice_date.strftime('%Y-%m-%d') if invoice.invoice_date else '-' }}</td>
+                <td>{{ invoice.due_date.strftime('%Y-%m-%d') if invoice.due_date else '-' }}</td>
+                <td>R{{ "%.2f"|format(invoice.total_amount) }}</td>
+                <td>R{{ "%.2f"|format(invoice.amount_paid) }}</td>
+                <td>R{{ "%.2f"|format(invoice.balance_due) }}</td>
+                <td><span class="badge">{{ invoice.status }}</span></td>
+                <td>
+                    <a href="{{ url_for('invoices.detail', id=invoice.id) }}" class="btn btn-sm btn-secondary">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No invoices found.</p>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <p><a href="{{ url_for('invoices.new_invoice') }}" class="btn btn-primary">Create your first invoice</a></p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

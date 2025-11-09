@@ -288,10 +288,212 @@ function addFormValidation(form) {
 }
 
 // ============================================================================
+// Sidebar Navigation
+// ============================================================================
+
+/**
+ * Toggle expandable sidebar section
+ * @param {HTMLElement} element - The parent element that was clicked
+ */
+function toggleSidebarSection(element) {
+    const section = element.closest('.sidebar-expandable');
+    if (section) {
+        section.classList.toggle('expanded');
+
+        // Save state to localStorage
+        const sectionId = element.querySelector('.sidebar-text').textContent.trim();
+        const isExpanded = section.classList.contains('expanded');
+        localStorage.setItem(`sidebar-section-${sectionId}`, isExpanded);
+    }
+}
+
+/**
+ * Initialize sidebar toggle functionality
+ */
+function initSidebar() {
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const body = document.body;
+
+    if (!sidebarToggle || !sidebar) return;
+
+    // Load saved sidebar state from localStorage
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState === 'true') {
+        body.classList.add('sidebar-collapsed');
+    }
+
+    // Check if mobile
+    const isMobile = () => window.innerWidth <= 768;
+
+    // Toggle sidebar
+    sidebarToggle.addEventListener('click', function() {
+        if (isMobile()) {
+            // On mobile, toggle sidebar-open class
+            body.classList.toggle('sidebar-open');
+        } else {
+            // On desktop, toggle sidebar-collapsed class
+            body.classList.toggle('sidebar-collapsed');
+
+            // Save state to localStorage
+            const isCollapsed = body.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+        }
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(e) {
+        if (isMobile() && body.classList.contains('sidebar-open')) {
+            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                body.classList.remove('sidebar-open');
+            }
+        }
+    });
+
+    // Handle window resize
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (!isMobile()) {
+                // Remove mobile-specific class when resizing to desktop
+                body.classList.remove('sidebar-open');
+            }
+        }, 250);
+    });
+}
+
+// ============================================================================
+// File Upload Utilities
+// ============================================================================
+
+/**
+ * Update file count display when files are selected
+ * @param {HTMLInputElement} input - File input element
+ * @param {string} countElementId - ID of element to display count
+ */
+function updateFileCount(input, countElementId) {
+    const countElement = document.getElementById(countElementId);
+    if (!countElement) return;
+
+    const fileCount = input.files.length;
+
+    if (fileCount === 0) {
+        countElement.style.display = 'none';
+        countElement.textContent = '';
+    } else if (fileCount === 1) {
+        countElement.style.display = 'block';
+        countElement.textContent = `📎 1 file selected: ${input.files[0].name}`;
+    } else {
+        countElement.style.display = 'block';
+
+        // Calculate total size
+        let totalSize = 0;
+        for (let i = 0; i < input.files.length; i++) {
+            totalSize += input.files[i].size;
+        }
+
+        countElement.textContent = `📎 ${fileCount} files selected (Total: ${formatFileSize(totalSize)})`;
+    }
+}
+
+/**
+ * Validate file upload before submission
+ * @param {HTMLInputElement} input - File input element
+ * @param {number} maxSizeMB - Maximum file size in MB (default: 50)
+ * @param {Array} allowedExtensions - Array of allowed extensions (e.g., ['.pdf', '.jpg'])
+ * @returns {Object} Validation result with {valid: boolean, errors: Array}
+ */
+function validateFileUpload(input, maxSizeMB = 50, allowedExtensions = null) {
+    const errors = [];
+    const files = input.files;
+
+    if (files.length === 0) {
+        errors.push('No files selected');
+        return { valid: false, errors };
+    }
+
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Check file size
+        if (file.size > maxSizeBytes) {
+            errors.push(`${file.name}: File too large (${formatFileSize(file.size)}). Maximum: ${maxSizeMB} MB`);
+        }
+
+        // Check file extension if specified
+        if (allowedExtensions && allowedExtensions.length > 0) {
+            const fileName = file.name.toLowerCase();
+            const hasValidExtension = allowedExtensions.some(ext =>
+                fileName.endsWith(ext.toLowerCase())
+            );
+
+            if (!hasValidExtension) {
+                errors.push(`${file.name}: Invalid file type. Allowed: ${allowedExtensions.join(', ')}`);
+            }
+        }
+    }
+
+    return {
+        valid: errors.length === 0,
+        errors: errors
+    };
+}
+
+/**
+ * Show file upload progress (for future AJAX uploads)
+ * @param {number} percent - Upload progress percentage (0-100)
+ * @param {string} progressElementId - ID of progress element
+ */
+function updateUploadProgress(percent, progressElementId) {
+    const progressElement = document.getElementById(progressElementId);
+    if (!progressElement) return;
+
+    progressElement.style.display = 'block';
+    progressElement.innerHTML = `
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: ${percent}%"
+                 aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
+                ${percent}%
+            </div>
+        </div>
+    `;
+
+    if (percent >= 100) {
+        setTimeout(() => {
+            progressElement.style.display = 'none';
+        }, 2000);
+    }
+}
+
+// ============================================================================
 // DOM Ready
 // ============================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize sidebar
+    initSidebar();
+
+    // Restore expandable section states from localStorage
+    document.querySelectorAll('.sidebar-expandable').forEach(section => {
+        const parentElement = section.querySelector('.sidebar-parent .sidebar-text');
+        if (parentElement) {
+            const sectionId = parentElement.textContent.trim();
+            const savedState = localStorage.getItem(`sidebar-section-${sectionId}`);
+
+            // If no saved state, check if section should be expanded based on active page
+            if (savedState === null) {
+                // Section will use the 'expanded' class from template if on active page
+            } else if (savedState === 'true') {
+                section.classList.add('expanded');
+            } else {
+                section.classList.remove('expanded');
+            }
+        }
+    });
+
     // Auto-dismiss flash messages after 5 seconds
     const flashMessages = document.querySelectorAll('.flash-messages .alert');
     flashMessages.forEach(message => {
@@ -299,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function() {
             message.remove();
         }, 5000);
     });
-    
+
     // Add form validation to all forms
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {

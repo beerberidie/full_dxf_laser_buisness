@@ -1,0 +1,784 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Attachments",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Attachments",
+      "description": "An Attachment is a file that is uploaded into Sage Accounting. It always belongs to an item in the application, e.g. a Sales Invoice or a Contact. This relation is defined in each Attachment via the Attachment Context and the Attachment Context Type, which you can also use to filter existing Attachments. You can retrieve all allowed context types via the Attachment Context Type endpoint. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/attachments/\" target=\"_blank\">Key Concepts: Attachments</a>"
+    },
+    {
+      "name": "Attachment Context Types",
+      "description": "Attachment Context Types define the available items you can upload Attachments to. The list includes all types of Invoices, Credit Notes, Payments and Contacts. If you want to upload Attachments that do not belong to one of these types, you can use the Context Type BUSINESS. <br> Attachment Context Types do not change often, so it makes sense to cache this data in your client if you need it. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/attachments/\" target=\"_blank\">Key Concepts: Attachments</a>"
+    }
+  ],
+  "paths": {
+    "/attachments": {
+      "get": {
+        "summary": "Returns all Attachments",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "attachment_context_id",
+            "description": "Use this to filter Attachments by attachment_context_id. Requires filtering by attachment_context_type_id as well",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attachment_context_type_id",
+            "description": "Use this to filter Attachments by attachment_context_type_id. Requires filtering by attachment_context_id as well",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "legacy_attachment_context_type",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "legacy_attachment_context_id",
+            "type": "integer",
+            "format": "int32",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Attachments changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Attachments deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Attachments per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Attachments",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Attachments (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Attachments",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 12,
+				"$page": 1,
+				"$next": "/attachments?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "7b098751-7dec-4cad-8f80-18306332c766",
+						"displayed_as": null,
+						"$path": "/attachments/7b098751-7dec-4cad-8f80-18306332c766"
+					},
+					{
+						"id": "ecffa907-de9d-4e96-ad2a-f74d9a99f67a",
+						"displayed_as": null,
+						"$path": "/attachments/ecffa907-de9d-4e96-ad2a-f74d9a99f67a"
+					},
+					{
+						"id": "3dd52f22-8138-4227-8329-b7de06700740",
+						"displayed_as": "Test of an upload via the API",
+						"$path": "/attachments/3dd52f22-8138-4227-8329-b7de06700740"
+					},
+					{
+						"id": "08ddd241-ebb4-4f66-9b9f-a622c4249881",
+						"displayed_as": null,
+						"$path": "/attachments/08ddd241-ebb4-4f66-9b9f-a622c4249881"
+					},
+					{
+						"id": "d60f376f-0165-4bd5-b06c-5c54b4ca606a",
+						"displayed_as": "Test of an upload via the API",
+						"$path": "/attachments/d60f376f-0165-4bd5-b06c-5c54b4ca606a"
+					},
+					{
+						"id": "ef67366f-079c-4d17-acf9-662a2fba0200",
+						"displayed_as": "Test of an upload via the API",
+						"$path": "/attachments/ef67366f-079c-4d17-acf9-662a2fba0200"
+					},
+					{
+						"id": "f543bb59-121e-43e2-b5f3-f3a89813a7f3",
+						"displayed_as": "Test of an upload via the API",
+						"$path": "/attachments/f543bb59-121e-43e2-b5f3-f3a89813a7f3"
+					},
+					{
+						"id": "4361cc27-320d-4b62-9daf-8c808607f44a",
+						"displayed_as": null,
+						"$path": "/attachments/4361cc27-320d-4b62-9daf-8c808607f44a"
+					},
+					{
+						"id": "6e2756d8-7606-429b-ade1-fa69593f45dc",
+						"displayed_as": "Test of an upload via the API",
+						"$path": "/attachments/6e2756d8-7606-429b-ade1-fa69593f45dc"
+					},
+					{
+						"id": "3a45b857-fdc8-4ed4-82ba-f87c155d10d5",
+						"displayed_as": "Test of an upload via the API",
+						"$path": "/attachments/3a45b857-fdc8-4ed4-82ba-f87c155d10d5"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Attachments"
+        ],
+        "operationId": "getAttachments"
+      },
+      "x-sage-pathtitle": "Attachment collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Attachment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Restricted Access, Full Access\n* Area: `Purchases`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Attachments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postAttachments"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Attachment",
+            "schema": {
+              "$ref": "#/definitions/Attachment"
+            }
+          }
+        },
+        "tags": [
+          "Attachments"
+        ],
+        "operationId": "postAttachments"
+      }
+    },
+    "/attachments/{key}": {
+      "get": {
+        "summary": "Returns a Attachment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Attachment Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Attachment (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Attachment",
+            "examples": {
+            "application/json":
+			{
+				"id": "d60f376f-0165-4bd5-b06c-5c54b4ca606a",
+				"displayed_as": "Test of an upload via the API",
+				"$path": "/attachments/d60f376f-0165-4bd5-b06c-5c54b4ca606a",
+				"mime_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"description": "Test of an upload via the API",
+				"file_extension": ".xlsx",
+				"transaction": null,
+				"file_size": 8699,
+				"file_name": "testy.xlsx",
+				"$file_path": "/attachments/d60f376f-0165-4bd5-b06c-5c54b4ca606a/file",
+				"attachment_context_type": {
+					"id": "SALES_INVOICE",
+					"displayed_as": "Sales Invoice",
+					"$path": "/attachment_context_types/SALES_INVOICE"
+				},
+				"attachment_context": null,
+				"is_public": true,
+				"created_at": "2022-11-21T11:30:50Z",
+				"updated_at": "2022-11-21T11:30:50Z"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Attachments"
+        ],
+        "operationId": "getAttachmentsKey"
+      },
+      "x-sage-pathtitle": "single Attachment resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Attachment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Restricted Access, Full Access\n* Area: `Purchases`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Attachment Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Attachments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putAttachments"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Attachment",
+            "schema": {
+              "$ref": "#/definitions/Attachment"
+            }
+          }
+        },
+        "tags": [
+          "Attachments"
+        ],
+        "operationId": "putAttachmentsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Attachment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Restricted Access, Full Access\n* Area: `Purchases`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Attachment Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Attachment"
+          }
+        },
+        "tags": [
+          "Attachments"
+        ],
+        "operationId": "deleteAttachmentsKey"
+      }
+    },
+    "/attachments/{key}/file": {
+      "get": {
+        "summary": "Returns an Attachment File",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept",
+            "description": "Specify the Accept header of the request.\nIt must always be set to `application/octet-stream` for retrieving files.\n",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Attachment Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an Attachment File",
+            "schema": {
+              "$ref": "#/definitions/Attachment"
+            }
+          }
+        },
+        "tags": [
+          "Attachments"
+        ],
+        "operationId": "getAttachmentsKeyFile"
+      },
+      "x-sage-pathtitle": "single Attachment resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/attachment_context_types": {
+      "get": {
+        "summary": "Returns all Attachment Context Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Attachment Context Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Attachment Context Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Attachment Context Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Attachment Context Types",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 13,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "BANK_TRANSFER",
+						"displayed_as": "Bank Transfer",
+						"$path": "/attachment_context_types/BANK_TRANSFER"
+					},
+					{
+						"id": "CONTACT",
+						"displayed_as": "Contact",
+						"$path": "/attachment_context_types/CONTACT"
+					},
+					{
+						"id": "JOURNAL",
+						"displayed_as": "Journal",
+						"$path": "/attachment_context_types/JOURNAL"
+					},
+					{
+						"id": "OTHER_PAYMENT",
+						"displayed_as": "Other Payment",
+						"$path": "/attachment_context_types/OTHER_PAYMENT"
+					},
+					{
+						"id": "PURCHASE_CORRECTIVE_INVOICE",
+						"displayed_as": "Purchase Corrective Invoice",
+						"$path": "/attachment_context_types/PURCHASE_CORRECTIVE_INVOICE"
+					},
+					{
+						"id": "PURCHASE_CREDIT_NOTE",
+						"displayed_as": "Purchase Credit Note",
+						"$path": "/attachment_context_types/PURCHASE_CREDIT_NOTE"
+					},
+					{
+						"id": "PURCHASE_INVOICE",
+						"displayed_as": "Purchase Invoice",
+						"$path": "/attachment_context_types/PURCHASE_INVOICE"
+					},
+					{
+						"id": "SALES_CORRECTIVE_INVOICE",
+						"displayed_as": "Sales Corrective Invoice",
+						"$path": "/attachment_context_types/SALES_CORRECTIVE_INVOICE"
+					},
+					{
+						"id": "SALES_CREDIT_NOTE",
+						"displayed_as": "Sales Credit Note",
+						"$path": "/attachment_context_types/SALES_CREDIT_NOTE"
+					},
+					{
+						"id": "SALES_ESTIMATE",
+						"displayed_as": "Sales Estimate",
+						"$path": "/attachment_context_types/SALES_ESTIMATE"
+					},
+					{
+						"id": "SALES_INVOICE",
+						"displayed_as": "Sales Invoice",
+						"$path": "/attachment_context_types/SALES_INVOICE"
+					},
+					{
+						"id": "SALES_QUOTE",
+						"displayed_as": "Sales Quote",
+						"$path": "/attachment_context_types/SALES_QUOTE"
+					},
+					{
+						"id": "BUSINESS",
+						"displayed_as": "Business",
+						"$path": "/attachment_context_types/BUSINESS"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Attachment Context Types"
+        ],
+        "operationId": "getAttachmentContextTypes"
+      },
+      "x-sage-pathtitle": "Attachment Context Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/attachment_context_types/{key}": {
+      "get": {
+        "summary": "Returns a Attachment Context Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Attachment Context Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Attachment Context Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Attachment Context Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "SALES_INVOICE",
+				"displayed_as": "Sales Invoice",
+				"$path": "/attachment_context_types/SALES_INVOICE"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Attachment Context Types"
+        ],
+        "operationId": "getAttachmentContextTypesKey"
+      },
+      "x-sage-pathtitle": "single Attachment Context Type resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "file": {
+          "type": "string",
+          "description": "The base64 encoded representation of the file"
+        },
+        "mime_type": {
+          "type": "string",
+          "description": "The mime type of the attachment"
+        },
+        "description": {
+          "type": "string",
+          "description": "The description of the attachment"
+        },
+        "file_extension": {
+          "type": "string",
+          "description": "The file extension of the attachment"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction the attachment belongs to"
+        },
+        "file_size": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The file size of the attachment in Bytes"
+        },
+        "file_name": {
+          "type": "string",
+          "description": "The file name of the attachment"
+        },
+        "$file_path": {
+          "type": "string",
+          "description": "The file path of the attachment"
+        },
+        "attachment_context_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The context type of the attachment"
+        },
+        "attachment_context": {
+          "$ref": "#/definitions/Base",
+          "description": "The context of the attachment"
+        },
+        "is_public": {
+          "type": "boolean",
+          "description": "Flag to determine whether the attachment should be visible to customers"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the attachment was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the attachment was last updated"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+      "x-sage-menusection": "Attachments"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "postAttachments": {
+      "type": "object",
+      "properties": {
+        "attachment": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The base64 encoded representation of the file"
+            },
+            "file_name": {
+              "type": "string",
+              "description": "The file name of the attachment"
+            },
+            "mime_type": {
+              "type": "string",
+              "description": "The mime type of the attachment"
+            },
+            "description": {
+              "type": "string",
+              "description": "The description of the attachment"
+            },
+            "file_extension": {
+              "type": "string",
+              "description": "The file extension of the attachment"
+            },
+            "transaction_id": {
+              "type": "string",
+              "description": "The ID of the Transaction."
+            },
+            "file_size": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The file size of the attachment in Bytes",
+              "minimum": 0,
+              "maximum": 2621440
+            },
+            "attachment_context_type_id": {
+              "type": "string",
+              "description": "The ID of the Attachment Context Type."
+            },
+            "attachment_context_id": {
+              "type": "string",
+              "description": "The ID of the Attachment Context."
+            },
+            "is_public": {
+              "type": "boolean",
+              "description": "Flag to determine whether the attachment should be visible to customers"
+            }
+          },
+          "required": [
+            "file",
+            "file_name",
+            "mime_type"
+          ]
+        }
+      },
+      "required": [
+        "attachment"
+      ],
+      "description": "Creates a Attachment"
+    },
+    "putAttachments": {
+      "type": "object",
+      "properties": {
+        "attachment": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "The base64 encoded representation of the file"
+            },
+            "file_name": {
+              "type": "string",
+              "description": "The file name of the attachment"
+            },
+            "mime_type": {
+              "type": "string",
+              "description": "The mime type of the attachment"
+            },
+            "description": {
+              "type": "string",
+              "description": "The description of the attachment"
+            },
+            "file_extension": {
+              "type": "string",
+              "description": "The file extension of the attachment"
+            },
+            "transaction_id": {
+              "type": "string",
+              "description": "The ID of the Transaction."
+            },
+            "file_size": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The file size of the attachment in Bytes",
+              "minimum": 0,
+              "maximum": 2621440
+            },
+            "attachment_context_type_id": {
+              "type": "string",
+              "description": "The ID of the Attachment Context Type."
+            },
+            "attachment_context_id": {
+              "type": "string",
+              "description": "The ID of the Attachment Context."
+            },
+            "is_public": {
+              "type": "boolean",
+              "description": "Flag to determine whether the attachment should be visible to customers"
+            }
+          }
+        }
+      },
+      "required": [
+        "attachment"
+      ],
+      "description": "Updates a Attachment"
+    }
+  }
+}

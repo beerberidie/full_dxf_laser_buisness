@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-5">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="dashboard-stat-title">Total Clients</h3>
+            <p class="dashboard-stat-value">
+                {{ stats.total_clients }}
+            </p>
+            <p class="dashboard-stat-subtitle">
+                in database
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="dashboard-stat-title">Total Projects</h3>
+            <p class="dashboard-stat-value">
+                {{ stats.total_projects }}
+            </p>
+            <p class="dashboard-stat-subtitle">
+                {{ stats.active_projects }} active
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="dashboard-stat-title">Total Products</h3>
+            <p class="dashboard-stat-value">
+                {{ stats.total_products }}
+            </p>
+            <p class="dashboard-stat-subtitle">
+                SKUs in catalog
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="dashboard-stat-title">Design Files</h3>
+            <p class="dashboard-stat-value">
+                {{ stats.total_files }}
+            </p>
+            <p class="dashboard-stat-subtitle">
+                DXF files uploaded
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h3 class="dashboard-stat-title">Queue Length</h3>
+            <p class="dashboard-stat-value">
+                {{ stats.queue_length }}
+            </p>
+            <p class="dashboard-stat-subtitle">
+                jobs waiting
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="grid grid-2">
+    <!-- Recent Clients -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Recent Clients</h2>
+            <a href="{{ url_for('clients.list_clients') }}" class="btn btn-sm btn-ghost">
+                View All
+            </a>
+        </div>
+        <div class="card-body">
+            {% if recent_clients %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in recent_clients %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('clients.detail', id=client.id) }}" class="link-primary">
+                                    {{ client.client_code }}
+                                </a>
+                            </td>
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.created_at|date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state-sm">
+                    <p>No clients yet.</p>
+                    {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+                    <a href="{{ url_for('clients.new_client') }}" class="btn btn-primary">
+                        + Create First Client
+                    </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Projects -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Recent Projects</h2>
+            <a href="{{ url_for('projects.index') }}" class="btn btn-sm btn-ghost">
+                View All
+            </a>
+        </div>
+        <div class="card-body">
+            {% if recent_projects %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for project in recent_projects %}
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('projects.detail', id=project.id) }}" class="link-primary">
+                                    {{ project.project_code }}
+                                </a>
+                            </td>
+                            <td>{{ project.name }}</td>
+                            <td>
+                                <span class="badge badge-{{ project.status|lower|replace(' ', '-') }}">
+                                    {{ project.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state-sm">
+                    <p>No projects yet.</p>
+                    <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
+                        + Create First Project
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Recent Products -->
+<div class="card">
+    <div class="card-header">
+        <h2>Recent Products</h2>
+        <a href="{{ url_for('products.index') }}" class="btn btn-sm btn-ghost">
+            View All
+        </a>
+    </div>
+    <div class="card-body">
+        {% if recent_products %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>SKU Code</th>
+                        <th>Name</th>
+                        <th>Material</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in recent_products %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('products.detail', id=product.id) }}" class="link-primary">
+                                {{ product.sku_code }}
+                            </a>
+                        </td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.material or '-' }}</td>
+                        <td>
+                            {% if product.unit_price %}
+                                R{{ "%.2f"|format(product.unit_price) }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state-sm">
+                <p>No products yet.</p>
+                <a href="{{ url_for('products.new_product') }}" class="btn btn-primary">
+                    + Create First Product
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Recent Files -->
+<div class="card">
+    <div class="card-header">
+        <h2>Recent Files</h2>
+    </div>
+    <div class="card-body">
+        {% if recent_files %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Filename</th>
+                        <th>Project</th>
+                        <th>Size</th>
+                        <th>Uploaded</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in recent_files %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('files.detail', file_id=file.id) }}">
+                                📄 {{ file.original_filename }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('projects.detail', id=file.project_id) }}">
+                                {{ file.project.project_code }}
+                            </a>
+                        </td>
+                        <td>{{ file.file_size_mb }} MB</td>
+                        <td>{{ file.upload_date.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state-sm">
+                <p>No files uploaded yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card">
+    <div class="card-header">
+        <h2>Quick Actions</h2>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-4">
+            {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+            <a href="{{ url_for('clients.new_client') }}" class="btn btn-primary quick-action-btn">
+                + New Client
+            </a>
+            <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary quick-action-btn">
+                + New Project
+            </a>
+            <a href="{{ url_for('products.new_product') }}" class="btn btn-primary quick-action-btn">
+                + New Product
+            </a>
+            {% endif %}
+            <a href="{{ url_for('projects.index') }}" class="btn btn-secondary quick-action-btn">
+                View Projects
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Production Queue -->
+<div class="card">
+    <div class="card-header">
+        <h2>Production Queue</h2>
+        <a href="{{ url_for('queue.index') }}" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="card-body">
+        {% if queue_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Project</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Scheduled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in queue_items %}
+                    <tr>
+                        <td>{{ item.queue_position }}</td>
+                        <td>
+                            <a href="{{ url_for('projects.detail', id=item.project_id) }}">
+                                {{ item.project.project_code }}
+                            </a>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ 'danger' if item.priority == 'Urgent' else 'warning' if item.priority == 'High' else 'secondary' }}">
+                                {{ item.priority }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ 'info' if item.status == 'Queued' else 'primary' }}">
+                                {{ item.status }}
+                            </span>
+                        </td>
+                        <td>{{ item.scheduled_date.strftime('%Y-%m-%d') if item.scheduled_date else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-muted">No items in queue</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Inventory Status -->
+<div class="card">
+    <div class="card-header">
+        <h2>Inventory Status</h2>
+        <a href="{{ url_for('inventory.index') }}" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="card-body">
+        <div class="grid grid-3 inventory-stat-grid">
+            <div class="inventory-stat-box">
+                <div class="inventory-stat-value">{{ stats.inventory_count }}</div>
+                <div class="text-muted">Total Items</div>
+            </div>
+            <div class="{% if stats.low_stock_count > 0 %}inventory-stat-box-warning{% else %}inventory-stat-box{% endif %}">
+                <div class="{% if stats.low_stock_count > 0 %}inventory-stat-value-warning{% else %}inventory-stat-value-success{% endif %}">{{ stats.low_stock_count }}</div>
+                <div class="text-muted">Low Stock Items</div>
+            </div>
+            <div class="inventory-stat-box">
+                <a href="{{ url_for('inventory.low_stock') }}" class="btn btn-warning btn-full-width">⚠️ View Low Stock</a>
+            </div>
+        </div>
+        {% if stats.low_stock_count > 0 %}
+        <div class="alert alert-warning">
+            ⚠️ <strong>{{ stats.low_stock_count }} item(s)</strong> are below reorder level. <a href="{{ url_for('inventory.low_stock') }}">View details</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Production Summary - Reports - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📈 Production Summary Report</h1>
+    <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <a href="{{ url_for('reports.export_production_csv', start_date=start_date, end_date=end_date) }}" class="btn btn-success">📥 Export CSV</a>
+        {% endif %}
+        <a href="{{ url_for('reports.index') }}" class="btn btn-secondary">← Back to Reports</a>
+    </div>
+</div>
+
+<!-- Date Range Filter -->
+<div class="card">
+    <form method="GET" class="search-form">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-4" style="margin-bottom: 2rem;">
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_runs }}</div>
+        <div class="stat-label">Total Runs</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_cut_hours }}</div>
+        <div class="stat-label">Total Cut Hours</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_parts }}</div>
+        <div class="stat-label">Parts Produced</div>
+    </div>
+    <div class="card stat-card">
+        <div class="stat-value">{{ stats.total_sheets }}</div>
+        <div class="stat-label">Sheets Used</div>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <!-- Operator Performance -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Operator Performance</h2>
+        </div>
+        <div class="card-body">
+            {% if operator_stats %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Runs</th>
+                        <th>Cut Time (hrs)</th>
+                        <th>Parts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for operator, data in operator_stats.items() %}
+                    <tr>
+                        <td><strong>{{ operator }}</strong></td>
+                        <td>{{ data.runs }}</td>
+                        <td>{{ "%.2f"|format(data.cut_time / 60) }}</td>
+                        <td>{{ data.parts }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-muted">No operator data available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Material Usage -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Material Usage</h2>
+        </div>
+        <div class="card-body">
+            {% if material_stats %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Material</th>
+                        <th>Runs</th>
+                        <th>Sheets</th>
+                        <th>Parts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for material, data in material_stats.items() %}
+                    <tr>
+                        <td><strong>{{ material }}</strong></td>
+                        <td>{{ data.runs }}</td>
+                        <td>{{ data.sheets }}</td>
+                        <td>{{ data.parts }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-muted">No material data available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Laser Runs Table -->
+<div class="card" style="margin-top: 1.5rem;">
+    <div class="card-header">
+        <h2>Laser Runs ({{ runs|length }})</h2>
+    </div>
+    <div class="card-body">
+        {% if runs %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Project</th>
+                    <th>Operator</th>
+                    <th>Cut Time</th>
+                    <th>Material</th>
+                    <th>Sheets</th>
+                    <th>Parts</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in runs %}
+                <tr>
+                    <td>{{ run.run_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if run.project %}
+                        <a href="{{ url_for('projects.detail', id=run.project_id) }}">{{ run.project.project_code }}</a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>{{ run.operator_display }}</td>
+                    <td>{{ run.cut_time_minutes }} min</td>
+                    <td>{{ run.material_type or '-' }}</td>
+                    <td>{{ run.sheet_count or '-' }}</td>
+                    <td>{{ run.parts_produced or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No laser runs found for this date range.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.stat-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}
+

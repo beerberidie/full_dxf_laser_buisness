@@ -1,0 +1,350 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/wordpress_format_schema.json",
+  "title": "WordPress REST Payload Schema",
+  "description": "Standardized payload format your custom server should emit before routing to the WordPress REST API. Use the top-level 'type' to select the correct WP endpoint, and pass 'data' as the body JSON (or 'media_multipart' for uploads). This schema validates shapes for posts, pages, custom post types (CPT), terms (categories/tags), and media metadata. For media, WordPress expects multipart binary; your server can accept base64 here and transform it into a proper multipart request.",
+  "type": "object",
+  "required": [
+    "type",
+    "data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "post",
+        "page",
+        "cpt",
+        "term",
+        "media"
+      ],
+      "description": "High-level content kind to route: post\u2192/wp/v2/posts, page\u2192/wp/v2/pages, cpt\u2192/wp/v2/{cpt_slug}, term\u2192/wp/v2/{taxonomy}, media\u2192/wp/v2/media."
+    },
+    "route_hint": {
+      "type": "string",
+      "description": "Optional explicit route override such as '/wp-json/wp/v2/projects'. If omitted, derive from 'type' (and cpt_slug/taxonomy in 'options')."
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cpt_slug": {
+          "type": "string",
+          "description": "Slug for CPT when type='cpt' (e.g., 'projects')."
+        },
+        "taxonomy": {
+          "type": "string",
+          "description": "Taxonomy when type='term' (e.g., 'categories', 'tags', or custom)."
+        },
+        "dry_run": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, don't send to WP; just validate/preview."
+        }
+      }
+    },
+    "data": {
+      "$ref": "#/$defs/EnvelopeData"
+    }
+  },
+  "$defs": {
+    "CommonPostFields": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "String or object with 'raw' field; string recommended."
+        },
+        "content": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "HTML string or object with 'raw' field."
+        },
+        "excerpt": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "slug": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "publish",
+            "pending",
+            "private"
+          ]
+        },
+        "sticky": {
+          "type": "boolean"
+        },
+        "password": {
+          "type": "string",
+          "description": "Optional password for protected content."
+        },
+        "featured_media": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "author": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "comment_status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "ping_status": {
+          "type": "string",
+          "enum": [
+            "open",
+            "closed"
+          ]
+        },
+        "template": {
+          "type": "string",
+          "description": "Theme template slug (if supported)."
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Key/value meta. Keys must be registered in WP for REST exposure."
+        }
+      },
+      "required": [
+        "title",
+        "content"
+      ]
+    },
+    "Post": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/CommonPostFields"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "format": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "Page": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/CommonPostFields"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "parent": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "CPT": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/CommonPostFields"
+        }
+      ],
+      "description": "Shape for any custom post type that behaves like a standard post. Use options.cpt_slug to route."
+    },
+    "Term": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "parent": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Media": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "alt_text": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "post": {
+          "type": "integer",
+          "description": "Attach to post ID (optional)."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "inherit"
+          ]
+        }
+      }
+    },
+    "MediaMultipart": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mime_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file_b64": {
+          "type": "string",
+          "contentEncoding": "base64",
+          "description": "Base64-encoded file content. Your server must decode and send as multipart."
+        },
+        "metadata": {
+          "$ref": "#/$defs/Media"
+        }
+      },
+      "required": [
+        "filename",
+        "mime_type",
+        "file_b64"
+      ]
+    },
+    "EnvelopeData": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Post"
+        },
+        {
+          "$ref": "#/$defs/Page"
+        },
+        {
+          "$ref": "#/$defs/CPT"
+        },
+        {
+          "$ref": "#/$defs/Term"
+        },
+        {
+          "$ref": "#/$defs/MediaMultipart"
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "type": "post",
+      "data": {
+        "title": "Automated Draft from AI",
+        "content": "<p>Generated via server-side automation.</p>",
+        "status": "draft",
+        "categories": [
+          2
+        ],
+        "tags": [
+          7
+        ],
+        "meta": {
+          "material": "1.2mm Galv",
+          "client": "XYZ Fabrication"
+        }
+      }
+    },
+    {
+      "type": "page",
+      "data": {
+        "title": "About Us",
+        "content": "<h2>Our Story</h2><p>We started in...</p>",
+        "status": "publish",
+        "parent": 0
+      }
+    },
+    {
+      "type": "cpt",
+      "options": {
+        "cpt_slug": "projects"
+      },
+      "data": {
+        "title": "Laser Cutting Job #A-102",
+        "content": "<p>DXF specs, materials, timings\u2026</p>",
+        "status": "pending",
+        "meta": {
+          "client_name": "ABC Manufacturing",
+          "material_type": "1.6mm Mild Steel"
+        }
+      }
+    },
+    {
+      "type": "term",
+      "options": {
+        "taxonomy": "categories"
+      },
+      "data": {
+        "name": "Laser Ops",
+        "slug": "laser-ops",
+        "description": "Posts about shop-floor laser operations."
+      }
+    },
+    {
+      "type": "media",
+      "data": {
+        "filename": "plate_190x100.jpg",
+        "mime_type": "image/jpeg",
+        "file_b64": "<base64 here>",
+        "metadata": {
+          "title": "Plate 190\u00d7100",
+          "alt_text": "DXF preview of plate"
+        }
+      }
+    }
+  ]
+}

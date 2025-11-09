@@ -6,7 +6,9 @@
 <div class="page-header">
     <h1>📄 Quote {{ quote.quote_number }}</h1>
     <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
         <a href="{{ url_for('quotes.edit', id=quote.id) }}" class="btn btn-secondary">Edit</a>
+        {% endif %}
         <a href="{{ url_for('quotes.index') }}" class="btn btn-secondary">← Back</a>
     </div>
 </div>
@@ -20,8 +22,8 @@
             <p><strong>Quote Number:</strong> {{ quote.quote_number }}</p>
             <p><strong>Client:</strong> {{ quote.client.name if quote.client else '-' }}</p>
             <p><strong>Project:</strong> {{ quote.project.project_code if quote.project else '-' }}</p>
-            <p><strong>Quote Date:</strong> {{ quote.quote_date.strftime('%Y-%m-%d') if quote.quote_date else '-' }}</p>
-            <p><strong>Valid Until:</strong> {{ quote.valid_until.strftime('%Y-%m-%d') if quote.valid_until else '-' }}</p>
+            <p><strong>Quote Date:</strong> {{ quote.quote_date|date if quote.quote_date else '-' }}</p>
+            <p><strong>Valid Until:</strong> {{ quote.valid_until|date if quote.valid_until else '-' }}</p>
             <p><strong>Status:</strong> <span class="badge">{{ quote.status }}</span></p>
         </div>
     </div>
@@ -31,9 +33,9 @@
             <h2>Totals</h2>
         </div>
         <div class="card-body">
-            <p><strong>Subtotal:</strong> ${{ "%.2f"|format(quote.subtotal) }}</p>
-            <p><strong>Tax ({{ quote.tax_rate }}%):</strong> ${{ "%.2f"|format(quote.tax_amount) }}</p>
-            <p><strong>Total:</strong> <strong>${{ "%.2f"|format(quote.total_amount) }}</strong></p>
+            <p><strong>Subtotal:</strong> R{{ "%.2f"|format(quote.subtotal) }}</p>
+            <p><strong>Tax ({{ quote.tax_rate }}%):</strong> R{{ "%.2f"|format(quote.tax_amount) }}</p>
+            <p><strong>Total:</strong> <strong>R{{ "%.2f"|format(quote.total_amount) }}</strong></p>
         </div>
     </div>
 </div>
@@ -59,8 +61,8 @@
                     <td>{{ item.item_number }}</td>
                     <td>{{ item.description }}</td>
                     <td>{{ item.quantity }}</td>
-                    <td>${{ "%.2f"|format(item.unit_price) }}</td>
-                    <td>${{ "%.2f"|format(item.line_total) }}</td>
+                    <td>R{{ "%.2f"|format(item.unit_price) }}</td>
+                    <td>R{{ "%.2f"|format(item.line_total) }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

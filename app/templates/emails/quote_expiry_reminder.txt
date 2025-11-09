@@ -1,0 +1,41 @@
+QUOTE EXPIRY REMINDER
+{{ '=' * 60 }}
+
+Dear {{ client.name }},
+
+⏰ YOUR QUOTE IS EXPIRING SOON!
+
+This is a friendly reminder that your quote for "{{ project.name }}" 
+will expire in {{ days_remaining }} days.
+
+To proceed with your project, please submit your proof of payment 
+before the expiry date.
+
+PROJECT DETAILS
+{{ '-' * 60 }}
+Project Code:       {{ project.project_code }}
+Project Name:       {{ project.name }}
+Quote Date:         {{ project.quote_date.strftime('%d %B %Y') if project.quote_date else 'N/A' }}
+Quote Expiry Date:  {{ project.quote_expiry_date.strftime('%d %B %Y') if project.quote_expiry_date else 'N/A' }}
+Quoted Price:       R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}
+
+WHAT HAPPENS NEXT?
+{{ '-' * 60 }}
+• Submit your proof of payment to confirm the order
+• Once payment is received, your project will be scheduled for production
+• If the quote expires, you may need to request a new quote
+
+VIEW PROJECT DETAILS
+{{ '-' * 60 }}
+{{ project_url }}
+
+NEED TO DISCUSS YOUR PROJECT?
+{{ '-' * 60 }}
+Email:          {{ company_email }}
+Phone:          {{ company_phone }}
+Business Hours: Monday - Friday, 8:00 AM - 5:00 PM
+
+{{ '-' * 60 }}
+This is an automated reminder from Laser OS.
+© {{ current_year }} {{ company_name }}. All rights reserved.
+

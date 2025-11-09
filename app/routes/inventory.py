@@ -2,15 +2,18 @@
 Inventory management routes for materials and consumables tracking
 """
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
+from flask_login import login_required
 from app import db
-from app.models import InventoryItem, InventoryTransaction, ActivityLog
+from app.models import InventoryItem, InventoryTransaction, ActivityLog, Setting
+from app.utils.decorators import role_required
 from datetime import datetime
 
 bp = Blueprint('inventory', __name__, url_prefix='/inventory')
 
 
 @bp.route('/')
+@login_required
 def index():
     """Display inventory dashboard."""
     # Get filter parameters
@@ -75,6 +78,7 @@ def index():
 
 
 @bp.route('/new', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def new_item():
     """Create a new inventory item."""
     if request.method == 'POST':
@@ -153,13 +157,28 @@ def new_item():
         InventoryItem.CATEGORY_TOOLS,
         InventoryItem.CATEGORY_OTHER
     ]
-    
+
     units = ['sheets', 'kg', 'liters', 'pieces', 'meters', 'hours']
-    
-    return render_template('inventory/form.html', item=None, categories=categories, units=units)
+
+    # Get material types from config
+    material_types = current_app.config.get('MATERIAL_TYPES', [])
+
+    # Get thicknesses from settings (same as products)
+    thicknesses_setting = Setting.query.filter_by(key='default_thicknesses').first()
+    thicknesses = thicknesses_setting.value.split(',') if thicknesses_setting else []
+
+    return render_template(
+        'inventory/form.html',
+        item=None,
+        categories=categories,
+        units=units,
+        material_types=material_types,
+        thicknesses=thicknesses
+    )
 
 
 @bp.route('/<int:id>')
+@login_required
 def detail(id):
     """View inventory item details."""
     item = InventoryItem.query.get_or_404(id)
@@ -179,6 +198,7 @@ def detail(id):
 
 
 @bp.route('/<int:id>/edit', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def edit(id):
     """Edit an inventory item."""
     item = InventoryItem.query.get_or_404(id)
@@ -237,13 +257,28 @@ def edit(id):
         InventoryItem.CATEGORY_TOOLS,
         InventoryItem.CATEGORY_OTHER
     ]
-    
+
     units = ['sheets', 'kg', 'liters', 'pieces', 'meters', 'hours']
-    
-    return render_template('inventory/form.html', item=item, categories=categories, units=units)
+
+    # Get material types from config
+    material_types = current_app.config.get('MATERIAL_TYPES', [])
+
+    # Get thicknesses from settings (same as products)
+    thicknesses_setting = Setting.query.filter_by(key='default_thicknesses').first()
+    thicknesses = thicknesses_setting.value.split(',') if thicknesses_setting else []
+
+    return render_template(
+        'inventory/form.html',
+        item=item,
+        categories=categories,
+        units=units,
+        material_types=material_types,
+        thicknesses=thicknesses
+    )
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
+@role_required('admin', 'manager')
 def delete(id):
     """Delete an inventory item."""
     item = InventoryItem.query.get_or_404(id)
@@ -275,6 +310,7 @@ def delete(id):
 
 
 @bp.route('/<int:id>/adjust', methods=['POST'])
+@role_required('admin', 'manager', 'operator')
 def adjust_stock(id):
     """Adjust inventory stock."""
     item = InventoryItem.query.get_or_404(id)
@@ -322,6 +358,7 @@ def adjust_stock(id):
 
 
 @bp.route('/low-stock')
+@login_required
 def low_stock():
     """View low stock items."""
     items = [item for item in InventoryItem.query.all() if item.is_low_stock]
@@ -330,6 +367,7 @@ def low_stock():
 
 
 @bp.route('/transactions')
+@login_required
 def transactions():
     """View all inventory transactions."""
     # Get filter parameters

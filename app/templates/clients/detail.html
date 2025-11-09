@@ -14,12 +14,14 @@
         <p class="text-muted">{{ client.client_code }}</p>
     </div>
     <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
         <a href="{{ url_for('clients.edit', id=client.id) }}" class="btn btn-secondary">
             Edit Client
         </a>
         <button onclick="confirmDelete()" class="btn btn-danger">
             Delete Client
         </button>
+        {% endif %}
     </div>
 </div>
 
@@ -55,7 +57,7 @@
                 <dt>Address</dt>
                 <dd>
                     {% if client.address %}
-                        <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">{{ client.address }}</pre>
+                        <pre class="text-pre-wrap">{{ client.address }}</pre>
                     {% else %}
                         -
                     {% endif %}
@@ -90,23 +92,88 @@
         <h2>Notes</h2>
     </div>
     <div class="card-body">
-        <pre style="white-space: pre-wrap; font-family: inherit;">{{ client.notes }}</pre>
+        <pre class="text-pre-wrap">{{ client.notes }}</pre>
     </div>
 </div>
 {% endif %}
 
-<!-- Projects (will be added in Phase 2) -->
+<!-- Projects -->
 <div class="card">
     <div class="card-header">
-        <h2>Projects</h2>
+        <h2>Projects ({{ projects|length }})</h2>
         <a href="{{ url_for('projects.new_project') }}?client_id={{ client.id }}" class="btn btn-sm btn-primary">
             + New Project
         </a>
     </div>
     <div class="card-body">
-        <div class="empty-state-sm">
-            <p>Projects feature coming in Phase 2</p>
-        </div>
+        {% if projects %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Material</th>
+                        <th>Quoted Price</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('projects.detail', id=project.id) }}" class="link-primary">
+                                {{ project.project_code }}
+                            </a>
+                        </td>
+                        <td>{{ project.name }}</td>
+                        <td>
+                            <span class="badge badge-{{ project.status|lower|replace(' ', '-') }}">
+                                {{ project.status }}
+                            </span>
+                            {% if project.is_overdue %}
+                                <span class="badge badge-danger" title="Overdue">⚠️</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if project.material_type %}
+                                {{ project.material_type }}
+                                {% if project.material_thickness %}
+                                    ({{ project.material_thickness }}mm)
+                                {% endif %}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if project.quoted_price %}
+                                R{{ "%.2f"|format(project.quoted_price) }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ project.created_at|date }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="{{ url_for('projects.detail', id=project.id) }}" class="btn btn-sm btn-ghost">
+                                    View
+                                </a>
+                                <a href="{{ url_for('projects.edit', id=project.id) }}" class="btn btn-sm btn-ghost">
+                                    Edit
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty-state-sm">
+                <p>No projects found for this client.</p>
+                <p>Get started by creating a new project.</p>
+            </div>
+        {% endif %}
     </div>
 </div>
 

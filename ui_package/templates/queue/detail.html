@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Queue Item #{{ queue_item.id }}{% endblock %}
+
+{% block content %}
+<!-- Breadcrumb -->
+<nav class="breadcrumb">
+    <a href="{{ url_for('main.dashboard') }}">Dashboard</a> /
+    <a href="{{ url_for('queue.index') }}">Queue</a> /
+    Queue Item #{{ queue_item.id }}
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Queue Item #{{ queue_item.id }}</h1>
+    <div>
+        <a href="{{ url_for('queue.index') }}" class="btn btn-secondary">Back to Queue</a>
+        <a href="{{ url_for('projects.detail', id=queue_item.project_id) }}" class="btn btn-primary">View Project</a>
+    </div>
+</div>
+
+<!-- Queue Item Information -->
+<div class="grid grid-2">
+    <!-- Basic Information -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Queue Information</h2>
+        </div>
+        <div class="card-body">
+            <table class="info-table">
+                <tr>
+                    <th>Queue Position:</th>
+                    <td>{{ queue_item.queue_position }}</td>
+                </tr>
+                <tr>
+                    <th>Project:</th>
+                    <td>
+                        <a href="{{ url_for('projects.detail', id=queue_item.project_id) }}">
+                            {{ queue_item.project.project_code }}
+                        </a>
+                        <br>
+                        <small class="text-muted">{{ queue_item.project.name }}</small>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Status:</th>
+                    <td>
+                        <span class="badge badge-{{ 'info' if queue_item.status == 'Queued' else 'primary' if queue_item.status == 'In Progress' else 'success' if queue_item.status == 'Completed' else 'secondary' }}">
+                            {{ queue_item.status }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Priority:</th>
+                    <td>
+                        <span class="badge badge-{{ 'danger' if queue_item.priority == 'Urgent' else 'warning' if queue_item.priority == 'High' else 'secondary' }}">
+                            {{ queue_item.priority }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Scheduled Date:</th>
+                    <td>{{ queue_item.scheduled_date.strftime('%Y-%m-%d') if queue_item.scheduled_date else 'Not scheduled' }}</td>
+                </tr>
+                <tr>
+                    <th>Estimated Cut Time:</th>
+                    <td>{{ queue_item.estimated_cut_time }} minutes</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Timestamps -->
+    <div class="card">
+        <div class="card-header">
+            <h2>Timeline</h2>
+        </div>
+        <div class="card-body">
+            <table class="info-table">
+                <tr>
+                    <th>Added At:</th>
+                    <td>{{ queue_item.added_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                <tr>
+                    <th>Added By:</th>
+                    <td>{{ queue_item.added_by or 'N/A' }}</td>
+                </tr>
+                <tr>
+                    <th>Started At:</th>
+                    <td>{{ queue_item.started_at.strftime('%Y-%m-%d %H:%M') if queue_item.started_at else 'Not started' }}</td>
+                </tr>
+                <tr>
+                    <th>Completed At:</th>
+                    <td>{{ queue_item.completed_at.strftime('%Y-%m-%d %H:%M') if queue_item.completed_at else 'Not completed' }}</td>
+                </tr>
+                <tr>
+                    <th>Duration in Queue:</th>
+                    <td>{{ queue_item.duration_in_queue }} day(s)</td>
+                </tr>
+                <tr>
+                    <th>Created:</th>
+                    <td>{{ queue_item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+                <tr>
+                    <th>Last Updated:</th>
+                    <td>{{ queue_item.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Notes -->
+{% if queue_item.notes %}
+<div class="card">
+    <div class="card-header">
+        <h2>Notes</h2>
+    </div>
+    <div class="card-body">
+        <p>{{ queue_item.notes }}</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Status Update -->
+{% if queue_item.is_active and (current_user.has_role('admin') or current_user.has_role('manager') or current_user.has_role('operator')) %}
+<div class="card">
+    <div class="card-header">
+        <h2>Update Status</h2>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('queue.update_status', id=queue_item.id) }}" method="POST" style="display: flex; gap: 1rem; align-items: flex-end;">
+            <div class="form-group" style="margin: 0; flex: 1;">
+                <label for="status">New Status:</label>
+                <select id="status" name="status" class="form-control" required>
+                    <option value="Queued" {% if queue_item.status == 'Queued' %}selected{% endif %}>Queued</option>
+                    <option value="In Progress" {% if queue_item.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Completed" {% if queue_item.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    <option value="Cancelled" {% if queue_item.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Laser Runs -->
+{% if runs %}
+<div class="card">
+    <div class="card-header">
+        <h2>Laser Runs</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Run Date</th>
+                    <th>Operator</th>
+                    <th>Cut Time</th>
+                    <th>Material</th>
+                    <th>Parts</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for run in runs %}
+                <tr>
+                    <td>{{ run.run_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {{ run.operator_display }}
+                        {% if run.preset %}
+                        <br><small class="text-muted">{{ run.preset.preset_name }}</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ run.cut_time_minutes }} min</td>
+                    <td>{{ run.material_type }} ({{ run.material_thickness }}mm)</td>
+                    <td>{{ run.parts_produced or 'N/A' }}</td>
+                    <td>
+                        <span class="badge badge-success">{{ run.status }}</span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<!-- Activity Log -->
+{% if logs %}
+<div class="card">
+    <div class="card-header">
+        <h2>Activity Log</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>User</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if log.action == 'ADDED' else 'info' if log.action == 'STATUS_CHANGED' else 'danger' if log.action == 'REMOVED' else 'secondary' }}">
+                            {{ log.action }}
+                        </span>
+                    </td>
+                    <td>{{ log.details }}</td>
+                    <td>{{ log.user }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

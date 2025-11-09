@@ -1,0 +1,2099 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Taxes",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+	{
+      "name": "Draft Tax Returns",
+      "description": "This endpoint provides detailed information about draft tax returns and allows for their creation and deletion."
+    },
+    {
+      "name": "Tax Determinations",
+      "description": "Tax Determination Engine provides an API that given information about an artefact, the business generating the artefact, and the customer of the artefact, provides a set of legislatively valid VAT rates describing the percentage that should be applied per item."
+    },
+    {
+      "name": "Tax Profiles",
+      "description": "This endpoint holds details about the current business' VAT taxation."
+    },
+    {
+      "name": "Tax Rates",
+      "description": "A tax rate as in this endpoint's resource is a VAT tax rate in the current business' country. In the US and CA, tax rates are combined and have two percentages that add up."
+    },
+    {
+      "name": "Tax Return Frequencies",
+      "description": "This endpoint is used to dynamically know your options what to specify as `tax_return_frequency` when POSTing to `/tax_profiles`."
+    },
+    {
+      "name": "Tax Schemes",
+      "description": "A tax scheme is different from a tax rate in that it lacks a percentage and a country reference. You can think of it as VAT-taxation type. Chances are that you will never need it; in the API tax schemes only occur in the `financial_settings` endpoint's response."
+    },
+	{
+      "name": "Tax Returns",
+      "description": "Operations about Tax Returns"
+    },
+    {
+      "name": "Tax Types",
+      "description": "This resource is more precisely described as 'types to do a (VAT) tax return'. In some countries there are different ways to report taxes, and this endpoint is about them. You will only need this to filter `/tax_profiles` or to know which values to expect in the `tax_type` property of its response."
+    }
+  ],
+  "paths": {
+	"/draft_tax_returns": {
+      "get": {
+        "summary": "Returns all Draft Tax Returns",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇬🇧\n* Accounting Standard: 🇬🇧\n* Accounting Start: 🇬🇧\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Returns per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 0,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Returns",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Returns (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Draft Tax Returns",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DraftTaxReturn"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Draft Tax Returns"
+        ],
+        "operationId": "getDraftTaxReturns"
+      },
+      "x-sage-pathtitle": "Draft Tax Return collection",
+      "x-sage-changelog": [],
+      "post": {
+        "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Full Access",
+        "summary": "Create a Draft Tax Return",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+		"parameters": [
+		  {
+            "in": "header",
+            "name": "X-Idempotency-Key",
+			"description": "Require idempotency key to be passed in the request header.",
+            "type": "string",
+            "format": "uuid",
+            "required": true
+		  }
+		],
+        "responses": {
+          "201": {
+            "description": "Return the Created Draft Tax Return",
+            "schema": {
+              "$ref": "#/definitions/DraftTaxReturn"
+            }
+          },
+		  "202": {
+            "description": "The Obligation Period is not yet available"
+		  }
+        },
+        "tags": [
+          "Draft Tax Returns"
+        ],
+        "operationId": "postDraftTaxReturns"
+      }
+    },
+    "/draft_tax_returns/{key}": {
+      "get": {
+        "summary": "Returns a Draft Tax Return",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇬🇧\n* Accounting Standard: 🇬🇧\n* Accounting Start: 🇬🇧\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Draft Tax Return Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Return (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Draft Tax Return",
+            "schema": {
+              "$ref": "#/definitions/DraftTaxReturn"
+            }
+          }
+        },
+        "tags": [
+          "Draft Tax Returns"
+        ],
+        "operationId": "getDraftTaxReturnsKey"
+      },
+      "x-sage-pathtitle": "single Draft Tax Return resource",
+      "x-sage-changelog": [],
+      "delete": {
+        "summary": "Deletes a Draft Tax Return",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇬🇧\n* Accounting Standard: 🇬🇧\n* Accounting Start: 🇬🇧\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Draft Tax Return Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Draft Tax Return"
+          }
+        },
+        "tags": [
+          "Draft Tax Returns"
+        ],
+        "operationId": "deleteDraftTaxReturnsKey"
+      }
+    },
+    "/tax_determinations": {
+      "get": {
+        "summary": "Returns all Tax Determinations",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷, 🇪🇸, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇫🇷, 🇪🇸, 🇬🇧, 🇮🇪\n* Accounting Start: 🇫🇷, 🇪🇸, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "artefact_id",
+            "description": "The artefact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "artefact_line_amount",
+            "description": "The artefact line amount",
+            "type": "number",
+            "format": "double",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "artefact_line_description",
+            "description": "The artefact line description",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "artefact_line_goods_services_type",
+            "description": "The artefact line goods and service type",
+            "type": "string",
+            "enum": [
+              "GOODS",
+              "SERVICES"
+            ],
+            "required": false,
+            "example": "GOODS"
+          },
+          {
+            "in": "query",
+            "name": "artefact_line_id",
+            "description": "The artefact line id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "artefact_line_tax_included",
+            "description": "The artefact line includes tax",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Use this to return results on a specified date.",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "include_destination_vat",
+            "description": "Include destination vat",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "include_line_determination",
+            "description": "Include line determination",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "retailer_rates",
+            "description": "Display recargo retailer rates",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "usage",
+            "description": "Tax rates with the intended usage",
+            "type": "string",
+            "enum": [
+              "sales",
+              "purchases"
+            ],
+            "required": true,
+            "example": "possible values are sales and purchases"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Rates per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Rates",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Rates (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Determinations",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 5,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "GB_STANDARD",
+						"displayed_as": "Standard 20.00%",
+						"$path": "/tax_rates/GB_STANDARD"
+					},
+					{
+						"id": "GB_LOWER",
+						"displayed_as": "Lower Rate 5.00%",
+						"$path": "/tax_rates/GB_LOWER"
+					},
+					{
+						"id": "GB_ZERO",
+						"displayed_as": "Zero Rated 0.00%",
+						"$path": "/tax_rates/GB_ZERO"
+					},
+					{
+						"id": "GB_EXEMPT",
+						"displayed_as": "Exempt 0.00%",
+						"$path": "/tax_rates/GB_EXEMPT"
+					},
+					{
+						"id": "GB_NO_TAX",
+						"displayed_as": "No VAT",
+						"$path": "/tax_rates/GB_NO_TAX"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Determinations"
+        ],
+        "operationId": "getTaxDeterminations"
+      },
+      "x-sage-pathtitle": "Tax Determination collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/tax_profiles": {
+      "get": {
+        "summary": "Returns all Tax Profiles",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Tax Profiles changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Profiles per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Profiles",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Profiles (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Profiles",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaxProfile"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tax Profiles"
+        ],
+        "operationId": "getTaxProfiles"
+      },
+      "x-sage-pathtitle": "Tax Profile collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/tax_profiles/{key}": {
+      "get": {
+        "summary": "Returns a Tax Profile",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Profile Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Profile (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Tax Profile",
+            "schema": {
+              "$ref": "#/definitions/TaxProfile"
+            }
+          }
+        },
+        "tags": [
+          "Tax Profiles"
+        ],
+        "operationId": "getTaxProfilesKey"
+      },
+      "x-sage-pathtitle": "single Tax Profile resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Tax Profile",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦\n* Accounting Standard: 🇨🇦\n* Accounting Start: 🇨🇦\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Profile Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "TaxProfiles",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putTaxProfiles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Tax Profile",
+            "schema": {
+              "$ref": "#/definitions/TaxProfile"
+            }
+          }
+        },
+        "tags": [
+          "Tax Profiles"
+        ],
+        "operationId": "putTaxProfilesKey"
+      }
+    },
+    "/tax_rates": {
+      "get": {
+        "summary": "Returns all Tax Rates",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Full Access, Restricted Access, Read Only\n* Area: `Purchases`: Full Access, Restricted Access, Read Only\n* Area: `Bank`: Full Access, Restricted Access, Read Only\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Tax Rates changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "usage",
+            "description": "possible values are `sales` and `purchase`",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "address_region_id",
+            "description": "Use this to filter by address region id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Use this to return results on a specified date.",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "include_historical_data",
+            "description": "Use this to include historical data in the response",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "include_destination_vat_rates",
+            "description": "Include vat destination tax rates",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "cis_only",
+            "description": "Use this to filter Tax Rates to CIS only records",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Rates per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Rates",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Rates (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Rates",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 5,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "GB_STANDARD",
+						"displayed_as": "Standard 20.00%",
+						"$path": "/tax_rates/GB_STANDARD"
+					},
+					{
+						"id": "GB_LOWER",
+						"displayed_as": "Lower Rate 5.00%",
+						"$path": "/tax_rates/GB_LOWER"
+					},
+					{
+						"id": "GB_ZERO",
+						"displayed_as": "Zero Rated 0.00%",
+						"$path": "/tax_rates/GB_ZERO"
+					},
+					{
+						"id": "GB_EXEMPT",
+						"displayed_as": "Exempt 0.00%",
+						"$path": "/tax_rates/GB_EXEMPT"
+					},
+					{
+						"id": "GB_NO_TAX",
+						"displayed_as": "No VAT",
+						"$path": "/tax_rates/GB_NO_TAX"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Rates"
+        ],
+        "operationId": "getTaxRates"
+      },
+      "x-sage-pathtitle": "Tax Rate collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Tax Rate (US only)",
+        "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "TaxRates",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postTaxRates"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Tax Rate (US only)",
+            "schema": {
+              "$ref": "#/definitions/TaxRate"
+            }
+          }
+        },
+        "tags": [
+          "Tax Rates"
+        ],
+        "operationId": "postTaxRates"
+      }
+    },
+    "/tax_rates/{key}": {
+      "get": {
+        "summary": "Returns a Tax Rate",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Full Access, Restricted Access, Read Only\n* Area: `Purchases`: Full Access, Restricted Access, Read Only\n* Area: `Bank`: Full Access, Restricted Access, Read Only\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Rate Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Use this to show the tax rate percentage on the given date",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Rate (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Tax Rate",
+            "examples": {
+              "application/json":
+			  {
+				"id": "GB_STANDARD",
+				"displayed_as": "Standard 20.00%",
+				"$path": "/tax_rates/GB_STANDARD",
+				"created_at": "2013-07-03T10:38:09Z",
+				"updated_at": "2021-07-01T16:49:32Z",
+				"name": "STANDARD",
+				"agency": null,
+				"percentage": "20.0",
+				"percentages": [
+					{
+						"percentage": "20.0",
+						"from_date": "1900-01-01",
+						"to_date": null
+					}
+				],
+				"is_visible": true,
+				"retailer": false,
+				"editable": false,
+				"deletable": false,
+				"is_combined_rate": false
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Rates"
+        ],
+        "operationId": "getTaxRatesKey"
+      },
+      "x-sage-pathtitle": "single Tax Rate resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Tax Rate (US only)",
+        "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Rate key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "TaxRates",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putTaxRates"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Tax Rate (US only)",
+            "schema": {
+              "$ref": "#/definitions/TaxRate"
+            }
+          }
+        },
+        "tags": [
+          "Tax Rates"
+        ],
+        "operationId": "putTaxRatesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Tax Rate (US only)",
+        "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Rate key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Tax Rate (US only)"
+          }
+        },
+        "tags": [
+          "Tax Rates"
+        ],
+        "operationId": "deleteTaxRatesKey"
+      }
+    },
+    "/tax_return_frequencies": {
+      "get": {
+        "summary": "Returns all Tax Return Frequencies",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Standard: 🇨🇦, 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Start: 🇨🇦, 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "tax_type_id",
+            "description": "Use this to filter Tax Submission Frequency Types by tax_type_id (Canada only)",
+            "type": "string",
+            "enum": [
+              "CA_GST_HST",
+              "CA_PST_BC",
+              "CA_PST_MB",
+              "CA_QST",
+              "CA_PST_SK"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Submission Frequency Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Submission Frequency Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Submission Frequency Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Return Frequencies",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 3,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "QUARTERLY",
+						"displayed_as": "Quarterly",
+						"$path": "/tax_return_frequencies/QUARTERLY"
+					},
+					{
+						"id": "MONTHLY",
+						"displayed_as": "Monthly",
+						"$path": "/tax_return_frequencies/MONTHLY"
+					},
+					{
+						"id": "ANNUALLY",
+						"displayed_as": "Annually",
+						"$path": "/tax_return_frequencies/ANNUALLY"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Return Frequencies"
+        ],
+        "operationId": "getTaxReturnFrequencies"
+      },
+      "x-sage-pathtitle": "Tax Return Frequency collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/tax_return_frequencies/{key}": {
+      "get": {
+        "summary": "Returns a Tax Return Frequency",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Standard: 🇨🇦, 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Start: 🇨🇦, 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Return Frequency Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Submission Frequency Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Tax Return Frequency",
+            "examples": {
+              "application/json":
+			  {
+				"id": "QUARTERLY",
+				"displayed_as": "Quarterly",
+				"$path": "/tax_return_frequencies/QUARTERLY"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Return Frequencies"
+        ],
+        "operationId": "getTaxReturnFrequenciesKey"
+      },
+      "x-sage-pathtitle": "single Tax Return Frequency resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/tax_schemes": {
+      "get": {
+        "summary": "Returns all Tax Schemes",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Standard: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Start: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Schemes per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Schemes",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Schemes (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Schemes",
+            "examples": {
+           "application/json":
+		   {
+			"$total": 5,
+			"$page": 1,
+			"$next": null,
+			"$back": null,
+			"$itemsPerPage": 20,
+			"$items": [
+				{
+					"id": "CASH_ACCOUNTING",
+					"displayed_as": "Cash Accounting",
+					"$path": "/tax_schemes/CASH_ACCOUNTING"
+				},
+				{
+					"id": "STANDARD",
+					"displayed_as": "Standard",
+					"$path": "/tax_schemes/STANDARD"
+				},
+				{
+					"id": "NOT_REGISTERED",
+					"displayed_as": "Not Registered",
+					"$path": "/tax_schemes/NOT_REGISTERED"
+				},
+				{
+					"id": "FLAT_CASH",
+					"displayed_as": "Flat Rate Cash Based",
+					"$path": "/tax_schemes/FLAT_CASH"
+				},
+				{
+					"id": "FLAT_INVOICE",
+					"displayed_as": "Flat Rate Invoice Based",
+					"$path": "/tax_schemes/FLAT_INVOICE"
+				}
+			]
+		}
+            }
+          }
+        },
+        "tags": [
+          "Tax Schemes"
+        ],
+        "operationId": "getTaxSchemes"
+      },
+      "x-sage-pathtitle": "Tax Scheme collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/tax_schemes/{key}": {
+      "get": {
+        "summary": "Returns a Tax Scheme",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Standard: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Start: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Scheme Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Scheme (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Tax Scheme",
+            "examples": {
+              "application/json":
+			  {
+				"id": "STANDARD",
+				"displayed_as": "Standard",
+				"$path": "/tax_schemes/STANDARD"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Schemes"
+        ],
+        "operationId": "getTaxSchemesKey"
+      },
+      "x-sage-pathtitle": "single Tax Scheme resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+	"/tax_returns": {
+      "get": {
+        "summary": "Returns all Tax Returns",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "from_period_start_date",
+            "description": "Use this to filter tax returns by the tax return period start date",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_period_start_date",
+            "description": "Use this to filter tax returns by the tax return period start date",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Tax Returns changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Returns per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 0,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Returns",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Returns (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Returns",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaxReturn"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tax Returns"
+        ],
+        "operationId": "getTaxReturns"
+      },
+      "x-sage-pathtitle": "Tax Return collection",
+      "x-sage-changelog": []
+    },
+    "/tax_returns/{key}": {
+      "get": {
+        "summary": "Returns a Tax Return",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Return Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Return (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Tax Return",
+            "schema": {
+              "$ref": "#/definitions/TaxReturn"
+            }
+          }
+        },
+        "tags": [
+          "Tax Returns"
+        ],
+        "operationId": "getTaxReturnsKey"
+      },
+      "x-sage-pathtitle": "single Tax Return resource",
+      "x-sage-changelog": []
+    },
+    "/tax_returns/obligation_periods": {
+      "post": {
+        "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Statutory reporting`: Full Access",
+        "summary": "Returns a Tax Return of the Obligation Period",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+		"parameters": [
+		  {
+            "in": "header",
+            "name": "X-Idempotency-Key",
+			"description": "Require idempotency key to be passed in the request header.",
+            "type": "string",
+            "format": "uuid",
+            "required": true
+		  }
+		],
+        "responses": {
+          "201": {
+            "description": "Create an Obligation Period.",
+            "schema": {
+              "$ref": "#/definitions/MtdObligationPeriod"
+            }
+          },
+		  "202": {
+			"description": "The Obligation Period is not yet available"
+		  }
+        },
+        "tags": [
+          "Tax Returns"
+        ],
+        "operationId": "postTaxReturnsObligationPeriods"
+      }
+    },
+    "/tax_types": {
+      "get": {
+        "summary": "Returns all Tax Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Tax Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Tax Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Tax Types",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 2,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "MTD",
+						"displayed_as": "MTD",
+						"$path": "/tax_types/MTD"
+					},
+					{
+						"id": "MTD_PENDING",
+						"displayed_as": "MTD_PENDING",
+						"$path": "/tax_types/MTD_PENDING"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Types"
+        ],
+        "operationId": "getTaxTypes"
+      },
+      "x-sage-pathtitle": "Tax Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/tax_types/{key}": {
+      "get": {
+        "summary": "Returns a Tax Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Tax Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Tax Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Tax Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "MTD",
+				"displayed_as": "MTD",
+				"$path": "/tax_types/MTD",
+				"federal_tax": true,
+				"country": {
+					"id": "GB",
+					"displayed_as": "United Kingdom (GB)",
+					"$path": "/countries/GB"
+				},
+				"address_regions": [],
+				"tax_rates": []
+			}
+            }
+          }
+        },
+        "tags": [
+          "Tax Types"
+        ],
+        "operationId": "getTaxTypesKey"
+      },
+      "x-sage-pathtitle": "single Tax Type resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+	"DraftTaxReturn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item, includes the period the tax return covers."
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "tax_return_number": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "The tax return number."
+        },
+        "period_start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The tax return from date. This is the start date of the period the tax return covers."
+        },
+        "period_end_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The tax return to date. This is the end date of the period the tax return covers."
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax return total amount."
+        },
+        "paid": {
+          "type": "boolean",
+          "description": "The tax return paid status."
+        },
+        "status": {
+          "$ref": "#/definitions/TaxReturnStatus",
+          "description": "The tax return status"
+        },
+        "tax_return_type": {
+          "$ref": "#/definitions/TaxReturnType",
+          "description": "The tax return type (CA only)"
+        },
+        "tax_return_id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The tax return id."
+        },
+        "submitted_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Date when the tax return was submitted"
+        }
+      },
+      "description": "DraftTaxReturn model",
+      "x-sage-menusection": "Draft Tax Returns"
+    },
+    "TaxReturnStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The tax return status id"
+        },
+        "name": {
+          "type": "string",
+          "description": "The return status name"
+        }
+      }
+    },
+    "TaxReturnType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The tax return status id"
+        },
+        "name": {
+          "type": "string",
+          "description": "The return status name"
+        }
+      }
+    },
+    "TaxRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the tax rate"
+        },
+        "agency": {
+          "type": "string",
+          "description": "The agency name (US Only)"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The current tax rate percentage"
+        },
+        "percentages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxRatePercentage"
+          },
+          "description": "The tax rate percentage and date ranges they apply to"
+        },
+        "is_visible": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is displayed in the application"
+        },
+        "retailer": {
+          "type": "boolean",
+          "description": "Indicates if tax rate is a retailer rate or not"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be deleted"
+        },
+        "is_combined_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is made up of component tax rates"
+        },
+        "component_tax_rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComponentTaxRate"
+          },
+          "description": "The component tax rates which make up a combined rate"
+        }
+      },
+      "description": "\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+    "TaxRatePercentage": {
+      "type": "object",
+      "properties": {
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The percentage of the rate"
+        },
+        "from_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The start date for the rate"
+        },
+        "to_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The end date for the rate"
+        }
+      }
+    },
+    "ComponentTaxRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the tax rate"
+        },
+        "agency": {
+          "type": "string",
+          "description": "The agency name (US Only)"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The current tax rate percentage"
+        },
+        "percentages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxRatePercentage"
+          },
+          "description": "The tax rate percentage and date ranges they apply to"
+        },
+        "is_visible": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is displayed in the application"
+        },
+        "retailer": {
+          "type": "boolean",
+          "description": "Indicates if tax rate is a retailer rate or not"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether a tax rate can be deleted"
+        },
+        "is_combined_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the tax rate is made up of component tax rates"
+        }
+      }
+    },
+    "TaxOffice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 17,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "office_number": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "The tax office number"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The tax office name"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇩🇪\n* Accounting Standard: 🇩🇪\n* Accounting Start: 🇩🇪",
+      "x-sage-menusection": "Settings"
+    },
+    "TaxProfile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "tax_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax type"
+        },
+        "tax_number": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The tax number"
+        },
+        "tax_number_suffix": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The tax number suffix"
+        },
+        "collect_tax": {
+          "type": "boolean",
+          "description": "Indicates whether tax is collected for this tax type"
+        },
+        "tax_return_frequency": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax return frequency"
+        },
+        "address_region": {
+          "$ref": "#/definitions/AddressRegion",
+          "description": "The address region associated with the tax profile. Note: GST/HST is for all regions."
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦\n* Accounting Standard: 🇨🇦\n* Accounting Start: 🇨🇦\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+      "x-sage-menusection": "Settings"
+    },
+	"TaxReturn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item, includes the period the tax return covers."
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "tax_return_number": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "The tax return number."
+        },
+        "period_start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The tax return from date. This is the start date of the period the tax return covers."
+        },
+        "period_end_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The tax return to date. This is the end date of the period the tax return covers."
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax return total amount."
+        },
+        "paid": {
+          "type": "boolean",
+          "description": "The tax return paid status."
+        },
+        "status": {
+          "$ref": "#/definitions/TaxReturnStatus",
+          "description": "The tax return status"
+        },
+        "tax_return_type": {
+          "$ref": "#/definitions/TaxReturnType",
+          "description": "The tax return type (CA only)"
+        }
+      },
+      "description": "TaxReturn model"
+    },
+	"MtdObligationPeriod": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The start date of this obligation period."
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The end date of this obligation period."
+        },
+        "due_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The due date for this obligation period."
+        },
+        "received_date": {
+          "type": "string",
+          "format": "date",
+          "description": "The obligation received date, is returned when status is (F = Fulfilled)."
+        },
+        "hmrc_status": {
+          "type": "string",
+          "description": "Which obligation statuses to return (O = Open, F = Fulfilled)"
+        },
+        "period_key": {
+          "type": "string",
+          "description": "The ID code for the period that this obligation belongs to.The format is four alphanumeric characters. Occasionally the format includes the # symbol."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the obligation period, nil unless the period is already used in a VAT returnThe status is one of the following: Draft, Submitted, Submission Failed, Queued, Waiting"
+        }
+      },
+      "description": "MtdObligationPeriod model"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Settings"
+    },
+    "AddressRegion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 8,
+          "description": "The code of the address region"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the address region"
+        }
+      }
+    },
+    "putTaxProfiles": {
+      "type": "object",
+      "properties": {
+        "tax_profile": {
+          "type": "object",
+          "properties": {
+            "tax_type_id": {
+              "type": "string",
+              "description": "The ID of the Tax Type."
+            },
+            "tax_number": {
+              "type": "string",
+              "description": "The tax number"
+            },
+            "tax_number_suffix": {
+              "type": "string",
+              "description": "The tax number suffix"
+            },
+            "collect_tax": {
+              "type": "boolean",
+              "description": "Indicates whether tax is collected for this tax type"
+            },
+            "tax_return_frequency_id": {
+              "type": "string",
+              "description": "The ID of the Tax Return Frequency."
+            },
+            "address_region": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the address region"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "The code of the address region"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "tax_profile"
+      ],
+      "description": "Updates a Tax Profile"
+    },
+    "postTaxRates": {
+      "type": "object",
+      "properties": {
+        "tax_rate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the tax rate"
+            },
+            "agency": {
+              "type": "string",
+              "description": "The agency name (US Only)"
+            },
+            "is_visible": {
+              "type": "boolean",
+              "description": "Indicates whether the tax rate is visible in the application"
+            },
+            "component_tax_rate": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the tax rate"
+                  },
+                  "agency": {
+                    "type": "string",
+                    "description": "The agency name (US Only)"
+                  },
+                  "percentage": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The tax rate percentage"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          },
+          "required": [
+            "name"
+          ]
+        }
+      },
+      "required": [
+        "tax_rate"
+      ],
+      "description": "Creates a Tax Rate (US only)"
+    },
+    "putTaxRates": {
+      "type": "object",
+      "properties": {
+        "tax_rate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the tax rate"
+            },
+            "from_date": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date from which the tax rate applies"
+            },
+            "agency": {
+              "type": "string",
+              "description": "The agency name (US Only)"
+            },
+            "percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax rate percentage"
+            },
+            "is_visible": {
+              "type": "boolean",
+              "description": "Indicates whether the tax rate is visible in the application"
+            }
+          }
+        }
+      },
+      "required": [
+        "tax_rate"
+      ],
+      "description": "Updates a Tax Rate (US only)"
+    },
+    "TaxScheme": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 20,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Standard: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸\n* Accounting Start: 🇫🇷, 🇬🇧, 🇮🇪, 🇪🇸",
+      "x-sage-menusection": "Settings"
+    },
+    "TaxType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The tax type id"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "federal_tax": {
+          "type": "boolean",
+          "description": "Indicates whether this is a federal tax type"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The country the tax type relates to"
+        },
+        "address_regions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Base"
+          },
+          "description": "The address regions the tax type relates to"
+        },
+        "tax_rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Base"
+          },
+          "description": "The tax rates related to the tax type"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Settings"
+    }
+  }
+}

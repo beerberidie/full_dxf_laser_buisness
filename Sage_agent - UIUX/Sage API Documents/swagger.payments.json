@@ -1,0 +1,3111 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Payments & Receipts",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Contact Allocations",
+      "description": "This endpoint allows you to allocate e.g. a sales credit note to a sales invoice, thus paying the invoice with the credit note. A contact allocation is therefore a transaction from one such artefact to another, given they have the same contact. The actual amount recorded needs to be specified for each artefact allocated, and all amounts need to sum up to zero. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/payments\" target=\"_blank\">Key Concepts: Payments and Receipts</a>"
+    },
+    {
+      "name": "Payment Methods",
+      "description": "This is a static endpoint, providing you with consistent payment method IDs to be used at the key payment_method_id in /contact_payments, /other_payments, and as default_payment_method_id /bank_account upon creating of updating resources. Naturally, only reading access is possible. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/payments\" target=\"_blank\">Key Concepts: Payments and Receipts</a>"
+    },
+    {
+      "name": "Contact Payments",
+      "description": "A contact payment is a payment that relates to a contact and an artefact that requires payment, i.e. usually an invoice. Incoming and outgoing payments are both handled in this endpoint; use the transaction_type_id to distinguish payments from receipts (from the perspective of the business). <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/payments\" target=\"_blank\">Key Concepts: Payments and Receipts</a>"
+    },
+    {
+      "name": "Other Payments",
+      "description": "Just as a Contact Payment, an Other Payment relates to a contact, but instead of an artefact that requires payment you need to specify a ledger account as well as the amount that is recorded to it. Thus, you can use this endpoint when you need to book a contact's payment that cannot be associated with a payment-requiring artefact like an invoice. Incoming and outgoing payments are both handled in this endpoint; use the transaction_type_id to distinguish payments from receipts (from the perspective of the business). <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/payments\" target=\"_blank\">Key Concepts: Payments and Receipts</a>"
+    },
+    {
+      "name": "Unallocated Artefacts",
+      "description": "This endpoint compiles a list of all transactions which have an outstanding amount. These are specifically (purchase or sales) invoices, credit notes, quick entries, corrective invoices, contact payments and opening balances. This API allows only SHOW and INDEX actions on this resource. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/payments/\" target=\"_blank\">Key Concepts: Payments and Receipts</a>"
+    }
+  ],
+  "paths": {
+    "/contact_allocations": {
+      "get": {
+        "summary": "Returns all Contact Allocations",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, and `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "transaction_type_id",
+            "description": "Use this to filter by transaction type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Allocations changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Allocations deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Allocations per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Allocations",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Allocations (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Order by a given attribute (required) and direction (optional; `asc` or `desc`; defaults to `asc`).\nAvailable attributes are:\ncreated_at, updated_at, date\n\nExample: `sort=created_at` or `sort=created_at:desc`",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact Allocations",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 46,
+				"$page": 1,
+				"$next": "/contact_allocations?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "343b3f50874e48f596d2114274e9cc6d",
+						"displayed_as": "Customer Allocation - 2023-01-03",
+						"$path": "/contact_allocations/343b3f50874e48f596d2114274e9cc6d"
+					},
+					{
+						"id": "e3049c8c01bb48ac8d6b2e435a06d4ad",
+						"displayed_as": "Customer Allocation - 2023-01-12",
+						"$path": "/contact_allocations/e3049c8c01bb48ac8d6b2e435a06d4ad"
+					},
+					{
+						"id": "eed2a26d984f4ebb8a9fe2d1ebacdba7",
+						"displayed_as": "Customer Allocation - 2023-01-12",
+						"$path": "/contact_allocations/eed2a26d984f4ebb8a9fe2d1ebacdba7"
+					},
+					{
+						"id": "e95b107743c248b78f5f88321c3c9adf",
+						"displayed_as": "Customer Allocation - 2023-01-12",
+						"$path": "/contact_allocations/e95b107743c248b78f5f88321c3c9adf"
+					},
+					{
+						"id": "83a7e88042594d15a5329588a57a9b89",
+						"displayed_as": "Customer Allocation - 2023-01-12",
+						"$path": "/contact_allocations/83a7e88042594d15a5329588a57a9b89"
+					},
+					{
+						"id": "36bf71fe59a74153a8a1bd51b3e3b3e9",
+						"displayed_as": "Customer Allocation - 2023-01-13",
+						"$path": "/contact_allocations/36bf71fe59a74153a8a1bd51b3e3b3e9"
+					},
+					{
+						"id": "6d907b5b418a45e28afdf2534d8b0098",
+						"displayed_as": "Customer Allocation - 2023-01-13",
+						"$path": "/contact_allocations/6d907b5b418a45e28afdf2534d8b0098"
+					},
+					{
+						"id": "107f7f682d4a432f9f05ed9e8786bc13",
+						"displayed_as": "Customer Allocation - 2023-01-13",
+						"$path": "/contact_allocations/107f7f682d4a432f9f05ed9e8786bc13"
+					},
+					{
+						"id": "c53e4b5b8ab24b35913f97ee514dcda8",
+						"displayed_as": "Customer Allocation - 2023-01-13",
+						"$path": "/contact_allocations/c53e4b5b8ab24b35913f97ee514dcda8"
+					},
+					{
+						"id": "a1fc4dfed42743e8a483c8e195f93b90",
+						"displayed_as": "Customer Allocation - 2023-01-13",
+						"$path": "/contact_allocations/a1fc4dfed42743e8a483c8e195f93b90"
+					}
+				]
+			}
+              
+            }
+          }
+        },
+        "tags": [
+          "Contact Allocations"
+        ],
+        "operationId": "getContactAllocations"
+      },
+      "x-sage-pathtitle": "Contact Allocation collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Contact Allocation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, and `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ContactAllocations",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postContactAllocations"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Contact Allocation",
+            "schema": {
+              "$ref": "#/definitions/ContactAllocation"
+            }
+          }
+        },
+        "tags": [
+          "Contact Allocations"
+        ],
+        "operationId": "postContactAllocations"
+      }
+    },
+    "/contact_allocations/{key}": {
+      "get": {
+        "summary": "Returns a Contact Allocation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, and `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Allocation Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Allocation (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Allocation",
+            "examples": {
+              "application/json":
+			  {
+				"id": "c945a9031efd4e84812c9d130bbcf8d1",
+				"displayed_as": "Customer Allocation - 2024-04-05",
+				"$path": "/contact_allocations/c945a9031efd4e84812c9d130bbcf8d1",
+				"created_at": "2024-04-05T10:30:00Z",
+				"updated_at": "2024-04-05T10:30:00Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/advanced_uk/customer_allocations/630611028",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"transaction": {
+					"id": "e5deb228b45743b8a80c5ad2e92f1620",
+					"displayed_as": null,
+					"$path": "/transactions/e5deb228b45743b8a80c5ad2e92f1620"
+				},
+				"transaction_type": {
+					"id": "CUSTOMER_ALLOCATION",
+					"displayed_as": "Customer Allocation",
+					"$path": "/transaction_types/CUSTOMER_ALLOCATION"
+				},
+				"date": "2024-04-05",
+				"contact": {
+					"id": "521229b29af04f3682d85b0d43ef5361",
+					"displayed_as": "ABS Garages Ltd (ABS001)",
+					"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+				},
+				"allocated_artefacts": [
+					{
+						"id": "fd835473cef14633af2e60101e458ab9",
+						"artefact": {
+							"id": "d88b0079361b4b37a3d6b4e6b41b2775",
+							"displayed_as": "SI-355",
+							"$path": "/sales_invoices/d88b0079361b4b37a3d6b4e6b41b2775",
+							"links": [
+								{
+									"href": "https://accounts-extra.sageone.com/invoicing/sales_invoices/d88b0079361b4b37a3d6b4e6b41b2775",
+									"rel": "alternate",
+									"type": "text/html"
+								},
+								{
+									"href": "https://accounts-extra.sageone.com/advanced_uk/online_payment/gb173d7da32bb99625b4af278582cfb9378e044f8ccfd5785c4e87d5042e4533c3ead35d0f8e34be8bec3cf0518a83a2991eb630b95f5841abd802a6ad930900da934bd5b6457935bf50f713539c54f5f4f063fde090e825cdefbc10b3c12d346bcf49ec8afe6f127d26948100a5583541",
+									"rel": "bookmark",
+									"type": "text/html"
+								}
+							]
+						},
+						"amount": "20.0"
+					},
+					{
+						"id": "14511ba50f2a49f1a2bc9765890f741a",
+						"artefact": {
+							"id": "cc31d97b43de4f9d9aaf718b7d81fa65",
+							"displayed_as": "ABS Garages payment",
+							"$path": "/contact_payments/abf85666183b4518af9639bff387b6d8",
+							"links": [
+								{
+									"href": null,
+									"rel": "alternate",
+									"type": "text/html"
+								}
+							]
+						},
+						"amount": "-20.0"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Allocations"
+        ],
+        "operationId": "getContactAllocationsKey"
+      },
+      "x-sage-pathtitle": "single Contact Allocation resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Contact Allocation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, and `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Allocation Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "ContactAllocations",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putContactAllocations"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Contact Allocation",
+            "schema": {
+              "$ref": "#/definitions/ContactAllocation"
+            }
+          }
+        },
+        "tags": [
+          "Contact Allocations"
+        ],
+        "operationId": "putContactAllocationsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Contact Allocation",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, and `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Allocation Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Contact Allocation"
+          }
+        },
+        "tags": [
+          "Contact Allocations"
+        ],
+        "operationId": "deleteContactAllocationsKey"
+      }
+    },
+    "/payment_methods": {
+      "get": {
+        "summary": "Returns all Payment Methods",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Payment Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Payment Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Payment Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Payment Methods",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 5,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "CASH",
+						"displayed_as": "Cash",
+						"$path": "/payment_methods/CASH"
+					},
+					{
+						"id": "CHECK",
+						"displayed_as": "Cheque",
+						"$path": "/payment_methods/CHECK"
+					},
+					{
+						"id": "ELECTRONIC",
+						"displayed_as": "Electronic",
+						"$path": "/payment_methods/ELECTRONIC"
+					},
+					{
+						"id": "CREDIT_DEBIT",
+						"displayed_as": "Credit/Debit Card",
+						"$path": "/payment_methods/CREDIT_DEBIT"
+					},
+					{
+						"id": "ONLINE_PAYMENT",
+						"displayed_as": "PayPal",
+						"$path": "/payment_methods/ONLINE_PAYMENT"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Payment Methods"
+        ],
+        "operationId": "getPaymentMethods"
+      },
+      "x-sage-pathtitle": "Payment Method collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/payment_methods/{key}": {
+      "get": {
+        "summary": "Returns a Payment Method",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Payment Method Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Payment Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Payment Method",
+            "examples": {
+              "application/json":
+			  {
+				"id": "CREDIT_DEBIT",
+				"displayed_as": "Credit/Debit Card",
+				"$path": "/payment_methods/CREDIT_DEBIT"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Payment Methods"
+        ],
+        "operationId": "getPaymentMethodsKey"
+      },
+      "x-sage-pathtitle": "single Payment Method resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/contact_payments": {
+      "get": {
+        "summary": "Returns all Contact Payments",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "bank_account_id",
+            "description": "Use this to filter by bank account id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "transaction_type_id",
+            "description": "Use this to filter by transaction type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Artefact Payments changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Artefact Payments deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Artefact Payments dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Artefact Payments dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Artefact Payments per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Artefact Payments",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Artefact Payments (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Order by a given attribute (required) and direction (optional; `asc` or `desc`; defaults to `asc`).\nAvailable attributes are:\ncreated_at, updated_at, date\n\nExample: `sort=created_at` or `sort=created_at:desc`",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact Payments",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 192,
+				"$page": 1,
+				"$next": "/contact_payments?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "125fd526b6ec4fba8c416ea8ab06b1da",
+						"displayed_as": null,
+						"$path": "/contact_payments/125fd526b6ec4fba8c416ea8ab06b1da"
+					},
+					{
+						"id": "a4f8af3a16fb46cf9ac0654bf9155314",
+						"displayed_as": null,
+						"$path": "/contact_payments/a4f8af3a16fb46cf9ac0654bf9155314"
+					},
+					{
+						"id": "d41e9e5e2ef04406990d684414fc5c18",
+						"displayed_as": null,
+						"$path": "/contact_payments/d41e9e5e2ef04406990d684414fc5c18"
+					},
+					{
+						"id": "8e5ece9d44fd463dae36d3653ed2ef65",
+						"displayed_as": null,
+						"$path": "/contact_payments/8e5ece9d44fd463dae36d3653ed2ef65"
+					},
+					{
+						"id": "24596ea28f9b4fa9a014caf8c80ff17b",
+						"displayed_as": null,
+						"$path": "/contact_payments/24596ea28f9b4fa9a014caf8c80ff17b"
+					},
+					{
+						"id": "61bcebf5f08c4cb6a71d61e8002032fe",
+						"displayed_as": null,
+						"$path": "/contact_payments/61bcebf5f08c4cb6a71d61e8002032fe"
+					},
+					{
+						"id": "661afa4f4a8640a9b520e5d7895b7688",
+						"displayed_as": null,
+						"$path": "/contact_payments/661afa4f4a8640a9b520e5d7895b7688"
+					},
+					{
+						"id": "bd9fec37fb1f4b6fac9fb0c68af14052",
+						"displayed_as": null,
+						"$path": "/contact_payments/bd9fec37fb1f4b6fac9fb0c68af14052"
+					},
+					{
+						"id": "e07e0ac07b734486b29c9da163dcc5b8",
+						"displayed_as": null,
+						"$path": "/contact_payments/e07e0ac07b734486b29c9da163dcc5b8"
+					},
+					{
+						"id": "2f05ee7c5d374ce7acc1bcede906c3dd",
+						"displayed_as": null,
+						"$path": "/contact_payments/2f05ee7c5d374ce7acc1bcede906c3dd"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Payments"
+        ],
+        "operationId": "getContactPayments"
+      },
+      "x-sage-pathtitle": "Contact Payment collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Contact Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ContactPayments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postContactPayments"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Contact Payment",
+            "schema": {
+              "$ref": "#/definitions/ContactPayment"
+            }
+          }
+        },
+        "tags": [
+          "Contact Payments"
+        ],
+        "operationId": "postContactPayments"
+      }
+    },
+    "/contact_payments/{key}": {
+      "get": {
+        "summary": "Returns a Contact Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Payment Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Artefact Payment (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Payment",
+            "examples": {
+              "application/json":
+			  {
+				"id": "abf85666183b4518af9639bff387b6d8",
+				"displayed_as": "ABS Garages payment",
+				"$path": "/contact_payments/abf85666183b4518af9639bff387b6d8",
+				"created_at": "2024-04-05T10:23:48Z",
+				"updated_at": "2024-04-05T10:30:00Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/advanced_uk/customer_income_payments/630606159",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"transaction": {
+					"id": "2052b76980c942038b9cc8ba183ea101",
+					"displayed_as": "ABS Garages payment",
+					"$path": "/transactions/2052b76980c942038b9cc8ba183ea101"
+				},
+				"transaction_type": {
+					"id": "CUSTOMER_RECEIPT",
+					"displayed_as": "Customer Receipt",
+					"$path": "/transaction_types/CUSTOMER_RECEIPT"
+				},
+				"payment_method": {
+					"id": "CREDIT_DEBIT",
+					"displayed_as": "Credit/Debit Card",
+					"$path": "/payment_methods/CREDIT_DEBIT"
+				},
+				"contact": {
+					"id": "521229b29af04f3682d85b0d43ef5361",
+					"displayed_as": "ABS Garages Ltd (ABS001)",
+					"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+				},
+				"bank_account": {
+					"id": "19e5f9768c9542ef840ab7532e231215",
+					"displayed_as": "Bank Account (1200)",
+					"$path": "/bank_accounts/19e5f9768c9542ef840ab7532e231215"
+				},
+				"date": "2024-04-05",
+				"net_amount": "0.0",
+				"tax_amount": "0.0",
+				"total_amount": "120.0",
+				"currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"exchange_rate": "1.0",
+				"base_currency_net_amount": "0.0",
+				"base_currency_tax_amount": "0.0",
+				"base_currency_total_amount": "120.0",
+				"base_currency_currency_charge": "0.0",
+				"reference": "ABS Garages payment",
+				"allocated_artefacts": [],
+				"tax_rate": null,
+				"payment_on_account": {
+					"id": "cc31d97b43de4f9d9aaf718b7d81fa65",
+					"displayed_as": "ABS Garages payment",
+					"$path": "/contact_payments/abf85666183b4518af9639bff387b6d8",
+					"created_at": "2024-04-05T10:23:48Z",
+					"updated_at": "2024-04-05T10:30:00Z",
+					"contact_name": "ABS Garages Ltd",
+					"contact_reference": "ABS001",
+					"contact": {
+						"id": "521229b29af04f3682d85b0d43ef5361",
+						"displayed_as": "ABS Garages Ltd (ABS001)",
+						"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+					},
+					"date": "2024-04-05",
+					"reference": "ABS Garages payment",
+					"net_amount": "120.0",
+					"tax_amount": "0.0",
+					"total_amount": "120.0",
+					"outstanding_amount": "100.0",
+					"currency": {
+						"id": "GBP",
+						"displayed_as": "Pound Sterling (GBP)",
+						"$path": "/currencies/GBP"
+					},
+					"exchange_rate": "1.0",
+					"base_currency_net_amount": "120.0",
+					"base_currency_tax_amount": "0.0",
+					"base_currency_total_amount": "120.0",
+					"base_currency_outstanding_amount": "100.0",
+					"status": {
+						"id": "PART_PAID",
+						"displayed_as": "Part Paid",
+						"$path": "/artefact_statuses/PART_PAID"
+					}
+				},
+				"editable": false
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Payments"
+        ],
+        "operationId": "getContactPaymentsKey"
+      },
+      "x-sage-pathtitle": "single Contact Payment resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Contact Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Payment Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "ContactPayments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putContactPayments"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Contact Payment",
+            "schema": {
+              "$ref": "#/definitions/ContactPayment"
+            }
+          }
+        },
+        "tags": [
+          "Contact Payments"
+        ],
+        "operationId": "putContactPaymentsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Contact Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Payment Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Contact Payment"
+          }
+        },
+        "tags": [
+          "Contact Payments"
+        ],
+        "operationId": "deleteContactPaymentsKey"
+      }
+    },
+    "/other_payments": {
+      "get": {
+        "summary": "Returns all Other Payments",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "bank_account_id",
+            "description": "Use this to filter by bank account id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Payments deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Use this to filter by Payments dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "has_attachments",
+            "description": "Use this to filter Payments by whether they have attachments or not",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Use this to filter by Payments dates",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "transaction_type_id",
+            "description": "Use this to filter by transaction type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Payments changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Payments per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Payments",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Payments (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Order by a given attribute (required) and direction (optional; `asc` or `desc`; defaults to `asc`).\nAvailable attributes are:\ncreated_at, updated_at, date\n\nExample: `sort=created_at` or `sort=created_at:desc`",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Other Payments",
+            "examples": {
+            "application/json":
+			{
+				"$total": 203,
+				"$page": 1,
+				"$next": "/other_payments?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "184f5ef4e3b54c1fa62787c70e4410d1",
+						"displayed_as": "56956",
+						"$path": "/other_payments/184f5ef4e3b54c1fa62787c70e4410d1"
+					},
+					{
+						"id": "c1b3a4f6173e455bb753199443bac8e2",
+						"displayed_as": "656678",
+						"$path": "/other_payments/c1b3a4f6173e455bb753199443bac8e2"
+					},
+					{
+						"id": "60bb9789bd5c4f55a612c999596d6ec6",
+						"displayed_as": "656679",
+						"$path": "/other_payments/60bb9789bd5c4f55a612c999596d6ec6"
+					},
+					{
+						"id": "ddfcb102f0c04e2aa50af428be73c365",
+						"displayed_as": "656680",
+						"$path": "/other_payments/ddfcb102f0c04e2aa50af428be73c365"
+					},
+					{
+						"id": "ed7f144bea1d4d86a9d25bee6d97fe9e",
+						"displayed_as": "656681",
+						"$path": "/other_payments/ed7f144bea1d4d86a9d25bee6d97fe9e"
+					},
+					{
+						"id": "6ca8b8870393426bab0595deaee44a3f",
+						"displayed_as": "656869",
+						"$path": "/other_payments/6ca8b8870393426bab0595deaee44a3f"
+					},
+					{
+						"id": "ae41fb5720334460a442a0906ced939f",
+						"displayed_as": "568953",
+						"$path": "/other_payments/ae41fb5720334460a442a0906ced939f"
+					},
+					{
+						"id": "b1eb0a6f9767491c98aa7f89573132fd",
+						"displayed_as": "1",
+						"$path": "/other_payments/b1eb0a6f9767491c98aa7f89573132fd"
+					},
+					{
+						"id": "c864c723552b42de982c39e57bd2799c",
+						"displayed_as": "1",
+						"$path": "/other_payments/c864c723552b42de982c39e57bd2799c"
+					},
+					{
+						"id": "31e5ca2ca2df4fb2b6834392f979aa11",
+						"displayed_as": "SED",
+						"$path": "/other_payments/31e5ca2ca2df4fb2b6834392f979aa11"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Other Payments"
+        ],
+        "operationId": "getOtherPayments"
+      },
+      "x-sage-pathtitle": "Other Payment collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Other Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "OtherPayments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postOtherPayments"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Other Payment",
+            "schema": {
+              "$ref": "#/definitions/OtherPayment"
+            }
+          }
+        },
+        "tags": [
+          "Other Payments"
+        ],
+        "operationId": "postOtherPayments"
+      }
+    },
+    "/other_payments/{key}": {
+      "get": {
+        "summary": "Returns a Other Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Other Payment Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Payment (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_analysis_types",
+            "description": "Use this to show the line item analysis types",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Payment (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Other Payment",
+            "examples": {
+              "application/json":
+			  {
+				"id": "a47292616ba743f6b111adb7d3df40d5",
+				"displayed_as": "ABS Garages payment",
+				"$path": "/other_payments/a47292616ba743f6b111adb7d3df40d5",
+				"created_at": "2024-04-05T08:56:57Z",
+				"updated_at": "2024-04-05T08:56:57Z",
+				"transaction": {
+					"id": "92137a7c04fd4c14b68c2da0b9b7b49f",
+					"displayed_as": "ABS Garages payment",
+					"$path": "/transactions/92137a7c04fd4c14b68c2da0b9b7b49f"
+				},
+				"transaction_type": {
+					"id": "OTHER_RECEIPT",
+					"displayed_as": "Other Receipt",
+					"$path": "/transaction_types/OTHER_RECEIPT"
+				},
+				"base_currency_total_itc_amount": null,
+				"total_itc_amount": null,
+				"base_currency_total_itr_amount": null,
+				"total_itr_amount": null,
+				"part_recoverable": null,
+				"payment_method": {
+					"id": "CREDIT_DEBIT",
+					"displayed_as": "Credit/Debit Card",
+					"$path": "/payment_methods/CREDIT_DEBIT"
+				},
+				"contact": {
+					"id": "521229b29af04f3682d85b0d43ef5361",
+					"displayed_as": "ABS Garages Ltd (ABS001)",
+					"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+				},
+				"bank_account": {
+					"id": "19e5f9768c9542ef840ab7532e231215",
+					"displayed_as": "Bank Account (1200)",
+					"$path": "/bank_accounts/19e5f9768c9542ef840ab7532e231215"
+				},
+				"tax_address_region": null,
+				"date": "2024-04-05",
+				"net_amount": "100.0",
+				"tax_amount": "20.0",
+				"total_amount": "120.0",
+				"reference": "ABS Garages payment",
+				"payment_lines": [
+					{
+						"id": "d14fcfd5ae7f445fbda2fa3965ce70b0",
+						"displayed_as": "ABS Garages payment",
+						"ledger_account": {
+							"id": "7a5ecfcf884911ed84fa0252b90cda0d",
+							"displayed_as": "Other income (4900)",
+							"$path": "/ledger_accounts/7a5ecfcf884911ed84fa0252b90cda0d"
+						},
+						"details": "ABS Garages payment",
+						"tax_rate": {
+							"id": "GB_STANDARD",
+							"displayed_as": "Standard 20.00%",
+							"$path": "/tax_rates/GB_STANDARD"
+						},
+						"net_amount": "100.0",
+						"tax_amount": "20.0",
+						"total_amount": "120.0",
+						"tax_breakdown": [
+							{
+								"tax_rate": {
+									"id": "GB_STANDARD",
+									"displayed_as": "Standard 20.00%",
+									"$path": "/tax_rates/GB_STANDARD"
+								},
+								"percentage": "20.0",
+								"amount": "20.0"
+							}
+						],
+						"is_purchase_for_resale": false,
+						"trade_of_asset": false,
+						"gst_amount": null,
+						"pst_amount": null,
+						"tax_recoverable": null
+					}
+				],
+				"editable": true,
+				"deletable": false,
+				"withholding_tax_rate": null,
+				"withholding_tax_amount": null
+			}
+            }
+          }
+        },
+        "tags": [
+          "Other Payments"
+        ],
+        "operationId": "getOtherPaymentsKey"
+      },
+      "x-sage-pathtitle": "single Other Payment resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Other Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Other Payment Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "OtherPayments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putOtherPayments"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Other Payment",
+            "schema": {
+              "$ref": "#/definitions/OtherPayment"
+            }
+          }
+        },
+        "tags": [
+          "Other Payments"
+        ],
+        "operationId": "putOtherPaymentsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Other Payment",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Other Payment Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Other Payment"
+          }
+        },
+        "tags": [
+          "Other Payments"
+        ],
+        "operationId": "deleteOtherPaymentsKey"
+      }
+    },
+    "/unallocated_artefacts": {
+      "get": {
+        "summary": "Returns all Unallocated Artefacts",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the contact identifier.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Base Artefacts (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Base Artefacts per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Base Artefacts",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Unallocated Artefacts",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 245,
+				"$page": 1,
+				"$next": "/unallocated_artefacts?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "d2b7ed37544e444887e49f3f74482474",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/d2b7ed37544e444887e49f3f74482474"
+					},
+					{
+						"id": "5ed6ca8f15dc4556a3d09a8687e4bb24",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/5ed6ca8f15dc4556a3d09a8687e4bb24"
+					},
+					{
+						"id": "6442c8cd4f6041b0ba0be74a58e55032",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/6442c8cd4f6041b0ba0be74a58e55032"
+					},
+					{
+						"id": "bd5cddbe044a48e5828e0a97409ee006",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/bd5cddbe044a48e5828e0a97409ee006"
+					},
+					{
+						"id": "46edee13628b4215ab120478154b9673",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/46edee13628b4215ab120478154b9673"
+					},
+					{
+						"id": "e846488332684285bb1cbb43d47c1f73",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/e846488332684285bb1cbb43d47c1f73"
+					},
+					{
+						"id": "ce1bed1009df47d2a1f6f5d7741efcb6",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/ce1bed1009df47d2a1f6f5d7741efcb6"
+					},
+					{
+						"id": "fdcf1052687d4334b71ac61ddd3edaa6",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/fdcf1052687d4334b71ac61ddd3edaa6"
+					},
+					{
+						"id": "3351928d486641a0bacab1b578bbfc55",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/purchase_quick_entries/3351928d486641a0bacab1b578bbfc55"
+					},
+					{
+						"id": "1c033ecbe5ff410f9eb45ae523e7a4e6",
+						"displayed_as": "OB-O/BAL",
+						"$path": "/sales_quick_entries/1c033ecbe5ff410f9eb45ae523e7a4e6"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Unallocated Artefacts"
+        ],
+        "operationId": "getUnallocatedArtefacts"
+      },
+      "x-sage-pathtitle": "Unallocated Artefact collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/unallocated_artefacts/{key}": {
+      "get": {
+        "summary": "Returns a Unallocated Artefact",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Unallocated Artefact Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Base Artefact (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Unallocated Artefact",
+            "examples": {
+              "application/json":
+			  {
+				"id": "d2b7ed37544e444887e49f3f74482474",
+				"displayed_as": "OB-O/BAL",
+				"$path": "/purchase_quick_entries/d2b7ed37544e444887e49f3f74482474",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/settings/supplier_opening_balances",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Unallocated Artefacts"
+        ],
+        "operationId": "getUnallocatedArtefactsKey"
+      },
+      "x-sage-pathtitle": "single Unallocated Artefact resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "ContactAllocation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the allocation"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date the allocation was made"
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The contact that the allocation relates to"
+        },
+        "allocated_artefacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AllocatedArtefact"
+          },
+          "description": "The payment lines of the payment"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the areas `Sales`, `Purchases`, and `Contacts`: Full Access",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "The link path"
+        },
+        "rel": {
+          "type": "string",
+          "description": "The relationship of the link to the resource"
+        },
+        "type": {
+          "type": "string",
+          "description": "The content-type of the link"
+        }
+      }
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "AllocatedArtefact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "artefact": {
+          "$ref": "#/definitions/Generic",
+          "description": "The artefact the payment has been allocated against"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The allocated amount"
+        }
+      }
+    },
+    "Generic": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        }
+      }
+    },
+    "postContactAllocations": {
+      "type": "object",
+      "properties": {
+        "contact_allocation": {
+          "type": "object",
+          "properties": {
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The transaction type of the allocation"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The contact that the allocation relates to"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date the allocation was made"
+            },
+            "allocated_artefacts": {
+              "type": "array",
+              "description": "The payment lines of the payment",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artefact_id": {
+                    "type": "string",
+                    "description": "The ID of the Artefact."
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The allocated amount"
+                  }
+                }
+              }
+            }
+          },
+          "required": [
+            "transaction_type_id",
+            "contact_id",
+            "allocated_artefacts"
+          ]
+        }
+      },
+      "required": [
+        "contact_allocation"
+      ],
+      "description": "Creates a Contact Allocation"
+    },
+    "putContactAllocations": {
+      "type": "object",
+      "properties": {
+        "contact_allocation": {
+          "type": "object",
+          "properties": {
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The transaction type of the allocation"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The contact that the allocation relates to"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date the allocation was made"
+            },
+            "allocated_artefacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artefact_id": {
+                    "type": "string",
+                    "description": "The ID of the Artefact."
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The allocated amount"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "contact_allocation"
+      ],
+      "description": "Updates a Contact Allocation"
+    },
+    "ContactPayment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the payment"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "payment_method": {
+          "$ref": "#/definitions/Base",
+          "description": "The payment method of the payment"
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The contact of the payment"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The bank account of the payment"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date the payment was made"
+        },
+        "net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the payment"
+        },
+        "tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the payment"
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the payment"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency of the payment"
+        },
+        "exchange_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The exchange rate of the payment"
+        },
+        "base_currency_net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the payment in base currency"
+        },
+        "base_currency_tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the payment in base currency"
+        },
+        "base_currency_total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the payment in base currency"
+        },
+        "base_currency_currency_charge": {
+          "type": "number",
+          "format": "double",
+          "description": "The currency conversion charges in base currency"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "A reference for the payment\nNote: An upper length limit of 25 or 40 characters is imposed conditionally and may not apply in every request. A hard upper limit of 255 characters is imposed by the storage layer, though."
+        },
+        "allocated_artefacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AllocatedPaymentArtefact"
+          },
+          "description": "The allocated artefacts"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax rate for the payment (only used with some cash based tax schemes)"
+        },
+        "payment_on_account": {
+          "$ref": "#/definitions/PaymentOnAccount",
+          "description": "The payment on account generated by this payment (if any)"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether payment can be edited"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Restricted Access, Full Access",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "AllocatedPaymentArtefact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "artefact": {
+          "$ref": "#/definitions/Generic",
+          "description": "The artefact the payment has been allocated against"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The allocated amount"
+        },
+        "discount": {
+          "type": "number",
+          "format": "double",
+          "description": "The allocated discount"
+        }
+      }
+    },
+    "PaymentOnAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "contact_name": {
+          "type": "string",
+          "description": "The name of the contact when the payment on account was created"
+        },
+        "contact_reference": {
+          "type": "string",
+          "description": "The reference of the contact when the payment on account was created"
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The contact the payment on account relates to"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the payment on account"
+        },
+        "reference": {
+          "type": "string",
+          "description": "The reference for the payment on account"
+        },
+        "net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the payment on account"
+        },
+        "tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the payment on account"
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the payment on account"
+        },
+        "outstanding_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The outstanding amount of the payment on account"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency for the payment on account"
+        },
+        "exchange_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "The exchange rate for the payment on account"
+        },
+        "base_currency_net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the payment on account in base currency"
+        },
+        "base_currency_tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the payment on account in base currency"
+        },
+        "base_currency_total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the payment on account in base currency"
+        },
+        "base_currency_outstanding_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The outstanding amount of the payment on account in base currency"
+        },
+        "status": {
+          "$ref": "#/definitions/Base",
+          "description": "The status of the payment on account"
+        }
+      }
+    },
+    "postContactPayments": {
+      "type": "object",
+      "properties": {
+        "contact_payment": {
+          "type": "object",
+          "properties": {
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The transaction type of the payment"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The contact of the payment"
+            },
+            "bank_account_id": {
+              "type": "string",
+              "description": "The bank account of the payment"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date the payment was made"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the payment"
+            },
+            "payment_method_id": {
+              "type": "string",
+              "description": "The ID of the Payment Method."
+            },
+            "net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the payment"
+            },
+            "tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the payment"
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The exchange rate of the payment"
+            },
+            "base_currency_net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the payment in base currency"
+            },
+            "base_currency_tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the payment in base currency"
+            },
+            "base_currency_total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the payment in base currency"
+            },
+            "base_currency_currency_charge": {
+              "type": "number",
+              "format": "double",
+              "description": "The currency conversion charges in base currency"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference for the payment"
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            },
+            "allocated_artefacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artefact_id": {
+                    "type": "string",
+                    "description": "The ID of the Artefact."
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The allocated amount"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The allocated discount"
+                  }
+                }
+              }
+            },
+            "payment_on_account": {
+              "type": "object",
+              "properties": {
+                "contact_name": {
+                  "type": "string",
+                  "description": "The name of the contact when the payment on account was created"
+                },
+                "contact_reference": {
+                  "type": "string",
+                  "description": "The reference of the contact when the payment on account was created"
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "The date of the payment on account"
+                },
+                "reference": {
+                  "type": "string",
+                  "description": "The reference for the payment on account"
+                },
+                "net_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The net amount of the payment on account"
+                },
+                "tax_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The tax amount of the payment on account"
+                },
+                "total_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The total amount of the payment on account"
+                },
+                "outstanding_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The outstanding amount of the payment on account"
+                },
+                "currency_id": {
+                  "type": "string",
+                  "description": "The ID of the Currency."
+                },
+                "exchange_rate": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The exchange rate for the payment on account"
+                },
+                "base_currency_net_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The net amount of the payment on account in base currency"
+                },
+                "base_currency_tax_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The tax amount of the payment on account in base currency"
+                },
+                "base_currency_total_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The total amount of the payment on account in base currency"
+                },
+                "base_currency_outstanding_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The outstanding amount of the payment on account in base currency"
+                },
+                "status_id": {
+                  "type": "string",
+                  "description": "The ID of the Status."
+                }
+              }
+            }
+          },
+          "required": [
+            "transaction_type_id",
+            "contact_id",
+            "bank_account_id",
+            "date",
+            "total_amount"
+          ]
+        }
+      },
+      "required": [
+        "contact_payment"
+      ],
+      "description": "Creates a Contact Payment"
+    },
+    "putContactPayments": {
+      "type": "object",
+      "properties": {
+        "contact_payment": {
+          "type": "object",
+          "properties": {
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The transaction type of the payment"
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The contact of the payment"
+            },
+            "bank_account_id": {
+              "type": "string",
+              "description": "The bank account of the payment"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date the payment was made"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the payment"
+            },
+            "payment_method_id": {
+              "type": "string",
+              "description": "The ID of the Payment Method."
+            },
+            "net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the payment"
+            },
+            "tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the payment"
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "exchange_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "The exchange rate of the payment"
+            },
+            "base_currency_net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the payment in base currency"
+            },
+            "base_currency_tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the payment in base currency"
+            },
+            "base_currency_total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the payment in base currency"
+            },
+            "base_currency_currency_charge": {
+              "type": "number",
+              "format": "double",
+              "description": "The currency conversion charges in base currency"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference for the payment"
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            },
+            "allocated_artefacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "artefact_id": {
+                    "type": "string",
+                    "description": "The ID of the Artefact."
+                  },
+                  "amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The allocated amount"
+                  },
+                  "discount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The allocated discount"
+                  }
+                }
+              }
+            },
+            "payment_on_account": {
+              "type": "object",
+              "properties": {
+                "contact_name": {
+                  "type": "string",
+                  "description": "The name of the contact when the payment on account was created"
+                },
+                "contact_reference": {
+                  "type": "string",
+                  "description": "The reference of the contact when the payment on account was created"
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "The date of the payment on account"
+                },
+                "reference": {
+                  "type": "string",
+                  "description": "The reference for the payment on account"
+                },
+                "net_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The net amount of the payment on account"
+                },
+                "tax_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The tax amount of the payment on account"
+                },
+                "total_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The total amount of the payment on account"
+                },
+                "outstanding_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The outstanding amount of the payment on account"
+                },
+                "currency_id": {
+                  "type": "string",
+                  "description": "The ID of the Currency."
+                },
+                "exchange_rate": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The exchange rate for the payment on account"
+                },
+                "base_currency_net_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The net amount of the payment on account in base currency"
+                },
+                "base_currency_tax_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The tax amount of the payment on account in base currency"
+                },
+                "base_currency_total_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The total amount of the payment on account in base currency"
+                },
+                "base_currency_outstanding_amount": {
+                  "type": "number",
+                  "format": "double",
+                  "description": "The outstanding amount of the payment on account in base currency"
+                },
+                "status_id": {
+                  "type": "string",
+                  "description": "The ID of the Status."
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "contact_payment"
+      ],
+      "description": "Updates a Contact Payment"
+    },
+    "OtherPayment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "transaction": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction for the item"
+        },
+        "transaction_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The transaction type of the payment"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "base_currency_total_itc_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of input tax credit in base currency for the\n                     Other Payment (Canada only)"
+        },
+        "total_itc_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of input tax credit for the Other Payment (Canada only)"
+        },
+        "base_currency_total_itr_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of input tax refund in base currency for the\n                     Other Payment (Canada only)"
+        },
+        "total_itr_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of input tax refund for the Other Payment (Canada only)"
+        },
+        "part_recoverable": {
+          "type": "boolean",
+          "description": "Indicates if the Other Payment is part recoverable or not (Canada only)"
+        },
+        "payment_method": {
+          "$ref": "#/definitions/Base",
+          "description": "The payment method of the payment"
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The contact of the payment"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The bank account of the payment"
+        },
+        "tax_address_region": {
+          "$ref": "#/definitions/Base",
+          "description": "The address region for tax purposes (Canada only)"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date of the payment"
+        },
+        "net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the payment"
+        },
+        "tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the payment"
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the payment"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "A reference of the payment\nNote: An upper length limit of 25 or 40 characters is imposed conditionally and may not apply in every request. A hard upper limit of 255 characters is imposed by the storage layer, though."
+        },
+        "payment_lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OtherPaymentLineItem"
+          },
+          "description": "The payment lines of the payment"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "Indicates whether or not the payment can be edited"
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether or not the payment can be deleted"
+        },
+        "withholding_tax_rate": {
+          "type": "number",
+          "format": "double",
+          "description": "IRPF withheld tax rate"
+        },
+        "withholding_tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "IRPF withheld tax amount"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any of the following roles in the area `Bank`: Restricted Access, Full Access",
+      "x-sage-menusection": "Bank, Payments & Receipts"
+    },
+    "OtherPaymentLineItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "analysis_type_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisTypeLineItem"
+          },
+          "description": "The analysis types information"
+        },
+        "ledger_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account of the payment line"
+        },
+        "details": {
+          "type": "string",
+          "description": "The details of the payment line"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax rate of the payment line"
+        },
+        "net_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The net amount of the payment line"
+        },
+        "tax_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount of the payment line"
+        },
+        "total_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount of the payment line"
+        },
+        "tax_breakdown": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaxBreakdown"
+          },
+          "description": "The tax breakdown for the payment line"
+        },
+        "is_purchase_for_resale": {
+          "type": "boolean",
+          "description": "Identifies whether the line item is for resale. (Ireland only)"
+        },
+        "trade_of_asset": {
+          "type": "boolean",
+          "description": "Whether the line item is marked as trade of asset."
+        },
+        "gst_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The gst or hst tax amount for the other payment"
+        },
+        "pst_amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The pst or qst tax amount for the other payment"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates if the other payment is tax recoverable or not"
+        }
+      }
+    },
+    "AnalysisTypeLineItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "analysis_type": {
+          "$ref": "#/definitions/AnalysisType",
+          "description": "The analysis type category"
+        }
+      }
+    },
+    "AnalysisType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "active_areas": {
+          "type": "array",
+          "description": "The areas for which the analysis type is available"
+        },
+        "analysis_type_level": {
+          "type": "array",
+          "description": "The analysis type level"
+        },
+        "analysis_type_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisTypeCategory"
+          },
+          "description": "The analysis type categories for the analysis type"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the analysis type"
+        }
+      }
+    },
+    "AnalysisTypeCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The code for the analysis type category"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the analysis type category"
+        },
+        "combined_id": {
+          "type": "string",
+          "description": "The combined_id of the analysis type category"
+        },
+        "analysis_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The analysis type for the analysis type category"
+        }
+      }
+    },
+    "TaxBreakdown": {
+      "type": "object",
+      "properties": {
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The tax rate"
+        },
+        "percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax rate percentage"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The tax amount for the given tax rate"
+        }
+      }
+    },
+    "postOtherPayments": {
+      "type": "object",
+      "properties": {
+        "other_payment": {
+          "type": "object",
+          "properties": {
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The transaction type of the payment"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the payment"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the payment"
+            },
+            "base_currency_total_itc_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax credit in base currency for the\n                     Other Payment (Canada only)"
+            },
+            "total_itc_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax credit for the Other Payment (Canada only)"
+            },
+            "base_currency_total_itr_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax refund in base currency for the\n                     Other Payment (Canada only)"
+            },
+            "total_itr_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax refund for the Other Payment (Canada only)"
+            },
+            "part_recoverable": {
+              "type": "boolean",
+              "description": "Indicates if the Other Payment is part recoverable or not (Canada only)"
+            },
+            "payment_method_id": {
+              "type": "string",
+              "description": "The ID of the Payment Method."
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The ID of the Contact."
+            },
+            "bank_account_id": {
+              "type": "string",
+              "description": "The ID of the Bank Account."
+            },
+            "tax_address_region_id": {
+              "type": "string",
+              "description": "The ID of the Tax Address Region. (Canada only)"
+            },
+            "net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the payment"
+            },
+            "tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the payment"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference of the payment"
+            },
+            "withholding_tax_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "IRPF withheld tax rate"
+            },
+            "withholding_tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "IRPF withheld tax amount"
+            },
+            "payment_lines": {
+              "type": "array",
+              "description": "The payment lines of the payment",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ledger_account_id": {
+                    "type": "string",
+                    "description": "The ID of the Ledger Account."
+                  },
+                  "total_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The total amount of the payment line"
+                  },
+                  "analysis_type_categories": {
+                    "type": "array",
+                    "description": "The analysis types information",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "details": {
+                    "type": "string",
+                    "description": "The details of the payment line"
+                  },
+                  "tax_rate_id": {
+                    "type": "string",
+                    "description": "The ID of the Tax Rate."
+                  },
+                  "net_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The net amount of the payment line"
+                  },
+                  "tax_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The tax amount of the payment line"
+                  },
+                  "is_purchase_for_resale": {
+                    "type": "boolean",
+                    "description": "Identifies whether the line item is for resale. (Ireland only)"
+                  },
+                  "trade_of_asset": {
+                    "type": "boolean",
+                    "description": "Whether the line item is marked as trade of asset."
+                  },
+                  "gst_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The gst or hst tax amount for the other payment"
+                  },
+                  "pst_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The pst or qst tax amount for the other payment"
+                  },
+                  "tax_recoverable": {
+                    "type": "boolean",
+                    "description": "Indicates if the other payment is tax recoverable or not"
+                  }
+                },
+                "required": [
+                  "ledger_account_id",
+                  "total_amount"
+                ]
+              }
+            }
+          },
+          "required": [
+            "transaction_type_id",
+            "date",
+            "total_amount",
+            "payment_lines"
+          ]
+        }
+      },
+      "required": [
+        "other_payment"
+      ],
+      "description": "Creates a Other Payment"
+    },
+    "putOtherPayments": {
+      "type": "object",
+      "properties": {
+        "other_payment": {
+          "type": "object",
+          "properties": {
+            "transaction_type_id": {
+              "type": "string",
+              "description": "The transaction type of the payment"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "The date of the payment"
+            },
+            "total_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of the payment"
+            },
+            "base_currency_total_itc_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax credit in base currency for the\n                     Other Payment (Canada only)"
+            },
+            "total_itc_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax credit for the Other Payment (Canada only)"
+            },
+            "base_currency_total_itr_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax refund in base currency for the\n                     Other Payment (Canada only)"
+            },
+            "total_itr_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The total amount of input tax refund for the Other Payment (Canada only)"
+            },
+            "part_recoverable": {
+              "type": "boolean",
+              "description": "Indicates if the Other Payment is part recoverable or not (Canada only)"
+            },
+            "payment_method_id": {
+              "type": "string",
+              "description": "The ID of the Payment Method."
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The ID of the Contact."
+            },
+            "bank_account_id": {
+              "type": "string",
+              "description": "The ID of the Bank Account."
+            },
+            "tax_address_region_id": {
+              "type": "string",
+              "description": "The ID of the Tax Address Region. (Canada only)"
+            },
+            "net_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The net amount of the payment"
+            },
+            "tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "The tax amount of the payment"
+            },
+            "reference": {
+              "type": "string",
+              "description": "A reference of the payment"
+            },
+            "withholding_tax_rate": {
+              "type": "number",
+              "format": "double",
+              "description": "IRPF withheld tax rate"
+            },
+            "withholding_tax_amount": {
+              "type": "number",
+              "format": "double",
+              "description": "IRPF withheld tax amount"
+            },
+            "payment_lines": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ledger_account_id": {
+                    "type": "string",
+                    "description": "The ID of the Ledger Account."
+                  },
+                  "total_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The total amount of the payment line"
+                  },
+                  "analysis_type_categories": {
+                    "type": "array",
+                    "description": "The analysis types information",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "details": {
+                    "type": "string",
+                    "description": "The details of the payment line"
+                  },
+                  "tax_rate_id": {
+                    "type": "string",
+                    "description": "The ID of the Tax Rate."
+                  },
+                  "net_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The net amount of the payment line"
+                  },
+                  "tax_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The tax amount of the payment line"
+                  },
+                  "is_purchase_for_resale": {
+                    "type": "boolean",
+                    "description": "Identifies whether the line item is for resale. (Ireland only)"
+                  },
+                  "trade_of_asset": {
+                    "type": "boolean",
+                    "description": "Whether the line item is marked as trade of asset."
+                  },
+                  "gst_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The gst or hst tax amount for the other payment"
+                  },
+                  "pst_amount": {
+                    "type": "number",
+                    "format": "double",
+                    "description": "The pst or qst tax amount for the other payment"
+                  },
+                  "tax_recoverable": {
+                    "type": "boolean",
+                    "description": "Indicates if the other payment is tax recoverable or not"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "other_payment"
+      ],
+      "description": "Updates a Other Payment"
+    },
+    "UnallocatedArtefact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+      "x-sage-menusection": "Invoices, Quotes & Credit Notes"
+    }
+  }
+}

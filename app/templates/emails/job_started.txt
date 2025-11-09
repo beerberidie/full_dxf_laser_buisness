@@ -1,0 +1,50 @@
+YOUR PROJECT IS NOW IN PRODUCTION!
+{{ '=' * 60 }}
+
+Dear {{ client.name }},
+
+⚙️ PRODUCTION STARTED!
+
+Great news! We've started working on "{{ project.name }}". Your 
+project is currently being laser cut.
+
+PROGRESS: ████████████████░░░░░░░░░░░░░░░░ 50% Complete
+
+PROJECT DETAILS
+{{ '-' * 60 }}
+Project Code:         {{ project.project_code }}
+Project Name:         {{ project.name }}
+Status:               In Progress
+Started:              {{ started_date.strftime('%d %B %Y at %H:%M') if started_date else 'Today' }}
+{% if project.due_date %}
+Expected Completion:  {{ project.due_date.strftime('%d %B %Y') }}
+{% endif %}
+{% if operator_name %}
+Operator:             {{ operator_name }}
+{% endif %}
+
+WHAT'S HAPPENING NOW
+{{ '-' * 60 }}
+• Your design files are being processed by our laser cutting equipment
+• Our experienced operators are monitoring the cutting process
+• Quality checks will be performed throughout production
+• You'll receive another notification when the job is completed
+
+VIEW PROJECT STATUS
+{{ '-' * 60 }}
+{{ project_url }}
+
+NEED TO MAKE CHANGES OR HAVE QUESTIONS?
+{{ '-' * 60 }}
+Email:          {{ company_email }}
+Phone:          {{ company_phone }}
+Business Hours: Monday - Friday, 8:00 AM - 5:00 PM
+
+Note: Changes may not be possible once cutting has started.
+
+We're excited to bring your project to life!
+
+{{ '-' * 60 }}
+This is an automated status update from Laser OS.
+© {{ current_year }} {{ company_name }}. All rights reserved.
+

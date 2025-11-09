@@ -6,26 +6,30 @@
 <div class="page-header">
     <h1>📈 Production Summary Report</h1>
     <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
         <a href="{{ url_for('reports.export_production_csv', start_date=start_date, end_date=end_date) }}" class="btn btn-success">📥 Export CSV</a>
+        {% endif %}
         <a href="{{ url_for('reports.index') }}" class="btn btn-secondary">← Back to Reports</a>
     </div>
 </div>
 
 <!-- Date Range Filter -->
-<div class="card" style="margin-bottom: 1.5rem;">
-    <div class="card-body">
-        <form method="GET" style="display: flex; gap: 1rem; align-items: flex-end;">
-            <div>
+<div class="card">
+    <form method="GET" class="search-form">
+        <div class="form-row">
+            <div class="form-group">
                 <label for="start_date">Start Date</label>
-                <input type="date" id="start_date" name="start_date" value="{{ start_date }}">
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
             </div>
-            <div>
+            <div class="form-group">
                 <label for="end_date">End Date</label>
-                <input type="date" id="end_date" name="end_date" value="{{ end_date }}">
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
             </div>
-            <button type="submit" class="btn btn-primary">🔍 Filter</button>
-        </form>
-    </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <!-- Statistics Cards -->
@@ -138,7 +142,7 @@
             <tbody>
                 {% for run in runs %}
                 <tr>
-                    <td>{{ run.run_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ run.run_date|datetime }}</td>
                     <td>
                         {% if run.project %}
                         <a href="{{ url_for('projects.detail', id=run.project_id) }}">{{ run.project.project_code }}</a>
@@ -146,7 +150,7 @@
                         -
                         {% endif %}
                     </td>
-                    <td>{{ run.operator or '-' }}</td>
+                    <td>{{ run.operator_display }}</td>
                     <td>{{ run.cut_time_minutes }} min</td>
                     <td>{{ run.material_type or '-' }}</td>
                     <td>{{ run.sheet_count or '-' }}</td>
@@ -170,12 +174,13 @@
 .stat-value {
     font-size: 2rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: var(--color-primary);
 }
 
 .stat-label {
-    color: var(--text-muted);
+    color: var(--text-secondary);
     margin-top: 0.5rem;
+    font-size: 0.875rem;
 }
 </style>
 {% endblock %}

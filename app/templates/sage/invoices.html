@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Invoices - Sage Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Sales Invoices</h1>
+        <p class="page-subtitle">Manage invoices from {{ business.displayed_as or business.name }}</p>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('sage.new_invoice') }}" class="btn btn-primary">
+            <span class="icon">➕</span> New Invoice
+        </a>
+        <a href="{{ url_for('sage.dashboard') }}" class="btn btn-secondary">
+            <span class="icon">←</span> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if invoices %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Due Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                    <tr>
+                        <td><strong>{{ invoice.displayed_as or invoice.reference or '-' }}</strong></td>
+                        <td>{{ invoice.contact.displayed_as if invoice.contact else '-' }}</td>
+                        <td>{{ invoice.date or '-' }}</td>
+                        <td>{{ invoice.due_date or '-' }}</td>
+                        <td><strong>R {{ "%.2f"|format(invoice.total_amount or 0) }}</strong></td>
+                        <td>
+                            {% if invoice.status == 'PAID' %}
+                            <span class="badge badge-success">Paid</span>
+                            {% elif invoice.status == 'SENT' %}
+                            <span class="badge badge-info">Sent</span>
+                            {% elif invoice.status == 'UNPAID' %}
+                            <span class="badge badge-warning">Unpaid</span>
+                            {% elif invoice.status == 'OVERDUE' %}
+                            <span class="badge badge-danger">Overdue</span>
+                            {% else %}
+                            <span class="badge badge-secondary">{{ invoice.status or 'Draft' }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-secondary" title="View Details">
+                                    <span class="icon">👁️</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container">
+            <div class="pagination-info">
+                Showing {{ invoices|length }} invoices
+            </div>
+            <div class="pagination-controls">
+                {% if page > 1 %}
+                <a href="{{ url_for('sage.invoices', page=page-1, items_per_page=items_per_page) }}" class="btn btn-sm btn-secondary">
+                    ← Previous
+                </a>
+                {% endif %}
+                <span class="pagination-current">Page {{ page }}</span>
+                {% if invoices|length == items_per_page %}
+                <a href="{{ url_for('sage.invoices', page=page+1, items_per_page=items_per_page) }}" class="btn btn-sm btn-secondary">
+                    Next →
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon">📄</div>
+            <h2 class="empty-state-title">No Invoices Found</h2>
+            <p class="empty-state-description">
+                You don't have any invoices in Sage yet. Create your first invoice to get started.
+            </p>
+            <div class="empty-state-actions">
+                <a href="{{ url_for('sage.new_invoice') }}" class="btn btn-primary">
+                    <span class="icon">➕</span> Create Invoice
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.pagination-info {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.pagination-current {
+    padding: 0 var(--spacing-md);
+    color: var(--color-gray-700);
+    font-weight: 600;
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+</style>
+{% endblock %}
+

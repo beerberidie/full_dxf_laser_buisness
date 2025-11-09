@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Reports & Analytics - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📊 Reports & Analytics</h1>
+</div>
+
+<div class="grid grid-2">
+    <!-- Production Summary -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📈 Production Summary</h2>
+        </div>
+        <div class="card-body">
+            <p>View production statistics, laser run history, and operator performance metrics.</p>
+            <ul>
+                <li>Total laser runs and cut time</li>
+                <li>Parts produced and materials used</li>
+                <li>Operator performance breakdown</li>
+                <li>Material usage statistics</li>
+            </ul>
+            <a href="{{ url_for('reports.production_summary') }}" class="btn btn-primary">View Production Report</a>
+        </div>
+    </div>
+
+    <!-- Efficiency Metrics -->
+    <div class="card">
+        <div class="card-header">
+            <h2>⚡ Efficiency Metrics</h2>
+        </div>
+        <div class="card-body">
+            <p>Analyze estimated vs actual cut times and identify efficiency opportunities.</p>
+            <ul>
+                <li>Estimated vs actual time comparison</li>
+                <li>Variance analysis</li>
+                <li>Efficiency percentages</li>
+                <li>Project-level insights</li>
+            </ul>
+            <a href="{{ url_for('reports.efficiency_metrics') }}" class="btn btn-primary">View Efficiency Report</a>
+        </div>
+    </div>
+
+    <!-- Inventory Report -->
+    <div class="card">
+        <div class="card-header">
+            <h2>📦 Inventory Report</h2>
+        </div>
+        <div class="card-body">
+            <p>Track inventory levels, usage patterns, and stock values.</p>
+            <ul>
+                <li>Current stock levels and values</li>
+                <li>Low stock alerts</li>
+                <li>Category-wise breakdown</li>
+                <li>Recent transaction history</li>
+            </ul>
+            <a href="{{ url_for('reports.inventory_report') }}" class="btn btn-primary">View Inventory Report</a>
+        </div>
+    </div>
+
+    <!-- Client Report -->
+    <div class="card">
+        <div class="card-header">
+            <h2>👥 Client & Project Report</h2>
+        </div>
+        <div class="card-body">
+            <p>Analyze client activity, project values, and profitability.</p>
+            <ul>
+                <li>Client project counts</li>
+                <li>Total project values</li>
+                <li>Laser run statistics per client</li>
+                <li>Active vs completed projects</li>
+            </ul>
+            <a href="{{ url_for('reports.client_report') }}" class="btn btn-primary">View Client Report</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

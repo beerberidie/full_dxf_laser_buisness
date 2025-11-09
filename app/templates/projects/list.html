@@ -4,53 +4,98 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>Projects</h1>
+    <div>
+        <nav class="breadcrumb">
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <span>/</span>
+            <span>Projects</span>
+        </nav>
+        <h1>Projects</h1>
+    </div>
     <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
         <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
             + New Project
         </a>
+        {% endif %}
     </div>
 </div>
 
 <!-- Search and Filter Bar -->
-<div class="search-bar">
-    <form method="get" action="{{ url_for('projects.index') }}">
-        <input 
-            type="text" 
-            name="search" 
-            placeholder="Search projects by name, code, or description..." 
-            value="{{ search }}"
-            class="search-input"
-        >
-        
-        <select name="client_id" class="filter-select">
-            <option value="">All Clients</option>
-            {% for client in clients %}
-                <option value="{{ client.id }}" {% if selected_client_id == client.id %}selected{% endif %}>
-                    {{ client.name }} ({{ client.client_code }})
-                </option>
-            {% endfor %}
-        </select>
-        
-        <select name="status" class="filter-select">
-            <option value="">All Statuses</option>
-            {% for status in statuses %}
-                <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>
-                    {{ status }}
-                </option>
-            {% endfor %}
-        </select>
-        
-        <button type="submit" class="btn btn-secondary">Filter</button>
-        {% if search or selected_client_id or selected_status %}
-            <a href="{{ url_for('projects.index') }}" class="btn btn-ghost">Clear</a>
-        {% endif %}
-    </form>
+<div class="card">
+    <div class="card-body">
+        <form method="get" action="{{ url_for('projects.index') }}" class="search-form">
+            <div class="grid grid-3 grid-gap-md">
+                <div class="form-group form-group-no-margin">
+                    <label for="search">Search:</label>
+                    <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        placeholder="Search projects by name, code, or description..."
+                        value="{{ search }}"
+                        class="form-control"
+                    >
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="client_id">Client:</label>
+                    <select id="client_id" name="client_id" class="form-control">
+                        <option value="">All Clients</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}" {% if selected_client_id == client.id %}selected{% endif %}>
+                            {{ client.name }} ({{ client.client_code }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="">All Statuses</option>
+                        {% for status in statuses %}
+                        <option value="{{ status }}" {% if selected_status == status %}selected{% endif %}>
+                            {{ status }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- V12.0: Additional Filters - Aligned on same line as buttons -->
+            <div class="mt-md" style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <div class="form-group form-group-no-margin">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        <input type="checkbox" name="on_hold" value="1" {% if on_hold_filter %}checked{% endif %}>
+                        <span>Show only On-Hold projects</span>
+                    </label>
+                </div>
+
+                <div class="form-group form-group-no-margin">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+                        <input type="checkbox" name="expiring_soon" value="1" {% if expiring_soon_filter %}checked{% endif %}>
+                        <span>Show only Quotes Expiring Soon (≤10 days)</span>
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 0.5rem; margin-left: auto;">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    {% if search or selected_client_id or selected_status or on_hold_filter or expiring_soon_filter %}
+                    <a href="{{ url_for('projects.index') }}" class="btn btn-secondary">Clear Filters</a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 <!-- Project List -->
-{% if projects %}
-    <div class="card">
+<div class="card">
+    {% if projects %}
+    <div class="card-header">
+        <h2>All Projects ({{ pagination.total }})</h2>
+    </div>
         <table class="table">
             <thead>
                 <tr>
@@ -82,8 +127,25 @@
                         <span class="badge badge-{{ project.status|lower|replace(' ', '-') }}">
                             {{ project.status }}
                         </span>
+
+                        <!-- V12.0: On-Hold Badge -->
+                        {% if project.on_hold %}
+                            <span class="badge badge-warning" title="On hold since {{ project.on_hold_date|date }}">⏸️ On Hold</span>
+                        {% endif %}
+
+                        <!-- V12.0: Quote Expiry Badge -->
+                        {% if project.status == 'Quote & Approval' and project.quote_expiry_date %}
+                            {% if project.is_quote_expired %}
+                                <span class="badge badge-danger" title="Quote expired">⚠️ Expired</span>
+                            {% elif project.quote_expiry_warning_level == 'critical' %}
+                                <span class="badge badge-danger" title="Expires in {{ project.days_until_quote_expiry }} days">⏰ {{ project.days_until_quote_expiry }}d</span>
+                            {% elif project.quote_expiry_warning_level == 'warning' %}
+                                <span class="badge badge-warning" title="Expires in {{ project.days_until_quote_expiry }} days">⏰ {{ project.days_until_quote_expiry }}d</span>
+                            {% endif %}
+                        {% endif %}
+
                         {% if project.is_overdue %}
-                            <span class="badge badge-danger" title="Overdue">⚠️</span>
+                            <span class="badge badge-danger" title="Overdue">Overdue</span>
                         {% endif %}
                     </td>
                     <td>
@@ -106,53 +168,59 @@
                     <td>{{ project.created_at|date }}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{ url_for('projects.detail', id=project.id) }}" class="btn btn-sm btn-ghost">
+                            <a href="{{ url_for('projects.detail', id=project.id) }}" class="btn btn-sm btn-secondary">
                                 View
                             </a>
-                            <a href="{{ url_for('projects.edit', id=project.id) }}" class="btn btn-sm btn-ghost">
+                            {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+                            <a href="{{ url_for('projects.edit', id=project.id) }}" class="btn btn-sm btn-primary">
                                 Edit
                             </a>
+                            {% endif %}
                         </div>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
 
-    <!-- Pagination -->
-    {% if pagination.pages > 1 %}
+        <!-- Pagination -->
+        {% if pagination.pages > 1 %}
         <div class="pagination">
             {% if pagination.has_prev %}
-                <a href="{{ url_for('projects.index', page=pagination.prev_num, search=search, client_id=selected_client_id, status=selected_status) }}" class="btn btn-ghost">
-                    &laquo; Previous
-                </a>
+            <a href="{{ url_for('projects.index', page=pagination.prev_num, search=search, client_id=selected_client_id, status=selected_status) }}" class="btn btn-ghost">
+                &laquo; Previous
+            </a>
             {% endif %}
-            
+
             <span class="pagination-info">
                 Page {{ pagination.page }} of {{ pagination.pages }}
             </span>
-            
+
             {% if pagination.has_next %}
-                <a href="{{ url_for('projects.index', page=pagination.next_num, search=search, client_id=selected_client_id, status=selected_status) }}" class="btn btn-ghost">
-                    Next &raquo;
-                </a>
+            <a href="{{ url_for('projects.index', page=pagination.next_num, search=search, client_id=selected_client_id, status=selected_status) }}" class="btn btn-ghost">
+                Next &raquo;
+            </a>
             {% endif %}
         </div>
-    {% endif %}
-
-{% else %}
-    <div class="empty-state">
-        <p>No projects found.</p>
-        {% if search or selected_client_id or selected_status %}
-            <p>Try adjusting your search or filter criteria.</p>
-        {% else %}
-            <p>Get started by creating your first project.</p>
-            <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
-                + New Project
-            </a>
         {% endif %}
+
+    {% else %}
+    <div class="card-body">
+        <div class="empty-state">
+            <p>No projects found.</p>
+            {% if search or selected_client_id or selected_status %}
+                <p>Try adjusting your search or filter criteria.</p>
+            {% else %}
+                <p>Get started by creating your first project.</p>
+                {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+                <a href="{{ url_for('projects.new_project') }}" class="btn btn-primary">
+                    + New Project
+                </a>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
-{% endif %}
+    {% endif %}
+</div>
 {% endblock %}
 

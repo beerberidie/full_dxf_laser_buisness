@@ -1,0 +1,57 @@
+YOUR PROJECT IS COMPLETE!
+{{ '=' * 60 }}
+
+🎉 ✨ 🎊
+
+Dear {{ client.name }},
+
+✅ PROJECT COMPLETED SUCCESSFULLY!
+
+Excellent news! We've completed "{{ project.name }}" and it's ready 
+for collection or delivery.
+
+PROGRESS: ████████████████████████████████ ✓ 100% Complete
+
+PROJECT DETAILS
+{{ '-' * 60 }}
+Project Code:  {{ project.project_code }}
+Project Name:  {{ project.name }}
+Status:        Completed
+Completed:     {{ project.completion_date.strftime('%d %B %Y') if project.completion_date else 'Today' }}
+{% if project.final_price %}
+Final Price:   R{{ "%.2f"|format(project.final_price) }}
+{% endif %}
+
+NEXT STEPS - COLLECTION/DELIVERY
+{{ '-' * 60 }}
+Please arrange to collect your completed project or confirm 
+delivery details.
+
+WHAT YOU NEED TO KNOW
+{{ '-' * 60 }}
+• Your project has passed our quality inspection
+• All items are packaged and ready for collection
+• Please contact us to arrange a convenient collection time
+• Bring your project code ({{ project.project_code }}) when collecting
+
+VIEW PROJECT DETAILS
+{{ '-' * 60 }}
+{{ project_url }}
+
+ARRANGE COLLECTION OR DELIVERY
+{{ '-' * 60 }}
+Email:            {{ company_email }}
+Phone:            {{ company_phone }}
+Collection Hours: Monday - Friday, 8:00 AM - 5:00 PM
+Address:          {{ company_address }}
+
+Thank you for choosing us for your laser cutting project! We hope 
+you're delighted with the results.
+
+We'd love to hear your feedback! If you're happy with our service, 
+please consider leaving us a review or referring us to others.
+
+{{ '-' * 60 }}
+This is an automated completion notification from Laser OS.
+© {{ current_year }} {{ company_name }}. All rights reserved.
+

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Laser COS{% endblock %} - {{ company_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+                <span class="hamburger-icon">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </button>
+            <div class="logo">
+                <h1>Laser COS</h1>
+            </div>
+
+            <!-- User Menu -->
+            {% if current_user.is_authenticated %}
+            <div class="user-menu">
+                <div class="user-info">
+                    <span class="user-name">{{ current_user.username }}</span>
+                    <span class="user-role">{{ current_user.roles.first().display_name if current_user.roles.first() else 'User' }}</span>
+                </div>
+                <div class="user-actions">
+                    <a href="{{ url_for('auth.profile') }}" class="btn btn-sm btn-secondary">Profile</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-danger">Logout</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('main.dashboard') }}" class="sidebar-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" title="Dashboard">
+                <span class="sidebar-icon">📊</span>
+                <span class="sidebar-text">Dashboard</span>
+            </a>
+            <a href="{{ url_for('clients.list_clients') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('clients.') %}active{% endif %}" title="Clients">
+                <span class="sidebar-icon">👥</span>
+                <span class="sidebar-text">Clients</span>
+            </a>
+            <a href="{{ url_for('projects.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('projects.') %}active{% endif %}" title="Projects">
+                <span class="sidebar-icon">📁</span>
+                <span class="sidebar-text">Projects</span>
+            </a>
+            <a href="{{ url_for('products.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('products.') %}active{% endif %}" title="Products">
+                <span class="sidebar-icon">📦</span>
+                <span class="sidebar-text">Products</span>
+            </a>
+            <a href="{{ url_for('queue.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('queue.') %}active{% endif %}" title="Queue">
+                <span class="sidebar-icon">⏱️</span>
+                <span class="sidebar-text">Queue</span>
+            </a>
+            <a href="{{ url_for('presets.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('presets.') %}active{% endif %}" title="Presets">
+                <span class="sidebar-icon">⚙️</span>
+                <span class="sidebar-text">Presets</span>
+            </a>
+            <a href="{{ url_for('inventory.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('inventory.') %}active{% endif %}" title="Inventory">
+                <span class="sidebar-icon">📋</span>
+                <span class="sidebar-text">Inventory</span>
+            </a>
+            <a href="{{ url_for('reports.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('reports.') %}active{% endif %}" title="Reports">
+                <span class="sidebar-icon">📈</span>
+                <span class="sidebar-text">Reports</span>
+            </a>
+
+            <!-- Sage Information Section -->
+            <div class="sidebar-section sidebar-expandable {% if request.endpoint and (request.endpoint.startswith('quotes.') or request.endpoint.startswith('invoices.')) %}expanded{% endif %}">
+                <div class="sidebar-link sidebar-parent" title="Sage Information" onclick="toggleSidebarSection(this)">
+                    <span class="sidebar-icon">💼</span>
+                    <span class="sidebar-text">Sage Information</span>
+                    <span class="sidebar-arrow">▼</span>
+                </div>
+                <div class="sidebar-submenu">
+                    <a href="{{ url_for('quotes.index') }}" class="sidebar-link sidebar-sublink {% if request.endpoint and request.endpoint.startswith('quotes.') %}active{% endif %}" title="Quotes">
+                        <span class="sidebar-icon">💰</span>
+                        <span class="sidebar-text">Quotes</span>
+                    </a>
+                    <a href="{{ url_for('invoices.index') }}" class="sidebar-link sidebar-sublink {% if request.endpoint and request.endpoint.startswith('invoices.') %}active{% endif %}" title="Invoices">
+                        <span class="sidebar-icon">🧾</span>
+                        <span class="sidebar-text">Invoices</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Communications Section -->
+            <div class="sidebar-section sidebar-expandable {% if request.endpoint and request.endpoint.startswith('comms.') or request.endpoint and request.endpoint.startswith('templates.') %}expanded{% endif %}">
+                <div class="sidebar-link sidebar-parent" title="Communications" onclick="toggleSidebarSection(this)">
+                    <span class="sidebar-icon">✉️</span>
+                    <span class="sidebar-text">Communications</span>
+                    <span class="sidebar-arrow">▼</span>
+                </div>
+                <div class="sidebar-submenu">
+                    {% if current_user.is_authenticated and (current_user.has_role('admin') or current_user.has_role('manager') or current_user.has_role('operator')) %}
+                    <a href="{{ url_for('templates.list_templates') }}" class="sidebar-link sidebar-sublink {% if request.endpoint and request.endpoint.startswith('templates.') %}active{% endif %}" title="Templates">
+                        <span class="sidebar-icon">📝</span>
+                        <span class="sidebar-text">Templates</span>
+                    </a>
+                    {% endif %}
+                    <a href="{{ url_for('comms.index') }}?channel=whatsapp" class="sidebar-link sidebar-sublink {% if request.endpoint == 'comms.index' and request.args.get('channel') == 'whatsapp' %}active{% endif %}" title="WhatsApp">
+                        <span class="sidebar-icon">💬</span>
+                        <span class="sidebar-text">WhatsApp</span>
+                    </a>
+                    <a href="{{ url_for('comms.index') }}?channel=gmail" class="sidebar-link sidebar-sublink {% if request.endpoint == 'comms.index' and request.args.get('channel') == 'gmail' %}active{% endif %}" title="Gmail">
+                        <span class="sidebar-icon">📧</span>
+                        <span class="sidebar-text">Gmail</span>
+                    </a>
+                    <a href="{{ url_for('comms.index') }}?channel=outlook" class="sidebar-link sidebar-sublink {% if request.endpoint == 'comms.index' and request.args.get('channel') == 'outlook' %}active{% endif %}" title="Outlook">
+                        <span class="sidebar-icon">📨</span>
+                        <span class="sidebar-text">Outlook</span>
+                    </a>
+                    <a href="{{ url_for('comms.index') }}?channel=teams" class="sidebar-link sidebar-sublink {% if request.endpoint == 'comms.index' and request.args.get('channel') == 'teams' %}active{% endif %}" title="Teams">
+                        <span class="sidebar-icon">👥</span>
+                        <span class="sidebar-text">Teams</span>
+                    </a>
+                </div>
+            </div>
+
+            {% if current_user.is_authenticated and (current_user.has_role('admin') or current_user.is_superuser) %}
+            <a href="{{ url_for('admin.users') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}" title="Admin">
+                <span class="sidebar-icon">🔧</span>
+                <span class="sidebar-text">Admin</span>
+            </a>
+            {% endif %}
+        </nav>
+    </aside>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                <div class="container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+            <p class="footer-meta">Laser COS v1.0</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

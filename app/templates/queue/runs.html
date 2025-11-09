@@ -67,15 +67,24 @@
             <tbody>
                 {% for run in runs %}
                 <tr>
-                    <td>{{ run.run_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ run.run_date|datetime }}</td>
                     <td>
+                        {% if run.project %}
                         <a href="{{ url_for('projects.detail', id=run.project_id) }}">
                             {{ run.project.project_code }}
                         </a>
                         <br>
                         <small class="text-muted">{{ run.project.name }}</small>
+                        {% else %}
+                        <span class="text-muted">[Deleted Project]</span>
+                        {% endif %}
                     </td>
-                    <td>{{ run.operator or 'N/A' }}</td>
+                    <td>
+                        {{ run.operator_display }}
+                        {% if run.preset %}
+                        <br><small class="text-muted">Preset: {{ run.preset.preset_name }}</small>
+                        {% endif %}
+                    </td>
                     <td>
                         {{ run.cut_time_minutes }} min
                         {% if run.cut_time_hours %}
@@ -111,7 +120,10 @@
             {% endif %}
         </p>
         {% else %}
-        <p class="text-muted">No laser runs found.</p>
+        <div class="empty-state">
+            <p>No laser runs found.</p>
+            <p class="text-muted">Laser runs will appear here once you start logging production runs from the queue.</p>
+        </div>
         {% endif %}
     </div>
 </div>

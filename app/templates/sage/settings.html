@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Sage Integration{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">Sage Integration Settings</h1>
+        <p class="page-subtitle">Manage your Sage connection and preferences</p>
+    </div>
+    <div class="page-actions">
+        <a href="{{ url_for('sage.dashboard') }}" class="btn btn-secondary">
+            <span class="icon">←</span> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="settings-grid">
+    <!-- Connection Status Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Connection Status</h2>
+        </div>
+        <div class="card-body">
+            {% if status.connected %}
+            <div class="status-item">
+                <div class="status-icon status-success">✓</div>
+                <div class="status-content">
+                    <div class="status-label">Status</div>
+                    <div class="status-value">Connected</div>
+                </div>
+            </div>
+
+            {% if connection %}
+            <div class="status-item">
+                <div class="status-icon">🔑</div>
+                <div class="status-content">
+                    <div class="status-label">Token Expires</div>
+                    <div class="status-value">{{ connection.expires_at.strftime('%Y-%m-%d %H:%M') if connection.expires_at else 'Unknown' }}</div>
+                </div>
+            </div>
+
+            <div class="status-item">
+                <div class="status-icon">📅</div>
+                <div class="status-content">
+                    <div class="status-label">Connected Since</div>
+                    <div class="status-value">{{ connection.created_at.strftime('%Y-%m-%d') if connection.created_at else 'Unknown' }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="status-actions">
+                <form method="POST" action="{{ url_for('sage.disconnect') }}" onsubmit="return confirm('Are you sure you want to disconnect from Sage?');">
+                    <button type="submit" class="btn btn-danger">
+                        <span class="icon">🔌</span> Disconnect
+                    </button>
+                </form>
+            </div>
+            {% else %}
+            <div class="status-item">
+                <div class="status-icon status-warning">⚠️</div>
+                <div class="status-content">
+                    <div class="status-label">Status</div>
+                    <div class="status-value">Not Connected</div>
+                </div>
+            </div>
+
+            <div class="status-actions">
+                <a href="{{ url_for('sage.connect') }}" class="btn btn-primary">
+                    <span class="icon">🔗</span> Connect to Sage
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Business Selection Card -->
+    {% if status.connected and businesses %}
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Business Selection</h2>
+        </div>
+        <div class="card-body">
+            {% if business %}
+            <div class="status-item">
+                <div class="status-icon">🏢</div>
+                <div class="status-content">
+                    <div class="status-label">Current Business</div>
+                    <div class="status-value">{{ business.displayed_as or business.name }}</div>
+                </div>
+            </div>
+
+            <div class="status-item">
+                <div class="status-icon">🆔</div>
+                <div class="status-content">
+                    <div class="status-label">Business ID</div>
+                    <div class="status-value">{{ business.sage_business_id }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="status-actions">
+                <a href="{{ url_for('sage.select_business') }}" class="btn btn-secondary">
+                    <span class="icon">🔄</span> Change Business
+                </a>
+            </div>
+
+            {% if businesses|length > 1 %}
+            <div class="business-list-small">
+                <p class="business-list-label">Available Businesses ({{ businesses|length }}):</p>
+                <ul>
+                    {% for b in businesses %}
+                    <li>
+                        {{ b.displayed_as or b.name }}
+                        {% if b.is_selected %}<span class="badge badge-success">Selected</span>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Integration Info Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Integration Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="info-item">
+                <div class="info-label">API Version</div>
+                <div class="info-value">Sage Business Cloud Accounting v3.1</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Features</div>
+                <div class="info-value">
+                    <ul class="feature-list">
+                        <li>✓ View Sales Invoices</li>
+                        <li>✓ View Sales Quotes</li>
+                        <li>✓ View Contacts</li>
+                        <li>✓ Create Invoices</li>
+                        <li>✓ Dashboard Statistics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Localization</div>
+                <div class="info-value">South Africa (ZAR, 15% VAT)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.status-item:last-of-type {
+    border-bottom: none;
+}
+
+.status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.status-icon.status-success {
+    background: rgba(82, 196, 26, 0.1);
+    color: #52c41a;
+}
+
+.status-icon.status-warning {
+    background: rgba(250, 173, 20, 0.1);
+    color: #faad14;
+}
+
+.status-content {
+    flex: 1;
+}
+
+.status-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-xs);
+}
+
+.status-value {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--color-gray-900);
+}
+
+.status-actions {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.business-list-small {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-200);
+}
+
+.business-list-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-sm);
+}
+
+.business-list-small ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.business-list-small li {
+    padding: var(--spacing-xs) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.info-item {
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-gray-100);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-bottom: var(--spacing-xs);
+}
+
+.info-value {
+    font-size: var(--font-size-base);
+    color: var(--color-gray-900);
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    padding: var(--spacing-xs) 0;
+}
+</style>
+{% endblock %}
+

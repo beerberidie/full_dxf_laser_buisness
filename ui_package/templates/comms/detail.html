@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Communication - {{ communication.subject }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="breadcrumb">
+            <a href="{{ url_for('comms.index') }}">Communications</a>
+            <span>/</span>
+            <span>{{ communication.comm_type }} - {{ communication.id }}</span>
+        </div>
+        <h1>{{ communication.subject }}</h1>
+    </div>
+    <div class="page-actions">
+        {% if not communication.is_linked %}
+        <button onclick="document.getElementById('linkForm').style.display='block'" class="btn btn-primary">
+            🔗 Link to Client/Project
+        </button>
+        {% else %}
+        <form action="{{ url_for('comms.unlink_communication', id=communication.id) }}" method="POST" class="inline-form"
+              onsubmit="return confirm('Unlink this communication from client and project?');">
+            <button type="submit" class="btn btn-warning">
+                🔓 Unlink
+            </button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('comms.index') }}" class="btn btn-secondary">
+            Back to List
+        </a>
+    </div>
+</div>
+
+<!-- Link Form (Hidden by default) -->
+{% if not communication.is_linked %}
+<div id="linkForm" class="hidden mb-xl">
+    <div class="card">
+        <div class="card-header">
+            <h2>Link Communication</h2>
+            <button onclick="document.getElementById('linkForm').style.display='none'" class="btn btn-sm btn-secondary">Cancel</button>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('comms.link_communication', id=communication.id) }}" method="POST">
+                <div class="form-group">
+                    <label for="client_id">Client:</label>
+                    <select id="client_id" name="client_id" class="form-control">
+                        <option value="">Select a client...</option>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}">{{ client.name }} ({{ client.client_code }})</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-help">Link this communication to a client</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="project_id">Project (optional):</label>
+                    <select id="project_id" name="project_id" class="form-control">
+                        <option value="">Select a project...</option>
+                        {% for project in projects %}
+                        <option value="{{ project.id }}">{{ project.project_code }} - {{ project.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-help">Optionally link to a specific project</small>
+                </div>
+
+                <div class="flex flex-gap flex-end">
+                    <button type="button" onclick="document.getElementById('linkForm').style.display='none'" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Link Communication</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Status Badges -->
+<div class="status-badges">
+    <span class="badge badge-lg badge-{{ communication.comm_type|lower }}">
+        {% if communication.comm_type == 'Email' %}✉️{% elif communication.comm_type == 'WhatsApp' %}💬{% else %}🔔{% endif %}
+        {{ communication.comm_type }}
+    </span>
+    <span class="badge badge-lg badge-{{ 'success' if communication.direction == 'Inbound' else 'info' }}">
+        {{ '📥' if communication.direction == 'Inbound' else '📤' }} {{ communication.direction }}
+    </span>
+    <span class="badge badge-lg badge-{{ communication.status|lower }}">
+        {{ communication.status }}
+    </span>
+    {% if communication.is_linked %}
+    <span class="badge badge-lg badge-success">
+        🔗 Linked
+    </span>
+    {% else %}
+    <span class="badge badge-lg badge-warning">
+        ⚠️ Unlinked
+    </span>
+    {% endif %}
+</div>
+
+<!-- Communication Details -->
+<div class="grid grid-2">
+    <!-- Left Column -->
+    <div>
+        <!-- Basic Information -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Communication Details</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Subject</dt>
+                    <dd><strong>{{ communication.subject }}</strong></dd>
+                    
+                    <dt>From</dt>
+                    <dd>{{ communication.from_address or '-' }}</dd>
+                    
+                    <dt>To</dt>
+                    <dd>{{ communication.to_address or '-' }}</dd>
+                    
+                    <dt>Date</dt>
+                    <dd>{{ communication.comm_date|datetime if communication.comm_date else communication.created_at|datetime }}</dd>
+                    
+                    <dt>Status</dt>
+                    <dd>{{ communication.status }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Linked Entities -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Linked To</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Client</dt>
+                    <dd>
+                        {% if communication.client %}
+                            <a href="{{ url_for('clients.detail', id=communication.client.id) }}" class="link-primary">
+                                {{ communication.client.name }} ({{ communication.client.client_code }})
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Not linked</span>
+                        {% endif %}
+                    </dd>
+                    
+                    <dt>Project</dt>
+                    <dd>
+                        {% if communication.project %}
+                            <a href="{{ url_for('projects.detail', id=communication.project.id) }}" class="link-primary">
+                                {{ communication.project.project_code }} - {{ communication.project.name }}
+                            </a>
+                        {% else %}
+                            <span class="text-muted">Not linked</span>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column -->
+    <div>
+        <!-- Message Body -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Message</h2>
+            </div>
+            <div class="card-body">
+                {% if communication.body %}
+                <div class="message-body">{{ communication.body }}</div>
+                {% else %}
+                <p class="text-muted">No message body</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Attachments -->
+        {% if communication.attachments %}
+        <div class="card">
+            <div class="card-header">
+                <h2>Attachments ({{ communication.attachments|length }})</h2>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>Size</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attachment in communication.attachments %}
+                        <tr>
+                            <td>📎 {{ attachment.filename }}</td>
+                            <td>{{ attachment.file_size|filesizeformat if attachment.file_size else '-' }}</td>
+                            <td><small>{{ attachment.mime_type or '-' }}</small></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Metadata -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Metadata</h2>
+            </div>
+            <div class="card-body">
+                <dl class="detail-list">
+                    <dt>Created</dt><dd>{{ communication.created_at|datetime }}</dd>
+                    <dt>Last Updated</dt><dd>{{ communication.updated_at|datetime }}</dd>
+                    {% if communication.external_id %}<dt>External ID</dt><dd><code>{{ communication.external_id }}</code></dd>{% endif %}
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+

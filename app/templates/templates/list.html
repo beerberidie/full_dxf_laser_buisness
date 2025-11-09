@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Message Templates - {{ company_name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Message Templates</h1>
+    <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <a href="{{ url_for('templates.new_template') }}" class="btn btn-primary">
+            <i class="icon">+</i> New Template
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-section">
+    <form method="get" action="{{ url_for('templates.list_templates') }}" class="filters-form">
+        <div class="filter-group">
+            <label for="type">Type:</label>
+            <select name="type" id="type" onchange="this.form.submit()">
+                <option value="">All Types</option>
+                {% for type in template_types %}
+                <option value="{{ type }}" {% if current_type == type %}selected{% endif %}>
+                    {{ type.replace('_', ' ').title() }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="active">Status:</label>
+            <select name="active" id="active" onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="true" {% if current_active == 'true' %}selected{% endif %}>Active</option>
+                <option value="false" {% if current_active == 'false' %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="search">Search:</label>
+            <input type="text" name="search" id="search" value="{{ current_search }}" placeholder="Search templates...">
+        </div>
+        
+        <button type="submit" class="btn btn-secondary">Filter</button>
+        <a href="{{ url_for('templates.list_templates') }}" class="btn btn-secondary">Clear</a>
+    </form>
+</div>
+
+<!-- Templates List -->
+<div class="content-section">
+    {% if templates %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Created By</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for template in templates %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('templates.view_template', template_id=template.id) }}" class="link-primary">
+                        <strong>{{ template.name }}</strong>
+                    </a>
+                </td>
+                <td>
+                    <span class="badge badge-info">
+                        {{ template.template_type.replace('_', ' ').title() }}
+                    </span>
+                </td>
+                <td>
+                    <span class="text-muted">{{ template.subject_template[:50] }}{% if template.subject_template|length > 50 %}...{% endif %}</span>
+                </td>
+                <td>
+                    {% if template.is_active %}
+                    <span class="badge badge-success">Active</span>
+                    {% else %}
+                    <span class="badge badge-secondary">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ template.created_by.username if template.created_by else 'System' }}</td>
+                <td>{{ template.created_at|date if template.created_at else '-' }}</td>
+                <td class="actions-cell">
+                    <a href="{{ url_for('templates.view_template', template_id=template.id) }}" class="btn btn-sm btn-secondary" title="View">
+                        View
+                    </a>
+                    {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+                    <a href="{{ url_for('templates.edit_template', template_id=template.id) }}" class="btn btn-sm btn-primary" title="Edit">
+                        Edit
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="table-footer">
+        <p class="text-muted">Showing {{ templates|length }} template(s)</p>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No message templates found.</p>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <p>
+            <a href="{{ url_for('templates.new_template') }}" class="btn btn-primary">
+                Create Your First Template
+            </a>
+        </p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Help Section -->
+<div class="info-section">
+    <h3>About Message Templates</h3>
+    <p>
+        Message templates allow you to create reusable email templates with dynamic placeholders.
+        Use placeholders like <code>{{client_name}}</code>, <code>{{project_code}}</code>, etc. to personalize messages.
+    </p>
+    <p>
+        <strong>Template Types:</strong>
+    </p>
+    <ul>
+        <li><strong>Project Complete:</strong> Sent when a project is marked as complete</li>
+        <li><strong>Order Confirmed:</strong> Sent when proof of payment is received</li>
+        <li><strong>Quote Sent:</strong> Sent when a quote is created</li>
+        <li><strong>Invoice Sent:</strong> Sent when an invoice is created</li>
+        <li><strong>Payment Reminder:</strong> Sent to remind clients about pending payments</li>
+        <li><strong>Delivery Notification:</strong> Sent when items are ready for delivery</li>
+        <li><strong>Custom:</strong> For any other purpose</li>
+    </ul>
+</div>
+
+<style>
+.filters-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.filters-form {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.filter-group label {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #495057;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 0.5rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.badge-success {
+    background: #28a745;
+    color: white;
+}
+
+.badge-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.badge-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.empty-state p {
+    margin-bottom: 1rem;
+}
+
+.info-section {
+    background: #e7f3ff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+    border-left: 4px solid #007bff;
+}
+
+.info-section h3 {
+    margin-top: 0;
+    color: #0056b3;
+}
+
+.info-section code {
+    background: #fff;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    color: #d63384;
+}
+
+.info-section ul {
+    margin-top: 0.5rem;
+}
+
+.info-section li {
+    margin-bottom: 0.5rem;
+}
+</style>
+{% endblock %}
+

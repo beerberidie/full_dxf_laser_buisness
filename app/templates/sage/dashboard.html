@@ -1,0 +1,567 @@
+{% extends "base.html" %}
+
+{% block title %}Sage Integration{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Sage Integration - Matching Communications Hub Design - v2.0 */
+
+/* Page Header - Matching Communications Hub */
+.page-header-sage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-header-sage h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Connection Status Banner */
+.connection-banner {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+}
+
+.connection-banner-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.connection-banner-label {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.connection-banner-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+/* Not Connected State - Centered Card */
+.sage-connect-card {
+    max-width: 600px;
+    margin: 3rem auto;
+    text-align: center;
+}
+
+.sage-connect-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+.sage-connect-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+    margin-bottom: 1rem;
+}
+
+.sage-connect-description {
+    font-size: 1rem;
+    color: var(--color-gray-600);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.sage-connect-requirements {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.sage-connect-requirements h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin-bottom: 1rem;
+}
+
+.sage-connect-requirements ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sage-connect-requirements li {
+    padding: 0.5rem 0;
+    color: var(--color-gray-700);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sage-connect-requirements li:before {
+    content: "✓";
+    color: #10b981;
+    font-weight: 700;
+}
+
+/* Statistics Grid - Matching Dashboard Style */
+.sage-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.sage-stat-card {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    transition: var(--transition);
+}
+
+.sage-stat-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.sage-stat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.sage-stat-icon {
+    font-size: 2rem;
+}
+
+.sage-stat-label {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+    font-weight: 500;
+}
+
+.sage-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-gray-900);
+}
+
+.sage-stat-sublabel {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    font-style: italic;
+    margin-top: 0.5rem;
+}
+
+/* Quick Actions Grid */
+.sage-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.sage-action-card {
+    background: white;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.sage-action-card:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+}
+
+.sage-action-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.sage-action-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    margin-bottom: 0.5rem;
+}
+
+.sage-action-description {
+    font-size: 0.875rem;
+    color: var(--color-gray-600);
+}
+
+/* Recent Data Tables */
+.sage-recent-section {
+    margin-bottom: 2rem;
+}
+
+.sage-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.sage-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-900);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sage-section-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header - Matching Communications Hub Style -->
+<div class="page-header-sage">
+    <h1>Sage Integration</h1>
+    <div class="header-actions">
+        {% if status.connected and status.status == 'active' %}
+        <a href="{{ url_for('sage.settings') }}" class="btn btn-secondary">
+            ⚙️ Settings
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Template Version Indicator (for debugging) -->
+<div style="display: none;" data-template-version="2.0-redesigned"></div>
+
+{% if not status.connected %}
+<!-- Not Connected State - Show Full Dashboard with Connection Banner -->
+
+<!-- Not Connected Banner -->
+<div class="alert alert-warning" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <strong>⚠️ Not Connected to Sage</strong>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+            Connect your Sage Business Cloud Accounting account to sync invoices, quotes, and contacts.
+        </p>
+    </div>
+    <a href="{{ url_for('sage.connect') }}" class="btn btn-primary">
+        🔗 Connect to Sage
+    </a>
+</div>
+
+<!-- Statistics Cards - Showing Zero/Placeholder Data -->
+<div class="sage-stats-grid">
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">📄</div>
+            <div class="sage-stat-label">Quotes</div>
+        </div>
+        <div class="sage-stat-value">0</div>
+        <div class="sage-stat-sublabel">Not connected</div>
+    </div>
+
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">📋</div>
+            <div class="sage-stat-label">Invoices</div>
+        </div>
+        <div class="sage-stat-value">0</div>
+        <div class="sage-stat-sublabel">Not connected</div>
+    </div>
+
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">💰</div>
+            <div class="sage-stat-label">Total Revenue</div>
+        </div>
+        <div class="sage-stat-value">R 0.00</div>
+        <div class="sage-stat-sublabel">Not connected</div>
+    </div>
+
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">⏰</div>
+            <div class="sage-stat-label">Pending Payments</div>
+        </div>
+        <div class="sage-stat-value">R 0.00</div>
+        <div class="sage-stat-sublabel">Not connected</div>
+    </div>
+</div>
+
+<!-- Quick Actions Grid - Always Visible -->
+<div class="sage-actions-grid">
+    <a href="{{ url_for('sage.invoices') }}" class="sage-action-card">
+        <div class="sage-action-icon">📋</div>
+        <div class="sage-action-title">Invoices</div>
+        <div class="sage-action-description">View and manage sales invoices</div>
+    </a>
+
+    <a href="{{ url_for('sage.quotes') }}" class="sage-action-card">
+        <div class="sage-action-icon">💰</div>
+        <div class="sage-action-title">Quotes</div>
+        <div class="sage-action-description">View sales quotes and estimates</div>
+    </a>
+
+    <a href="{{ url_for('sage.contacts') }}" class="sage-action-card">
+        <div class="sage-action-icon">👥</div>
+        <div class="sage-action-title">Contacts</div>
+        <div class="sage-action-description">Manage customers and suppliers</div>
+    </a>
+
+    <a href="{{ url_for('sage.settings') }}" class="sage-action-card">
+        <div class="sage-action-icon">⚙️</div>
+        <div class="sage-action-title">Settings</div>
+        <div class="sage-action-description">Connection and preferences</div>
+    </a>
+</div>
+
+<!-- Getting Started Guide -->
+<div class="card" style="margin-top: 2rem;">
+    <div class="card-body">
+        <h3 style="margin-top: 0;">Getting Started with Sage Integration</h3>
+        <p>Connect your Sage Business Cloud Accounting account to unlock powerful features:</p>
+        <ul style="margin-bottom: 1.5rem;">
+            <li><strong>Sync Invoices:</strong> View and create sales invoices directly from Laser OS</li>
+            <li><strong>Manage Quotes:</strong> Access and track sales quotes and estimates</li>
+            <li><strong>Contact Management:</strong> Keep customer and supplier information in sync</li>
+            <li><strong>Real-time Data:</strong> Always see up-to-date financial information</li>
+        </ul>
+        <a href="{{ url_for('sage.connect') }}" class="btn btn-primary btn-lg">
+            🔗 Connect to Sage Now
+        </a>
+    </div>
+</div>
+
+{% elif status.status == 'pending_business_selection' %}
+<!-- Pending Business Selection -->
+<div class="alert alert-info">
+    <strong>Action Required:</strong> Please select which business you want to work with.
+    <a href="{{ url_for('sage.select_business') }}" class="btn btn-sm btn-primary">Select Business</a>
+</div>
+
+{% elif status.status == 'active' %}
+<!-- Connected and Active -->
+
+<!-- Connection Status Banner -->
+<div class="connection-banner">
+    <div class="connection-banner-content">
+        <div class="connection-banner-label">Connected Business</div>
+        <div class="connection-banner-value">{{ business.displayed_as or business.name }}</div>
+    </div>
+    <a href="{{ url_for('sage.select_business') }}" class="btn btn-sm" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+        Change Business
+    </a>
+</div>
+
+<!-- Statistics Cards -->
+<div class="sage-stats-grid">
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">📄</div>
+            <div class="sage-stat-label">Quotes</div>
+        </div>
+        <div class="sage-stat-value">{{ stats.total_quotes if stats else 0 }}</div>
+    </div>
+
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">📋</div>
+            <div class="sage-stat-label">Invoices</div>
+        </div>
+        <div class="sage-stat-value">{{ stats.total_invoices if stats else 0 }}</div>
+    </div>
+
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">💰</div>
+            <div class="sage-stat-label">Total Revenue</div>
+        </div>
+        <div class="sage-stat-value">R {{ "%.2f"|format(stats.total_revenue if stats else 0) }}</div>
+    </div>
+
+    <div class="sage-stat-card">
+        <div class="sage-stat-header">
+            <div class="sage-stat-icon">⏰</div>
+            <div class="sage-stat-label">Pending Payments</div>
+        </div>
+        <div class="sage-stat-value">R {{ "%.2f"|format(stats.pending_payments if stats else 0) }}</div>
+    </div>
+</div>
+
+<!-- Quick Actions Grid -->
+<div class="sage-actions-grid">
+    <a href="{{ url_for('sage.invoices') }}" class="sage-action-card">
+        <div class="sage-action-icon">📋</div>
+        <div class="sage-action-title">Invoices</div>
+        <div class="sage-action-description">View and manage sales invoices</div>
+    </a>
+
+    <a href="{{ url_for('sage.quotes') }}" class="sage-action-card">
+        <div class="sage-action-icon">💰</div>
+        <div class="sage-action-title">Quotes</div>
+        <div class="sage-action-description">View sales quotes and estimates</div>
+    </a>
+
+    <a href="{{ url_for('sage.contacts') }}" class="sage-action-card">
+        <div class="sage-action-icon">👥</div>
+        <div class="sage-action-title">Contacts</div>
+        <div class="sage-action-description">Manage customers and suppliers</div>
+    </a>
+
+    <a href="{{ url_for('sage.settings') }}" class="sage-action-card">
+        <div class="sage-action-icon">⚙️</div>
+        <div class="sage-action-title">Settings</div>
+        <div class="sage-action-description">Connection and preferences</div>
+    </a>
+</div>
+
+<!-- Recent Invoices -->
+<div class="sage-recent-section">
+    <div class="sage-section-header">
+        <h2 class="sage-section-title">
+            <span>📋</span> Recent Invoices
+        </h2>
+        <div class="sage-section-actions">
+            <a href="{{ url_for('sage.new_invoice') }}" class="btn btn-primary btn-sm">
+                ➕ New Invoice
+            </a>
+            <a href="{{ url_for('sage.invoices') }}" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if recent_invoices %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Invoice #</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for invoice in recent_invoices %}
+                        <tr>
+                            <td><strong>{{ invoice.displayed_as or invoice.reference or '-' }}</strong></td>
+                            <td>{{ invoice.contact.displayed_as if invoice.contact else '-' }}</td>
+                            <td>R {{ "%.2f"|format(invoice.total_amount or 0) }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if invoice.status == 'PAID' else 'warning' if invoice.status == 'SENT' else 'secondary' }}">
+                                    {{ invoice.status or 'DRAFT' }}
+                                </span>
+                            </td>
+                            <td>{{ invoice.date or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state-small">
+                <p>No invoices found</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Recent Quotes -->
+<div class="sage-recent-section">
+    <div class="sage-section-header">
+        <h2 class="sage-section-title">
+            <span>💰</span> Recent Quotes
+        </h2>
+        <div class="sage-section-actions">
+            <a href="{{ url_for('sage.quotes') }}" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if recent_quotes %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Quote #</th>
+                            <th>Customer</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quote in recent_quotes %}
+                        <tr>
+                            <td><strong>{{ quote.displayed_as or quote.reference or '-' }}</strong></td>
+                            <td>{{ quote.contact.displayed_as if quote.contact else '-' }}</td>
+                            <td>R {{ "%.2f"|format(quote.total_amount or 0) }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if quote.status == 'ACCEPTED' else 'danger' if quote.status == 'REJECTED' else 'info' if quote.status == 'SENT' else 'secondary' }}">
+                                    {{ quote.status or 'DRAFT' }}
+                                </span>
+                            </td>
+                            <td>{{ quote.date or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state-small">
+                <p>No quotes found</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% elif error %}
+<!-- Error State -->
+<div class="card sage-connect-card">
+    <div class="card-body">
+        <div class="sage-connect-icon">⚠️</div>
+        <h2 class="sage-connect-title">Failed to Load Dashboard</h2>
+        <p class="sage-connect-description">
+            There was an error loading your Sage data. Please try again or check your connection.
+        </p>
+        <div class="alert alert-danger" style="margin-bottom: 1.5rem;">
+            <strong>Error:</strong> {{ error }}
+        </div>
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+            <a href="{{ url_for('sage.dashboard') }}" class="btn btn-primary">Retry</a>
+            <a href="{{ url_for('sage.settings') }}" class="btn btn-secondary">Settings</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+

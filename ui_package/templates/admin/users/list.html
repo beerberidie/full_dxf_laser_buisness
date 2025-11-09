@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👥 User Management</h1>
+    <div class="page-actions">
+        <a href="{{ url_for('admin.new_user') }}" class="btn btn-primary">
+            + New User
+        </a>
+    </div>
+</div>
+
+{% if users %}
+<div class="card">
+    <div class="card-header">
+        <h2>All Users ({{ users|length }})</h2>
+    </div>
+    <div class="card-body">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('admin.user_detail', id=user.id) }}">
+                            <strong>{{ user.username }}</strong>
+                        </a>
+                        {% if user.is_superuser %}
+                        <span class="badge badge-danger">SUPERUSER</span>
+                        {% endif %}
+                        {% if user.id == current_user.id %}
+                        <span class="badge badge-info">YOU</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ user.full_name or '-' }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        {% set user_roles = user.roles.all() %}
+                        {% if user_roles %}
+                            {% for role in user_roles %}
+                                <span class="badge badge-primary">{{ role.display_name }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted">No roles</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not user.is_active %}
+                            <span class="badge badge-secondary">Inactive</span>
+                        {% elif user.is_locked() %}
+                            <span class="badge badge-warning">Locked</span>
+                        {% else %}
+                            <span class="badge badge-success">Active</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.last_login %}
+                            {{ user.last_login.strftime('%Y-%m-%d %H:%M') }}
+                        {% else %}
+                            <span class="text-muted">Never</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('admin.user_detail', id=user.id) }}" class="btn btn-sm btn-secondary">
+                            View
+                        </a>
+                        {% if user.id != current_user.id %}
+                        <a href="{{ url_for('admin.edit_user', id=user.id) }}" class="btn btn-sm btn-primary">
+                            Edit
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+    <div class="card-header">
+        <h2>Quick Actions</h2>
+    </div>
+    <div class="card-body">
+        <a href="{{ url_for('admin.login_history') }}" class="btn btn-secondary">
+            📊 View Login History
+        </a>
+    </div>
+</div>
+
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">👥</div>
+    <h2>No Users Found</h2>
+    <p>There are no users in the system.</p>
+    <a href="{{ url_for('admin.new_user') }}" class="btn btn-primary">
+        + Create First User
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Machine Settings Presets - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⚙️ Machine Settings Presets</h1>
+    <div class="page-actions">
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <a href="{{ url_for('presets.new_preset') }}" class="btn btn-primary">➕ Add Preset</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card" style="margin-bottom: 1.5rem;">
+    <div class="card-body">
+        <form method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="form-group" style="margin: 0;">
+                <label for="search">Search:</label>
+                <input type="text" id="search" name="search" class="form-control" 
+                       placeholder="Preset name or material..." value="{{ search or '' }}">
+            </div>
+            
+            <div class="form-group" style="margin: 0;">
+                <label for="material">Material Type:</label>
+                <select id="material" name="material" class="form-control">
+                    <option value="">All Materials</option>
+                    {% for material in material_types %}
+                    <option value="{{ material }}" {% if material_filter == material %}selected{% endif %}>
+                        {{ material }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin: 0;">
+                <label for="active">Status:</label>
+                <select id="active" name="active" class="form-control">
+                    <option value="">All Statuses</option>
+                    <option value="1" {% if active_filter == '1' %}selected{% endif %}>Active</option>
+                    <option value="0" {% if active_filter == '0' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin: 0; display: flex; align-items: flex-end; gap: 0.5rem;">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ url_for('presets.index') }}" class="btn btn-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Presets List -->
+<div class="card">
+    <div class="card-header">
+        <h2>Presets ({{ presets|length }})</h2>
+    </div>
+    <div class="card-body">
+        {% if presets %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Preset Name</th>
+                    <th>Material Type</th>
+                    <th>Thickness (mm)</th>
+                    <th>Key Settings</th>
+                    <th>Status</th>
+                    <th>Usage</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for preset in presets %}
+                <tr>
+                    <td>
+                        <strong>{{ preset.preset_name }}</strong>
+                        {% if preset.notes %}
+                        <br><small class="text-muted">{{ preset.notes[:50] }}{% if preset.notes|length > 50 %}...{% endif %}</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ preset.material_type }}</td>
+                    <td>{{ preset.thickness }}</td>
+                    <td>
+                        <small>
+                            {% if preset.nozzle %}Nozzle: {{ preset.nozzle }}<br>{% endif %}
+                            {% if preset.cut_speed %}Speed: {{ preset.cut_speed }} mm/min<br>{% endif %}
+                            {% if preset.gas_type %}Gas: {{ preset.gas_type }}{% endif %}
+                            {% if preset.gas_pressure %} @ {{ preset.gas_pressure }} bar{% endif %}
+                        </small>
+                    </td>
+                    <td>
+                        {% if preset.is_active %}
+                        <span class="badge badge-success">Active</span>
+                        {% else %}
+                        <span class="badge badge-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <small class="text-muted">
+                            {{ preset.laser_run_count }} run{{ 's' if preset.laser_run_count != 1 else '' }}
+                        </small>
+                    </td>
+                    <td>
+                        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="{{ url_for('presets.edit_preset', id=preset.id) }}"
+                               class="btn btn-sm btn-secondary" title="Edit">
+                                ✏️ Edit
+                            </a>
+
+                            <form action="{{ url_for('presets.toggle_active', id=preset.id) }}"
+                                  method="POST" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-warning"
+                                        title="{% if preset.is_active %}Deactivate{% else %}Activate{% endif %}">
+                                    {% if preset.is_active %}
+                                    ⏸️ Deactivate
+                                    {% else %}
+                                    ▶️ Activate
+                                    {% endif %}
+                                </button>
+                            </form>
+
+                            <form action="{{ url_for('presets.delete_preset', id=preset.id) }}"
+                                  method="POST"
+                                  onsubmit="return confirm('Are you sure you want to delete this preset? This action cannot be undone.');"
+                                  style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                    🗑️ Delete
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No presets found.</p>
+            {% if search or material_filter or active_filter %}
+            <p><a href="{{ url_for('presets.index') }}">Clear filters</a> to see all presets.</p>
+            {% else %}
+            <p>Get started by creating your first preset.</p>
+            {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+            <p><a href="{{ url_for('presets.new_preset') }}" class="btn btn-primary">Create your first preset</a></p>
+            {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Info Card -->
+<div class="card" style="margin-top: 1.5rem;">
+    <div class="card-header">
+        <h3>ℹ️ About Presets</h3>
+    </div>
+    <div class="card-body">
+        <p><strong>Machine Settings Presets</strong> allow you to save commonly used laser cutting parameters for specific material types and thicknesses.</p>
+        
+        <p><strong>Benefits:</strong></p>
+        <ul>
+            <li>Faster laser run logging - select a preset instead of entering all settings manually</li>
+            <li>Consistency - ensure the same settings are used for the same materials</li>
+            <li>Quality control - standardize cutting parameters across operators</li>
+            <li>Easy updates - change settings in one place and they apply to all future runs</li>
+        </ul>
+        
+        <p><strong>Usage:</strong></p>
+        <ul>
+            <li>When logging a laser run, select a preset from the dropdown</li>
+            <li>The preset dropdown automatically filters by material type and thickness</li>
+            <li>Only active presets appear in the dropdown</li>
+            <li>Deactivate presets you no longer use instead of deleting them (preserves history)</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+

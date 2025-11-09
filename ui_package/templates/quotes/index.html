@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Quotes - Laser OS{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <nav class="breadcrumb">
+            <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+            <span>/</span>
+            <span>Quotes</span>
+        </nav>
+        <h1>Quotes</h1>
+    </div>
+    <div>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <a href="{{ url_for('quotes.new_quote') }}" class="btn btn-primary">+ New Quote</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>All Quotes ({{ quotes|length }})</h2>
+    </div>
+
+    {% if quotes %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Quote #</th>
+                <th>Client</th>
+                <th>Date</th>
+                <th>Valid Until</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for quote in quotes %}
+            <tr>
+                <td><a href="{{ url_for('quotes.detail', id=quote.id) }}" class="link">{{ quote.quote_number }}</a></td>
+                <td>{{ quote.client.name if quote.client else '-' }}</td>
+                <td>{{ quote.quote_date.strftime('%Y-%m-%d') if quote.quote_date else '-' }}</td>
+                <td>{{ quote.valid_until.strftime('%Y-%m-%d') if quote.valid_until else '-' }}</td>
+                <td>R{{ "%.2f"|format(quote.total_amount) }}</td>
+                <td><span class="badge">{{ quote.status }}</span></td>
+                <td>
+                    <a href="{{ url_for('quotes.detail', id=quote.id) }}" class="btn btn-sm btn-secondary">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No quotes found.</p>
+        {% if current_user.has_role('admin') or current_user.has_role('manager') %}
+        <p><a href="{{ url_for('quotes.new_quote') }}" class="btn btn-primary">Create your first quote</a></p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+

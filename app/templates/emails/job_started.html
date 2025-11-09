@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production Started - {{ project.project_code }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .email-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #17a2b8;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #17a2b8;
+            margin: 0;
+            font-size: 24px;
+        }
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .info-box {
+            background-color: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box h2 {
+            color: #0c5460;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .project-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .project-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .project-details td {
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .project-details td:first-child {
+            font-weight: bold;
+            width: 40%;
+            color: #495057;
+        }
+        .project-details tr:last-child td {
+            border-bottom: none;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+        .progress-bar {
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #17a2b8, #138496);
+            height: 100%;
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .contact-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .contact-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="logo">⚡ Laser OS</div>
+            <h1>Your Project is Now in Production!</h1>
+        </div>
+
+        <p>Dear {{ client.name }},</p>
+
+        <div class="info-box">
+            <h2>⚙️ Production Started!</h2>
+            <p>Great news! We've started working on <strong>{{ project.name }}</strong>. Your project is currently being laser cut.</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill">
+                50% Complete
+            </div>
+        </div>
+
+        <div class="project-details">
+            <table>
+                <tr>
+                    <td>Project Code:</td>
+                    <td><strong>{{ project.project_code }}</strong></td>
+                </tr>
+                <tr>
+                    <td>Project Name:</td>
+                    <td>{{ project.name }}</td>
+                </tr>
+                <tr>
+                    <td>Status:</td>
+                    <td><strong>In Progress</strong></td>
+                </tr>
+                <tr>
+                    <td>Started:</td>
+                    <td>{{ started_date.strftime('%d %B %Y at %H:%M') if started_date else 'Today' }}</td>
+                </tr>
+                {% if project.due_date %}
+                <tr>
+                    <td>Expected Completion:</td>
+                    <td><strong>{{ project.due_date.strftime('%d %B %Y') }}</strong></td>
+                </tr>
+                {% endif %}
+                {% if operator_name %}
+                <tr>
+                    <td>Operator:</td>
+                    <td>{{ operator_name }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+
+        <p><strong>What's happening now:</strong></p>
+        <ul>
+            <li>Your design files are being processed by our laser cutting equipment</li>
+            <li>Our experienced operators are monitoring the cutting process</li>
+            <li>Quality checks will be performed throughout production</li>
+            <li>You'll receive another notification when the job is completed</li>
+        </ul>
+
+        <div style="text-align: center;">
+            <a href="{{ project_url }}" class="cta-button">View Project Status</a>
+        </div>
+
+        <div class="contact-info">
+            <p><strong>Need to make changes or have questions?</strong></p>
+            <p>📧 Email: {{ company_email }}</p>
+            <p>📞 Phone: {{ company_phone }}</p>
+            <p>🕒 Business Hours: Monday - Friday, 8:00 AM - 5:00 PM</p>
+            <p><em>Note: Changes may not be possible once cutting has started.</em></p>
+        </div>
+
+        <p>We're excited to bring your project to life!</p>
+
+        <div class="footer">
+            <p>This is an automated status update from Laser OS.</p>
+            <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+

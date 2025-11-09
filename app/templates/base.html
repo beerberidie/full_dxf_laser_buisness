@@ -3,54 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Laser OS{% endblock %} - {{ company_name }}</title>
+    <title>{% block title %}Laser COS{% endblock %} - {{ company_name }}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16x16.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>{{ company_name }}</h1>
-                    <p class="tagline">Laser Cutting Operations System</p>
-                </div>
-                <nav class="nav">
-                    <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">
-                        Dashboard
-                    </a>
-                    <a href="{{ url_for('clients.list_clients') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('clients.') %}active{% endif %}">
-                        Clients
-                    </a>
-                    <a href="{{ url_for('projects.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('projects.') %}active{% endif %}">
-                        Projects
-                    </a>
-                    <a href="{{ url_for('products.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('products.') %}active{% endif %}">
-                        Products
-                    </a>
-                    <a href="{{ url_for('queue.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('queue.') %}active{% endif %}">
-                        Queue
-                    </a>
-                    <a href="{{ url_for('inventory.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('inventory.') %}active{% endif %}">
-                        Inventory
-                    </a>
-                    <a href="{{ url_for('reports.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('reports.') %}active{% endif %}">
-                        Reports
-                    </a>
-                    <a href="{{ url_for('quotes.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('quotes.') %}active{% endif %}">
-                        Quotes
-                    </a>
-                    <a href="{{ url_for('invoices.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('invoices.') %}active{% endif %}">
-                        Invoices
-                    </a>
-                    <a href="{{ url_for('comms.index') }}" class="nav-link {% if request.endpoint and request.endpoint.startswith('comms.') %}active{% endif %}">
-                        Communications
-                    </a>
-                </nav>
+        <div class="header-content">
+            <!-- Left: Toggle + Logo -->
+            <div class="logo">
+                <button type="button" class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">
+                    <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <h1>Laser COS</h1>
             </div>
+
+            <!-- Right: User Menu -->
+            {% if current_user.is_authenticated %}
+            <div class="user-menu">
+                <!-- Production Automation: Notification Bell Icon -->
+                {% include 'partials/bell_dropdown.html' %}
+
+                <div class="user-info">
+                    <span class="user-name">{{ current_user.username }}</span>
+                    <span class="user-role">{{ current_user.roles.first().display_name if current_user.roles.first() else 'User' }}</span>
+                </div>
+                <div class="user-actions">
+                    <a href="{{ url_for('auth.profile') }}" class="btn btn-sm btn-secondary">Profile</a>
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-danger">Logout</a>
+                </div>
+            </div>
+            {% endif %}
         </div>
     </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('main.dashboard') }}" class="sidebar-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" title="Dashboard">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Dashboard</span>
+            </a>
+            <a href="{{ url_for('clients.list_clients') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('clients.') %}active{% endif %}" title="Clients">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Clients</span>
+            </a>
+            <a href="{{ url_for('projects.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('projects.') %}active{% endif %}" title="Projects">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Projects</span>
+            </a>
+            <a href="{{ url_for('products.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('products.') %}active{% endif %}" title="Products">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Products</span>
+            </a>
+            <a href="{{ url_for('queue.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('queue.') %}active{% endif %}" title="Queue">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Queue</span>
+            </a>
+            <a href="{{ url_for('presets.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('presets.') %}active{% endif %}" title="Presets">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2"></path>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Presets</span>
+            </a>
+            <a href="{{ url_for('operators.list') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('operators.') %}active{% endif %}" title="Operators">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Operators</span>
+            </a>
+            <a href="{{ url_for('inventory.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('inventory.') %}active{% endif %}" title="Inventory">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Inventory</span>
+            </a>
+            <a href="{{ url_for('reports.index') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('reports.') %}active{% endif %}" title="Reports">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Reports</span>
+            </a>
+
+            <!-- Sage Integration Link -->
+            <a href="{{ url_for('sage.dashboard') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('sage.') %}active{% endif %}" title="Sage Integration">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                        <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                        <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Sage Integration</span>
+            </a>
+
+            <!-- Communications Link -->
+            <a href="{{ url_for('comms.index') }}" class="sidebar-link {% if request.endpoint and (request.endpoint.startswith('comms.') or request.endpoint.startswith('templates.')) %}active{% endif %}" title="Communications">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Communications</span>
+            </a>
+
+            {% if current_user.is_authenticated and (current_user.has_role('admin') or current_user.is_superuser) %}
+            <a href="{{ url_for('admin.users') }}" class="sidebar-link {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}" title="Admin">
+                <span class="sidebar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </span>
+                <span class="sidebar-text">Admin</span>
+            </a>
+            {% endif %}
+        </nav>
+    </aside>
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -60,7 +189,7 @@
                     {% for category, message in messages %}
                         <div class="alert alert-{{ category }}">
                             {{ message }}
-                            <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove()">&times;</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -68,23 +197,56 @@
         {% endif %}
     {% endwith %}
 
-    <!-- Main Content -->
-    <main class="main">
-        <div class="container">
-            {% block content %}{% endblock %}
-        </div>
-    </main>
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+        <!-- Main Content -->
+        <main class="main">
+            <div class="container">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>
-            <p class="footer-meta">Laser OS Tier 1 v1.0</p>
+            <p class="footer-meta">Laser COS v1.0</p>
         </div>
     </footer>
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Production Automation: Notification System JavaScript -->
+    <script>
+        // Update notification count badge
+        function updateNotificationCount() {
+            fetch('{{ url_for("notifications.notification_count") }}')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('notificationBadge');
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching notification count:', error));
+        }
+
+        // Auto-refresh notification count every 60 seconds
+        setInterval(updateNotificationCount, 60000);
+
+        // Load on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNotificationCount();
+        });
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

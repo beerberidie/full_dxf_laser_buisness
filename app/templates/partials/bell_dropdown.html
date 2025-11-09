@@ -1,0 +1,330 @@
+<!-- Bell Icon Notification Dropdown (Admin/Manager Only) -->
+{% if current_user.is_authenticated and current_user.role in ['admin', 'manager'] %}
+<div class="notification-bell-wrapper">
+    <button class="notification-bell-btn" id="notificationBellBtn" type="button" aria-label="Notifications">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        {% if count > 0 %}
+        <span class="notification-badge" id="notificationBadge">{{ count if count < 100 else '99+' }}</span>
+        {% endif %}
+    </button>
+
+    <div class="notification-dropdown" id="notificationDropdown">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            {% if count > 0 %}
+            <span class="notification-count-badge">{{ count }}</span>
+            {% endif %}
+        </div>
+
+        <div class="notification-body">
+            {% if notifications %}
+                {% for notif in notifications %}
+                <div class="notification-item {% if not notif.resolved %}unread{% endif %}">
+                    <div class="notification-icon">
+                        {% if notif.notif_type == 'approval_wait' %}
+                            ⏰
+                        {% elif notif.notif_type == 'material_block' %}
+                            ⚠️
+                        {% elif notif.notif_type == 'cutting_stall' %}
+                            ⏸️
+                        {% elif notif.notif_type == 'pickup_wait' %}
+                            🚚
+                        {% elif notif.notif_type == 'low_stock' %}
+                            📦
+                        {% elif notif.notif_type == 'preset_missing' %}
+                            ⚙️
+                        {% else %}
+                            ℹ️
+                        {% endif %}
+                    </div>
+                    <div class="notification-content">
+                        <p class="notification-message">{{ notif.message }}</p>
+                        <small class="notification-time">{{ notif.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                        {% if notif.project %}
+                        <div class="notification-action">
+                            <a href="{{ url_for('projects.view_project', id=notif.project_id) }}" class="btn-link">View Project</a>
+                        </div>
+                        {% endif %}
+                        {% if notif.inventory_item %}
+                        <div class="notification-action">
+                            <a href="{{ url_for('inventory.view_item', id=notif.inventory_item_id) }}" class="btn-link">View Inventory</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="notification-actions">
+                        <form method="POST" action="{{ url_for('notifications.resolve_notification', notification_id=notif.id) }}" style="display: inline;">
+                            <button type="submit" class="btn-resolve" title="Mark as resolved">✓</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="notification-empty">
+                    <div class="empty-icon">✓</div>
+                    <p>No notifications</p>
+                    <small>You're all caught up!</small>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="notification-footer">
+            <a href="{{ url_for('notifications.list_notifications') }}" class="btn-view-all">View All</a>
+            {% if count > 0 %}
+            <form method="POST" action="{{ url_for('notifications.mark_all_read') }}" style="display: inline;">
+                <button type="submit" class="btn-mark-all">Mark All Read</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+// Toggle notification dropdown
+document.addEventListener('DOMContentLoaded', function() {
+    const bellBtn = document.getElementById('notificationBellBtn');
+    const dropdown = document.getElementById('notificationDropdown');
+
+    if (bellBtn && dropdown) {
+        bellBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!bellBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+
+<style>
+/* Notification Bell Wrapper */
+.notification-bell-wrapper {
+    position: relative;
+    margin-right: 15px;
+}
+
+.notification-bell-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    position: relative;
+    color: #333;
+    transition: color 0.2s;
+}
+
+.notification-bell-btn:hover {
+    color: #007bff;
+}
+
+.notification-bell-btn svg {
+    display: block;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #dc3545;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    width: 380px;
+    max-width: 90vw;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 1000;
+}
+
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.notification-count-badge {
+    background: #dc3545;
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.notification-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.notification-item.unread {
+    background-color: #f8f9fa;
+    border-left-color: #007bff;
+}
+
+.notification-item:hover {
+    background-color: #e9ecef;
+}
+
+.notification-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-message {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.notification-time {
+    color: #666;
+    font-size: 12px;
+}
+
+.notification-action {
+    margin-top: 8px;
+}
+
+.notification-action .btn-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.notification-action .btn-link:hover {
+    text-decoration: underline;
+}
+
+.notification-actions {
+    flex-shrink: 0;
+}
+
+.btn-resolve {
+    background: none;
+    border: none;
+    color: #28a745;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.btn-resolve:hover {
+    color: #218838;
+}
+
+.notification-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.notification-empty p {
+    margin: 8px 0 4px 0;
+    font-size: 16px;
+    color: #666;
+}
+
+.notification-empty small {
+    color: #999;
+    font-size: 13px;
+}
+
+.notification-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-top: 1px solid #eee;
+    background: #f8f9fa;
+    border-radius: 0 0 8px 8px;
+}
+
+.btn-view-all,
+.btn-mark-all {
+    background: none;
+    border: none;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.btn-view-all:hover,
+.btn-mark-all:hover {
+    text-decoration: underline;
+}
+
+/* Scrollbar styling */
+.notification-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notification-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.notification-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.notification-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+</style>
+

@@ -1,0 +1,45 @@
+QUOTE EXPIRED
+{{ '=' * 60 }}
+
+Dear {{ client.name }},
+
+⚠️ YOUR QUOTE HAS EXPIRED
+
+Unfortunately, the quote for "{{ project.name }}" has expired as we 
+did not receive proof of payment within the 30-day validity period.
+
+PROJECT DETAILS
+{{ '-' * 60 }}
+Project Code:           {{ project.project_code }}
+Project Name:           {{ project.name }}
+Quote Date:             {{ project.quote_date.strftime('%d %B %Y') if project.quote_date else 'N/A' }}
+Expiry Date:            {{ project.quote_expiry_date.strftime('%d %B %Y') if project.quote_expiry_date else 'N/A' }}
+Original Quoted Price:  R{{ "%.2f"|format(project.quoted_price) if project.quoted_price else '0.00' }}
+
+STILL INTERESTED IN THIS PROJECT?
+{{ '-' * 60 }}
+We'd be happy to provide you with a new quote! Please contact us to 
+discuss your requirements and receive updated pricing.
+
+WHAT YOU CAN DO:
+{{ '-' * 60 }}
+• Contact us to request a new quote for this project
+• Discuss any changes or updates to your requirements
+• Get updated pricing based on current material costs
+
+REQUEST NEW QUOTE
+{{ '-' * 60 }}
+{{ contact_url }}
+
+GET IN TOUCH WITH US
+{{ '-' * 60 }}
+Email:          {{ company_email }}
+Phone:          {{ company_phone }}
+Business Hours: Monday - Friday, 8:00 AM - 5:00 PM
+
+We appreciate your interest and look forward to working with you!
+
+{{ '-' * 60 }}
+This is an automated notification from Laser OS.
+© {{ current_year }} {{ company_name }}. All rights reserved.
+

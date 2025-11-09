@@ -1,0 +1,1684 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Chart Of Accounts",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Coa Accounts",
+      "description": "A COA account stores common properties for one or more ledger accounts that belong to a business.\n\nThe COA accounts for all the businesses are the same, but a business never uses all existing COA accounts, but\nonly a subset of them.\n\nCOA accounts are grouped in different ways: There is a `ledger_account_type` attribute and an additional\n`classification`, the latter not being used on all accounts, but only in some countries like France and\nGermany.\n\nFor you as a developer, COA accounts are important when creating ledger accounts: You will need to reference\na ledger account, so that the ledger account can be included in the correct column of different reports.\n"
+    },
+    {
+      "name": "Coa Templates",
+      "description": "A COA template describes a common set of (ledger) accounts.\n\nEach business in accounting has one COA template assigned to it. Which template is being used\ndepends on the country where the business is registered, its business type and/or the user's\nselection.\n"
+    },
+    {
+      "name": "Ledger Accounts",
+      "description": "A Ledger Account keeps ledger entries for a business in Accounting. It has a balance and all ledger accounts\nof a business are grouped into different types and in some countries additionally into classifications.\n\nThere can be a mandatory or default tax rate assigned to the ledger account, which means that bookings on the\naccount should (or must) be taxed with that rate.\n\nThere are special ledger accounts which cannot be deleted: Control accounts are used in booking rules, for\ninstance for recording tax liabilities.\n"
+    },
+    {
+      "name": "Ledger Account Classifications",
+      "description": "The Ledger Account Classification is a way COA accounts — and with that their associated ledger accounts — are\ngrouped. This is not used in all countries where Accounting is available.\n"
+    },
+    {
+      "name": "Ledger Account Types",
+      "description": "The Ledger Account Types group COA and their associated Ledger Accounts. Examples are\n`CURRENT_LIABILITIES`, `DIRECT_EXPENSES` and `OTHER_INCOME`. This helps building reports and also determining\nfor which bookings a ledger account can be used.\n"
+    }
+  ],
+  "paths": {
+    "/coa_accounts": {
+      "get": {
+        "summary": "Returns all Coa Accounts",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "coa_template_id",
+            "description": "Use this to filter by COA Template",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Coa Accounts changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Coa Accounts per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Coa Accounts",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Coa Accounts (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Coa Accounts",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 417,
+				"$page": 1,
+				"$next": "/coa_accounts?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "e6fc4cf1494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Office equipment and IT - Cost",
+						"$path": "/coa_accounts/e6fc4cf1494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc4eda494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Office equipment and IT - Accumulated Depreciation",
+						"$path": "/coa_accounts/e6fc4eda494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc50d3494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Fixtures and fittings - Cost",
+						"$path": "/coa_accounts/e6fc50d3494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc5290494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Fixtures and fittings - Accumulated Depreciation",
+						"$path": "/coa_accounts/e6fc5290494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc5417494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Motor Vehicles - Cost",
+						"$path": "/coa_accounts/e6fc5417494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc55c2494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Motor Vehicles - Accumulated Depreciation",
+						"$path": "/coa_accounts/e6fc55c2494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc5768494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Stock - Raw Materials",
+						"$path": "/coa_accounts/e6fc5768494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc5ae9494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Trade Debtors",
+						"$path": "/coa_accounts/e6fc5ae9494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc5c77494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Provision for Doubtful Debtors",
+						"$path": "/coa_accounts/e6fc5c77494a11e691e20a5d7cf84c3e"
+					},
+					{
+						"id": "e6fc5dfd494a11e691e20a5d7cf84c3e",
+						"displayed_as": "Prepayments",
+						"$path": "/coa_accounts/e6fc5dfd494a11e691e20a5d7cf84c3e"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Coa Accounts"
+        ],
+        "operationId": "getCoaAccounts"
+      },
+      "x-sage-pathtitle": "Coa Account collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/coa_accounts/{key}": {
+      "get": {
+        "summary": "Returns a Coa Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Coa Account Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Coa Account (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Coa Account",
+            "examples": {
+             "application/json":
+			 {
+				"id": "e6fc4eda494a11e691e20a5d7cf84c3e",
+				"displayed_as": "Office equipment and IT - Accumulated Depreciation",
+				"$path": "/coa_accounts/e6fc4eda494a11e691e20a5d7cf84c3e",
+				"created_at": "2013-07-03T10:38:12Z",
+				"updated_at": "2013-07-03T10:38:12Z",
+				"ledger_account_group": {
+					"id": "ASSET",
+					"displayed_as": "Asset"
+				},
+				"name": "Office equipment and IT - Accumulated Depreciation",
+				"control_name": null,
+				"nominal_code": 31,
+				"ledger_account_type": {
+					"id": "FIXED_ASSETS",
+					"displayed_as": "Fixed Assets",
+					"$path": "/ledger_account_types/FIXED_ASSETS"
+				},
+				"ledger_account_classification": null,
+				"tax_rate": {
+					"id": "GB_NO_TAX",
+					"displayed_as": "No VAT",
+					"$path": "/tax_rates/GB_NO_TAX"
+				},
+				"fixed_tax_rate": true,
+				"cis_materials": false,
+				"cis_labour": false
+			}
+            }
+          }
+        },
+        "tags": [
+          "Coa Accounts"
+        ],
+        "operationId": "getCoaAccountsKey"
+      },
+      "x-sage-pathtitle": "single Coa Account resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/coa_templates": {
+      "get": {
+        "summary": "Returns all Coa Templates",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Coa Templates per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Coa Templates",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Coa Templates (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "country_id",
+            "description": "Use this to filter by country id",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Coa Templates",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 8,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "SMALL_BUSINESS_GB",
+						"displayed_as": "Small Business",
+						"$path": "/coa_templates/SMALL_BUSINESS_GB"
+					},
+					{
+						"id": "SMALL_BUSINESS_IE",
+						"displayed_as": "Small Business (IE)",
+						"$path": "/coa_templates/SMALL_BUSINESS_IE"
+					},
+					{
+						"id": "SMALL_BUSINESS_CA_EN",
+						"displayed_as": "Small Business (Canada)",
+						"$path": "/coa_templates/SMALL_BUSINESS_CA_EN"
+					},
+					{
+						"id": "SMALL_BUSINESS_CA_FR",
+						"displayed_as": "Small Business (French Canadian)",
+						"$path": "/coa_templates/SMALL_BUSINESS_CA_FR"
+					},
+					{
+						"id": "PARTNERSHIP_GB",
+						"displayed_as": "Partnership",
+						"$path": "/coa_templates/PARTNERSHIP_GB"
+					},
+					{
+						"id": "LIMITED_COMPANY_GB",
+						"displayed_as": "Limited Company",
+						"$path": "/coa_templates/LIMITED_COMPANY_GB"
+					},
+					{
+						"id": "PARTNERSHIP_IE",
+						"displayed_as": "Partnership (IE)",
+						"$path": "/coa_templates/PARTNERSHIP_IE"
+					},
+					{
+						"id": "LIMITED_COMPANY_IE",
+						"displayed_as": "Limited Company (IE)",
+						"$path": "/coa_templates/LIMITED_COMPANY_IE"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Coa Templates"
+        ],
+        "operationId": "getCoaTemplates"
+      },
+      "x-sage-pathtitle": "Coa Template collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/coa_templates/{key}": {
+      "get": {
+        "summary": "Returns a Coa Template",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Coa Template Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Coa Template (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Coa Template",
+            "examples": {
+              "application/json":
+			  {
+				"id": "SMALL_BUSINESS_GB",
+				"displayed_as": "Small Business",
+				"$path": "/coa_templates/SMALL_BUSINESS_GB",
+				"created_at": "2013-07-03T10:38:17Z",
+				"updated_at": "2013-07-03T10:38:17Z",
+				"name": "Small Business",
+				"country": {
+					"id": "GB",
+					"displayed_as": "United Kingdom (GB)",
+					"$path": "/countries/GB"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Coa Templates"
+        ],
+        "operationId": "getCoaTemplatesKey"
+      },
+      "x-sage-pathtitle": "single Coa Template resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/ledger_accounts": {
+      "get": {
+        "summary": "Returns all Ledger Accounts",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Full Access, Restricted Access, Read Only\n* Area: `Purchases`: Full Access, Restricted Access, Read Only\n* Area: `Products & Services`: Full Access, Restricted Access, Read Only\n* Area: `Contacts`: Full Access, Restricted Access, Read Only\n* Area: `Bank`: Full Access, Restricted Access, Read Only\n* Area: `Journals`: Full Access, Restricted Access, Read Only\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Ledger Accounts changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "visible_in",
+            "description": "Use this to limit the response to ledger account types visible in a specific area. Valid values are: banking, sales, expenses, other_payments, other_receipts, journals and reporting",
+            "type": "string",
+            "enum": [
+              "sales",
+              "banking",
+              "expenses",
+              "other_payments",
+              "other_receipts",
+              "journals",
+              "reporting"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "not_visible_in",
+            "description": "Use this to limit the response to ledger account types not visible in a specific area.",
+            "type": "string",
+            "enum": [
+              "sales",
+              "banking",
+              "expenses",
+              "other_payments",
+              "other_receipts",
+              "journals",
+              "reporting"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_included_in_chart",
+            "description": "Use this to limit the response to ledger accounts that are/are not included in the chart",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_control_accounts",
+            "description": "Use this to limit the response to ledger accounts that are/are not control accounts",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "ledger_account_classification_id",
+            "description": "Use this to filter by ledger account classification id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_balance_details",
+            "description": "Use this to display the balance details for ledger accounts between a date range (requires from_date and to_date).",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "exclude_deleted_entries",
+            "description": "Exclude deleted ledger entries.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Calculate balances from this date.",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Calculate balances to this date.",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the item code or description",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "sort_order_from_user_setting",
+            "description": "Use this to enable ordering ledger accounts according to user settings. Defaulted to 'false'.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "filter_inactive_bank_accounts",
+            "description": "Use this to filter inactive bank accounts",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Ledger Accounts per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Ledger Accounts",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Accounts (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "ledger_account_type_id",
+            "description": "Use this to filter by ledger account type id",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Ledger Accounts",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 178,
+				"$page": 1,
+				"$next": "/ledger_accounts?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "163849e847954f66badb3a4bbbb4dc19",
+						"displayed_as": "Bank Account (1200)",
+						"$path": "/ledger_accounts/163849e847954f66badb3a4bbbb4dc19"
+					},
+					{
+						"id": "a7e0a1f77a9b4566829ccf8247bdb22d",
+						"displayed_as": "Cash (1210)",
+						"$path": "/ledger_accounts/a7e0a1f77a9b4566829ccf8247bdb22d"
+					},
+					{
+						"id": "7a59a7a4884911ed84fa0252b90cda0d",
+						"displayed_as": "Office equipment and IT - Cost (0030)",
+						"$path": "/ledger_accounts/7a59a7a4884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a59d338884911ed84fa0252b90cda0d",
+						"displayed_as": "Office equipment and IT - Accumulated Depreciation (0031)",
+						"$path": "/ledger_accounts/7a59d338884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a5a0d4f884911ed84fa0252b90cda0d",
+						"displayed_as": "Fixtures and fittings - Cost (0040)",
+						"$path": "/ledger_accounts/7a5a0d4f884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a5a33da884911ed84fa0252b90cda0d",
+						"displayed_as": "Fixtures and fittings - Accumulated Depreciation (0041)",
+						"$path": "/ledger_accounts/7a5a33da884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a5a595c884911ed84fa0252b90cda0d",
+						"displayed_as": "Motor Vehicles - Cost (0050)",
+						"$path": "/ledger_accounts/7a5a595c884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a5a8952884911ed84fa0252b90cda0d",
+						"displayed_as": "Motor Vehicles - Accumulated Depreciation (0051)",
+						"$path": "/ledger_accounts/7a5a8952884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a5ab138884911ed84fa0252b90cda0d",
+						"displayed_as": "Stock - Raw Materials (1000)",
+						"$path": "/ledger_accounts/7a5ab138884911ed84fa0252b90cda0d"
+					},
+					{
+						"id": "7a5ad74c884911ed84fa0252b90cda0d",
+						"displayed_as": "Trade Debtors (1100)",
+						"$path": "/ledger_accounts/7a5ad74c884911ed84fa0252b90cda0d"
+					}
+				]
+			}
+              
+            }
+          }
+        },
+        "tags": [
+          "Ledger Accounts"
+        ],
+        "operationId": "getLedgerAccounts"
+      },
+      "x-sage-pathtitle": "Ledger Account collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Ledger Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "LedgerAccounts",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postLedgerAccounts"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Ledger Account",
+            "schema": {
+              "$ref": "#/definitions/LedgerAccount"
+            }
+          }
+        },
+        "tags": [
+          "Ledger Accounts"
+        ],
+        "operationId": "postLedgerAccounts"
+      }
+    },
+    "/ledger_accounts/{key}": {
+      "get": {
+        "summary": "Returns a Ledger Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Sales`: Full Access, Restricted Access, Read Only\n* Area: `Purchases`: Full Access, Restricted Access, Read Only\n* Area: `Products & Services`: Full Access, Restricted Access, Read Only\n* Area: `Contacts`: Full Access, Restricted Access, Read Only\n* Area: `Bank`: Full Access, Restricted Access, Read Only\n* Area: `Journals`: Full Access, Restricted Access, Read Only\n* Area: `Settings`: Full Access, Read Only",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Ledger Account (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_balance_details",
+            "description": "Use this to display the balance details for ledger accounts between a date range (requires from_date and to_date).",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "exclude_deleted_entries",
+            "description": "Exclude deleted ledger entries.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "from_date",
+            "description": "Calculate balances from this date.",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "to_date",
+            "description": "Calculate balances to this date.",
+            "type": "string",
+            "format": "date-time",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Account (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Ledger Account",
+            "examples": {
+              "application/json":
+			  {
+				"id": "7a5a33da884911ed84fa0252b90cda0d",
+				"displayed_as": "Fixtures and fittings - Accumulated Depreciation (0041)",
+				"$path": "/ledger_accounts/7a5a33da884911ed84fa0252b90cda0d",
+				"created_at": "2022-12-30T13:54:28Z",
+				"updated_at": "2022-12-30T13:54:28Z",
+				"ledger_account_group": {
+					"id": "ASSET",
+					"displayed_as": "Asset"
+				},
+				"name": "Fixtures and fittings - Accumulated Depreciation",
+				"display_name": "Fixtures and fittings - Accumulated Depreciation",
+				"visible_scopes": [
+					"journals",
+					"other_payment",
+					"other_receipt",
+					"reporting"
+				],
+				"included_in_chart": true,
+				"nominal_code": 41,
+				"ledger_account_type": {
+					"id": "FIXED_ASSETS",
+					"displayed_as": "Fixed Assets",
+					"$path": "/ledger_account_types/FIXED_ASSETS"
+				},
+				"ledger_account_classification": null,
+				"tax_rate": {
+					"id": "GB_NO_TAX",
+					"displayed_as": "No VAT",
+					"$path": "/tax_rates/GB_NO_TAX"
+				},
+				"fixed_tax_rate": true,
+				"visible_in_banking": false,
+				"visible_in_expenses": false,
+				"visible_in_journals": true,
+				"visible_in_other_payments": true,
+				"visible_in_other_receipts": true,
+				"visible_in_reporting": true,
+				"visible_in_sales": false,
+				"ui_visible": true,
+				"bank_attached": false,
+				"is_control_account": false,
+				"control_name": null,
+				"display_formatted": "0041 - Fixtures and fittings - Accumulated Depreciation",
+				"tax_recoverable": null,
+				"recoverable_percentage": null,
+				"non_recoverable_ledger_account": null,
+				"cis_materials": false,
+				"tax_instalment": false,
+				"cis_labour": false,
+				"gifi_code": null
+			}
+            }
+          }
+        },
+        "tags": [
+          "Ledger Accounts"
+        ],
+        "operationId": "getLedgerAccountsKey"
+      },
+      "x-sage-pathtitle": "single Ledger Account resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Ledger Account",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "LedgerAccounts",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putLedgerAccounts"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Ledger Account",
+            "schema": {
+              "$ref": "#/definitions/LedgerAccount"
+            }
+          }
+        },
+        "tags": [
+          "Ledger Accounts"
+        ],
+        "operationId": "putLedgerAccountsKey"
+      }
+    },
+    "/ledger_account_classifications": {
+      "get": {
+        "summary": "Returns all Ledger Account Classifications",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ledger_account_type_id",
+            "description": "Use this to filter by ledger account type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Ledger Account Classifications per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Ledger Account Classifications",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Account Classifications (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Ledger Account Classifications",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Base"
+              }
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Classifications"
+        ],
+        "operationId": "getLedgerAccountClassifications"
+      },
+      "x-sage-pathtitle": "Ledger Account Classification collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/ledger_account_classifications/{key}": {
+      "get": {
+        "summary": "Returns a Ledger Account Classification",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Classification Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Account Classification (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Ledger Account Classification",
+            "schema": {
+              "$ref": "#/definitions/Base"
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Classifications"
+        ],
+        "operationId": "getLedgerAccountClassificationsKey"
+      },
+      "x-sage-pathtitle": "single Ledger Account Classification resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/ledger_account_types": {
+      "get": {
+        "summary": "Returns all Ledger Account Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ledger_account_classification_id",
+            "description": "Use this to filter by ledger account classification id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Ledger Account Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Ledger Account Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Account Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Ledger Account Types",
+            "examples": {
+          "application/json":
+		  {
+			"$total": 13,
+			"$page": 1,
+			"$next": null,
+			"$back": null,
+			"$itemsPerPage": 20,
+			"$items": [
+				{
+					"id": "SALES",
+					"displayed_as": "Sales",
+					"$path": "/ledger_account_types/SALES"
+				},
+				{
+					"id": "OTHER_INCOME",
+					"displayed_as": "Other Income",
+					"$path": "/ledger_account_types/OTHER_INCOME"
+				},
+				{
+					"id": "DIRECT_EXPENSES",
+					"displayed_as": "Direct Expenses",
+					"$path": "/ledger_account_types/DIRECT_EXPENSES"
+				},
+				{
+					"id": "OVERHEADS",
+					"displayed_as": "Overheads",
+					"$path": "/ledger_account_types/OVERHEADS"
+				},
+				{
+					"id": "DEPRECIATION",
+					"displayed_as": "Depreciation",
+					"$path": "/ledger_account_types/DEPRECIATION"
+				},
+				{
+					"id": "CURRENT_ASSETS",
+					"displayed_as": "Current Assets",
+					"$path": "/ledger_account_types/CURRENT_ASSETS"
+				},
+				{
+					"id": "FIXED_ASSETS",
+					"displayed_as": "Fixed Assets",
+					"$path": "/ledger_account_types/FIXED_ASSETS"
+				},
+				{
+					"id": "FUTURE_ASSETS",
+					"displayed_as": "Future Assets",
+					"$path": "/ledger_account_types/FUTURE_ASSETS"
+				},
+				{
+					"id": "BANK",
+					"displayed_as": "Bank",
+					"$path": "/ledger_account_types/BANK"
+				},
+				{
+					"id": "CURRENT_LIABILITY",
+					"displayed_as": "Current Liability",
+					"$path": "/ledger_account_types/CURRENT_LIABILITY"
+				},
+				{
+					"id": "FUTURE_LIABILITY",
+					"displayed_as": "Future Liability",
+					"$path": "/ledger_account_types/FUTURE_LIABILITY"
+				},
+				{
+					"id": "EQUITY",
+					"displayed_as": "Equity",
+					"$path": "/ledger_account_types/EQUITY"
+				},
+				{
+					"id": "LINE_OF_CREDIT",
+					"displayed_as": "Credit Card / Loan",
+					"$path": "/ledger_account_types/LINE_OF_CREDIT"
+				}
+			]
+		}
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Types"
+        ],
+        "operationId": "getLedgerAccountTypes"
+      },
+      "x-sage-pathtitle": "Ledger Account Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/ledger_account_types/{key}": {
+      "get": {
+        "summary": "Returns a Ledger Account Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Ledger Account Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Ledger Account Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Ledger Account Type",
+            "examples": {
+             "application/json":
+			 {
+				"id": "SALES",
+				"displayed_as": "Sales",
+				"$path": "/ledger_account_types/SALES"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Ledger Account Types"
+        ],
+        "operationId": "getLedgerAccountTypesKey"
+      },
+      "x-sage-pathtitle": "single Ledger Account Type resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "CoaAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the COA account"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The system control name for the COA account.\n\nSystem control names are used in Accounting to identify the correct ledger account for booking taxes\netc.\n"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the COA account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the COA account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the COA account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the COA account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the COA account is flagged for CIS Materials"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the COA account is flagged for CIS Labour"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Financial Accounts & Entries"
+    },
+    "CoaGroupType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        }
+      }
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Financial Accounts & Entries"
+    },
+    "CoaTemplate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name for the COA template"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The country the COA template relates to"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Financial Accounts & Entries"
+    },
+    "LedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The display name for the ledger account"
+        },
+        "visible_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The visible scopes for the ledger account.\n\nThis indicates in which of the UI's areas the ledger account is displayed and available for user\nselection. Possible entries in this array are `bank`, `sales`, `purchasing`, `other_payment`,\n`other_receipt`, `reporting`, `journals`, `sales_eu`, `sales_row`, `purchasing_eu`, `purchasing_row`\nand `purchasing_hrc`.\n"
+        },
+        "included_in_chart": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is included in the chart of accounts"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the ledger account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the ledger account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the ledger account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the ledger account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "visible_in_banking": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+        },
+        "visible_in_expenses": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+        },
+        "visible_in_journals": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+        },
+        "visible_in_other_payments": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+        },
+        "visible_in_other_receipts": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+        },
+        "visible_in_reporting": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+        },
+        "visible_in_sales": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+        },
+        "balance_details": {
+          "$ref": "#/definitions/LedgerAccountBalanceDetails",
+          "description": "The ledger account balance details for the date range provided"
+        },
+        "is_control_account": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is a control account.\n\nControl accounts cannot be removed. See also `control_name`.\n"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+        },
+        "display_formatted": {
+          "type": "string",
+          "description": "The display name formatted based on coa_list_order in settings"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "non_recoverable_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The non-recoverable ledger account (Canada Only)"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Materials"
+        },
+        "tax_instalment": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for Tax Intalment (Canada only)"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Labour"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Settings`: Full Access",
+      "x-sage-menusection": "Financial Accounts & Entries"
+    },
+    "LedgerAccountBalanceDetails": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The account balance"
+        },
+        "credit_or_debit": {
+          "type": "string",
+          "description": "Is the balance a debit or credit"
+        },
+        "credits": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit balance"
+        },
+        "debits": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit balance"
+        },
+        "from_date": {
+          "type": "string",
+          "description": "The from date filter"
+        },
+        "to_date": {
+          "type": "string",
+          "description": "The to date filter"
+        }
+      }
+    },
+    "putLedgerAccounts": {
+      "type": "object",
+      "properties": {
+        "ledger_account": {
+          "type": "object",
+          "properties": {
+            "ledger_account_type_id": {
+              "type": "string",
+              "description": "The ledger account type for the ledger account"
+            },
+            "included_in_chart": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is included in the chart of accounts"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+            },
+            "display_name": {
+              "type": "string",
+              "description": "The display name for the ledger account"
+            },
+            "nominal_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The nominal code of the ledger account",
+              "minimum": 1,
+              "maximum": 99999999
+            },
+            "ledger_account_classification_id": {
+              "type": "string",
+              "description": "The ID of the Ledger Account Classification."
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            },
+            "fixed_tax_rate": {
+              "type": "boolean",
+              "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+            },
+            "visible_in_banking": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+            },
+            "visible_in_expenses": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+            },
+            "visible_in_journals": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+            },
+            "visible_in_other_payments": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+            },
+            "visible_in_other_receipts": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+            },
+            "visible_in_reporting": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+            },
+            "visible_in_sales": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+            },
+            "control_name": {
+              "type": "string",
+              "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+            },
+            "tax_recoverable": {
+              "type": "boolean",
+              "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+            },
+            "recoverable_percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The partial recoverable tax rate (Canada only)"
+            },
+            "non_recoverable_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Non Recoverable Ledger Account."
+            },
+            "cis_materials": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is flagged for CIS Materials"
+            },
+            "cis_labour": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is flagged for CIS Labour"
+            },
+            "gifi_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n",
+              "minimum": 1000,
+              "maximum": 9999
+            }
+          }
+        }
+      },
+      "required": [
+        "ledger_account"
+      ],
+      "description": "Updates a Ledger Account"
+    },
+    "postLedgerAccounts": {
+      "type": "object",
+      "properties": {
+        "ledger_account": {
+          "type": "object",
+          "properties": {
+            "ledger_account_type_id": {
+              "type": "string",
+              "description": "The ledger account type for the ledger account"
+            },
+            "included_in_chart": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is included in the chart of accounts"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+            },
+            "display_name": {
+              "type": "string",
+              "description": "The display name for the ledger account"
+            },
+            "nominal_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The nominal code of the ledger account",
+              "minimum": 1,
+              "maximum": 99999999
+            },
+            "ledger_account_classification_id": {
+              "type": "string",
+              "description": "The ID of the Ledger Account Classification."
+            },
+            "tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Tax Rate."
+            },
+            "fixed_tax_rate": {
+              "type": "boolean",
+              "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+            },
+            "visible_in_banking": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+            },
+            "visible_in_expenses": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+            },
+            "visible_in_journals": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+            },
+            "visible_in_other_payments": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+            },
+            "visible_in_other_receipts": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+            },
+            "visible_in_reporting": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+            },
+            "visible_in_sales": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+            },
+            "control_name": {
+              "type": "string",
+              "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+            },
+            "tax_recoverable": {
+              "type": "boolean",
+              "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+            },
+            "recoverable_percentage": {
+              "type": "number",
+              "format": "double",
+              "description": "The partial recoverable tax rate (Canada only)"
+            },
+            "non_recoverable_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Non Recoverable Ledger Account."
+            },
+            "cis_materials": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is flagged for CIS Materials"
+            },
+            "cis_labour": {
+              "type": "boolean",
+              "description": "Indicates whether the ledger account is flagged for CIS Labour"
+            },
+            "gifi_code": {
+              "type": "integer",
+              "format": "int32",
+              "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n",
+              "minimum": 1000,
+              "maximum": 9999
+            }
+          },
+          "required": [
+            "ledger_account_type_id",
+            "included_in_chart",
+            "name",
+            "display_name",
+            "nominal_code"
+          ]
+        }
+      },
+      "required": [
+        "ledger_account"
+      ],
+      "description": "Creates a Ledger Account"
+    }
+  }
+}

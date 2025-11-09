@@ -5,15 +5,18 @@ This module defines routes for client management (CRUD operations).
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 from app import db
 from app.models import Client
 from app.services.id_generator import generate_client_code
 from app.services.activity_logger import log_activity
+from app.utils.decorators import role_required
 
 bp = Blueprint('clients', __name__, url_prefix='/clients')
 
 
 @bp.route('/')
+@login_required
 def list_clients():
     """
     List all clients with optional search and pagination.
@@ -60,6 +63,7 @@ def list_clients():
 
 
 @bp.route('/new', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def new_client():
     """
     Create a new client.
@@ -124,30 +128,38 @@ def new_client():
 
 
 @bp.route('/<int:id>')
+@login_required
 def detail(id):
     """
     Display client details.
-    
+
     Args:
         id (int): Client ID
-    
+
     Returns:
         Rendered template with client details
     """
+    from app.models import Project
+
     client = Client.query.get_or_404(id)
-    
+
+    # Get all projects for this client, ordered by created date (newest first)
+    projects = Project.query.filter_by(client_id=client.id).order_by(Project.created_at.desc()).all()
+
     # Get recent activities for this client
     from app.services.activity_logger import get_entity_activities
     activities = get_entity_activities('CLIENT', client.id, limit=20)
-    
+
     return render_template(
         'clients/detail.html',
         client=client,
+        projects=projects,
         activities=activities
     )
 
 
 @bp.route('/<int:id>/edit', methods=['GET', 'POST'])
+@role_required('admin', 'manager')
 def edit(id):
     """
     Edit an existing client.
@@ -214,6 +226,7 @@ def edit(id):
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
+@role_required('admin', 'manager')
 def delete(id):
     """
     Delete a client.

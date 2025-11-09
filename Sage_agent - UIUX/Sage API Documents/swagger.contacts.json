@@ -1,0 +1,3648 @@
+{
+  "info": {
+    "title": "Sage Accounting API - Contacts",
+    "description": "Documentation of the Sage Business Cloud Accounting API.",
+    "contact": {
+      "name": "Sage Business Cloud Accounting API Team",
+      "url": "mailto:sbc-accounting-api-developers@sage.com"
+    },
+    "version": "3.1"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.accounting.sage.com",
+  "basePath": "/v3.1",
+  "schemes": [
+    "https"
+  ],
+  "tags": [
+    {
+      "name": "Addresses",
+      "description": "Addresses can be associated with Contacts and with Bank Accounts, either as Main Addresses or Delivery Addresses. When you create an Address, you will need to specify an associated contact via its ID. When creating a Contact, however, you can specify address data and the address is automatically created in the background. Thus, it makes sense create addresses only for existing contacts to save requests. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Address Types",
+      "description": "An Address Type is used to categorize Addresses, such as Accounts, Sales, Delivery etc. This is a subresource to the Addresses resource and referenced in the Addresses endpoint as an association. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Address Regions",
+      "description": "Address Regions are used to handle region specific tax rates and are referenced in several resources across the Accounting API. They represent a State in the USA or a Province in Canada. This endpoint is immutable and only here for your convenience, i.e. to be used in (drop-down) lists etc. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Contacts",
+      "description": "Contacts in Sage Business Cloud Accounting represent the companies a user of Sage Accounting does business with. They can be either customers or suppliers/vendors. For most transactions in Accounting, Contacts are involved: Invoicing, Payments, Banking, … Do not confuse Contacts with Contact Persons, who represent the staff of a company. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Contact Types",
+      "description": "This endpoint represents the different types that contacts can be stored as e.g. Customer or Supplier/Vendor. This is a subresource to the Contact resource and referenced in the Contact endpoint as an association. Since the contact type is compulsory when creating a Contact, you can use this endpoint to get their IDs (for use as association) as well as a human readable label. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Contact People",
+      "description": "A Contact Person represents a person in the staff of a company the user does business with. You can think of a Contact Person as of a staff member who works at one of the company's addresses (subsidiaries). Thus, the associations are as follows: a company (endpoint \"Contact\") has at least one address (endpoint \"Address\"), which again has at least one contact person (endpoint \"Contact Persons\"). <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Contact Person Types",
+      "description": "A Contact Person Type is used to categorize Contact Persons, such as Accounts, Sales, Purchasing etc. This is a subresource to the Contact Person resource and referenced in the Contact Person endpoint as an association. Since the contact person type is compulsory when creating a Contact Person, you can use this endpoint to get their IDs (for use as association) as well as a human readable label. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Countries",
+      "description": "This endpoint represents the countries as they are stored in Sage Business Cloud Accounting. This is a subresource to the Address resource and referenced in the Address endpoint as an association. Since the country is compulsory when creating an Address, you can use this endpoint to get their IDs (for use as association) as well as a human readable label. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    },
+    {
+      "name": "Country Groups",
+      "description": "The Country Group categorizes Country resources. Possible values are ALL, CA, EU, GBIE and US. <br><br> Related Guide: <a href=\"https://developer.sage.com/api/accounting/guides/contact_and_address_relationship\" target=\"_blank\">Key Concepts: Contact and Address relationships</a>"
+    }
+  ],
+  "paths": {
+    "/addresses": {
+      "get": {
+        "summary": "Returns all Addresses",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "bank_account_id",
+            "description": "Use this to filter by bank account id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Addresses changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Addresses deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Addresses per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Addresses",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Addresses (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Addresses",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 236,
+				"$page": 1,
+				"$next": "/addresses?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "58ff84d719cf45b5bcf17c033ea713d3",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/58ff84d719cf45b5bcf17c033ea713d3"
+					},
+					{
+						"id": "20561be8a9d845d1ab454dae15016ded",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/20561be8a9d845d1ab454dae15016ded"
+					},
+					{
+						"id": "81c534e826884c178167fc55e1e9cc60",
+						"displayed_as": "",
+						"$path": "/addresses/81c534e826884c178167fc55e1e9cc60"
+					},
+					{
+						"id": "81dff3aa23b64034a403c2d5fa48c61e",
+						"displayed_as": "",
+						"$path": "/addresses/81dff3aa23b64034a403c2d5fa48c61e"
+					},
+					{
+						"id": "90234c75a8d54a91bc81320ee3ae5d0d",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/90234c75a8d54a91bc81320ee3ae5d0d"
+					},
+					{
+						"id": "c8f6c652dceb4ab9a224533a91f014a4",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/c8f6c652dceb4ab9a224533a91f014a4"
+					},
+					{
+						"id": "f5fd5573a18e487499778f3d46ab6160",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/f5fd5573a18e487499778f3d46ab6160"
+					},
+					{
+						"id": "7c19fc6859b345f0800a365dfe810cd4",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/7c19fc6859b345f0800a365dfe810cd4"
+					},
+					{
+						"id": "34f1e571cac34da7b2c0dfe65042c987",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/34f1e571cac34da7b2c0dfe65042c987"
+					},
+					{
+						"id": "ee872f7bad3d4fed959b480b16bde859",
+						"displayed_as": "United Kingdom",
+						"$path": "/addresses/ee872f7bad3d4fed959b480b16bde859"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Addresses"
+        ],
+        "operationId": "getAddresses"
+      },
+      "x-sage-pathtitle": "Address collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Address",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Addresses",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postAddresses"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Address",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          }
+        },
+        "tags": [
+          "Addresses"
+        ],
+        "operationId": "postAddresses"
+      }
+    },
+    "/addresses/{key}": {
+      "get": {
+        "summary": "Returns a Address",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access\n* Area: `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Address Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Address (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Address (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Address",
+            "examples": {
+              "application/json":
+			  {
+				"id": "20561be8a9d845d1ab454dae15016ded",
+				"displayed_as": "United Kingdom",
+				"$path": "/addresses/20561be8a9d845d1ab454dae15016ded",
+				"address_line_1": null,
+				"address_line_2": null,
+				"city": null,
+				"postal_code": null,
+				"country": {
+					"id": "GB",
+					"displayed_as": "United Kingdom (GB)",
+					"$path": "/countries/GB"
+				},
+				"created_at": "2022-12-30T13:54:24Z",
+				"updated_at": "2022-12-30T13:54:24Z",
+				"bank_account": {
+					"id": "4ad5a004af3d463fa1c1179f8d821ad3",
+					"displayed_as": "Cash (1210)",
+					"$path": "/bank_accounts/4ad5a004af3d463fa1c1179f8d821ad3"
+				},
+				"address_type": {
+					"id": "DELIVERY",
+					"displayed_as": "Delivery",
+					"$path": "/address_types/DELIVERY"
+				},
+				"name": "Main Address",
+				"region": null,
+				"country_group": {
+					"id": "GBIE",
+					"displayed_as": "UK & Ireland",
+					"$path": "/country_groups/GBIE"
+				},
+				"is_main_address": true
+			}
+            }
+          }
+        },
+        "tags": [
+          "Addresses"
+        ],
+        "operationId": "getAddressesKey"
+      },
+      "x-sage-pathtitle": "single Address resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Address",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Address Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Addresses",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putAddresses"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Address",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          }
+        },
+        "tags": [
+          "Addresses"
+        ],
+        "operationId": "putAddressesKey"
+      },
+      "delete": {
+        "summary": "Deletes a Address",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Address Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Address"
+          }
+        },
+        "tags": [
+          "Addresses"
+        ],
+        "operationId": "deleteAddressesKey"
+      }
+    },
+    "/address_types": {
+      "get": {
+        "summary": "Returns all Address Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Address Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Address Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Address Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Address Types",
+            "examples": {
+            "application/json":
+			{
+				"$total": 4,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "DELIVERY",
+						"displayed_as": "Delivery",
+						"$path": "/address_types/DELIVERY"
+					},
+					{
+						"id": "ACCOUNTS",
+						"displayed_as": "Accounts",
+						"$path": "/address_types/ACCOUNTS"
+					},
+					{
+						"id": "SALES",
+						"displayed_as": "Sales",
+						"$path": "/address_types/SALES"
+					},
+					{
+						"id": "PURCHASING",
+						"displayed_as": "Purchasing",
+						"$path": "/address_types/PURCHASING"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Address Types"
+        ],
+        "operationId": "getAddressTypes"
+      },
+      "x-sage-pathtitle": "Address Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/address_types/{key}": {
+      "get": {
+        "summary": "Returns a Address Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Address Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Address Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Address Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "ACCOUNTS",
+				"displayed_as": "Accounts",
+				"$path": "/address_types/ACCOUNTS"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Address Types"
+        ],
+        "operationId": "getAddressTypesKey"
+      },
+      "x-sage-pathtitle": "single Address Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/address_regions": {
+      "get": {
+        "summary": "Returns all Address Regions",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of States per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of States",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the States (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "country_id",
+            "description": "Use this to filter by country id",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Address Regions",
+            "examples": {
+             "application/json":
+			 {
+				"$total": 72,
+				"$page": 1,
+				"$next": "/address_regions?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "CA-AB",
+						"displayed_as": "Alberta (AB)",
+						"$path": "/address_regions/CA-AB"
+					},
+					{
+						"id": "CA-BC",
+						"displayed_as": "British Columbia (BC)",
+						"$path": "/address_regions/CA-BC"
+					},
+					{
+						"id": "CA-MB",
+						"displayed_as": "Manitoba (MB)",
+						"$path": "/address_regions/CA-MB"
+					},
+					{
+						"id": "CA-NB",
+						"displayed_as": "New Brunswick (NB)",
+						"$path": "/address_regions/CA-NB"
+					},
+					{
+						"id": "CA-NL",
+						"displayed_as": "Newfoundland and Labrador (NL)",
+						"$path": "/address_regions/CA-NL"
+					},
+					{
+						"id": "CA-NS",
+						"displayed_as": "Nova Scotia (NS)",
+						"$path": "/address_regions/CA-NS"
+					},
+					{
+						"id": "CA-NT",
+						"displayed_as": "Northwest Territories (NT)",
+						"$path": "/address_regions/CA-NT"
+					},
+					{
+						"id": "CA-NU",
+						"displayed_as": "Nunavut (NU)",
+						"$path": "/address_regions/CA-NU"
+					},
+					{
+						"id": "CA-ON",
+						"displayed_as": "Ontario (ON)",
+						"$path": "/address_regions/CA-ON"
+					},
+					{
+						"id": "CA-PE",
+						"displayed_as": "Prince Edward Island (PE)",
+						"$path": "/address_regions/CA-PE"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Address Regions"
+        ],
+        "operationId": "getAddressRegions"
+      },
+      "x-sage-pathtitle": "Address Region collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/address_regions/{key}": {
+      "get": {
+        "summary": "Returns a Address Region",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Address Region Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the State (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Address Region",
+            "examples": {
+              "application/json":
+			  {
+				"id": "CA-AB",
+				"displayed_as": "Alberta (AB)",
+				"$path": "/address_regions/CA-AB",
+				"code": "AB",
+				"name": "Alberta"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Address Regions"
+        ],
+        "operationId": "getAddressRegionsKey"
+      },
+      "x-sage-pathtitle": "single Address Region resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/contacts": {
+      "get": {
+        "summary": "Returns all Contacts",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Contacts changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Contacts deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "contact_type_id",
+            "description": "Use this to filter by contact type id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "exclude_system",
+            "description": "Use this to filter out system entities, not applicable for transaction creation",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Contacts (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_balance",
+            "description": "Use this to display the balance for a contact.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "context_date",
+            "description": "Use this to determine the correct tax treatment for a contact on a given date.",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "search",
+            "description": "Use this to filter by the contact name, company name or reference.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "email",
+            "description": "Use this to filter by the contact person email address.",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_unfinished_recurring_invoices_status",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "filter_inactive_contacts",
+            "description": "Use this to filter inactive contacts",
+            "type": "boolean",
+            "required": false
+          },
+		  {
+            "in": "query",
+            "name": "filter_foreign_currencies",
+            "description": "Use this to filter for base currency contacts only.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Contacts per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Contacts",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Contacts (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contacts",
+            "examples": {
+              "application/json":
+			  {
+				"$total": 148,
+				"$page": 1,
+				"$next": "/contacts?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "bd7860529a6445f7898b4418feced4b1",
+						"displayed_as": "HMRC Reclaimed (HMRC Rec)",
+						"$path": "/contacts/bd7860529a6445f7898b4418feced4b1"
+					},
+					{
+						"id": "eaab22cbff1e4f33883fa39961124ac7",
+						"displayed_as": "HMRC Payments (HMRC Pay)",
+						"$path": "/contacts/eaab22cbff1e4f33883fa39961124ac7"
+					},
+					{
+						"id": "b274fd7f50f8413b8e375795c81b9594",
+						"displayed_as": "Windsor (A1D001)",
+						"$path": "/contacts/b274fd7f50f8413b8e375795c81b9594"
+					},
+					{
+						"id": "521229b29af04f3682d85b0d43ef5361",
+						"displayed_as": "ABS Garages Ltd (ABS001)",
+						"$path": "/contacts/521229b29af04f3682d85b0d43ef5361"
+					},
+					{
+						"id": "cced5085c2d24394a758c5d16b38fca1",
+						"displayed_as": "Bobs Building Supplies (BBS001)",
+						"$path": "/contacts/cced5085c2d24394a758c5d16b38fca1"
+					},
+					{
+						"id": "607808ff4c694521a45b279e4cdd78a0",
+						"displayed_as": "Fred Briant (BRI001)",
+						"$path": "/contacts/607808ff4c694521a45b279e4cdd78a0"
+					},
+					{
+						"id": "81320fdb3dca461eac4f7942604c2f38",
+						"displayed_as": "Bronson Inc (BRO001)",
+						"$path": "/contacts/81320fdb3dca461eac4f7942604c2f38"
+					},
+					{
+						"id": "9e2f8d3d7e0d48b39648227962cfb6cb",
+						"displayed_as": "Business Exhibitions (BUS001)",
+						"$path": "/contacts/9e2f8d3d7e0d48b39648227962cfb6cb"
+					},
+					{
+						"id": "bfc881c9b12546458d891e97621982aa",
+						"displayed_as": "Cash and Credit Card Sales (CASH001)",
+						"$path": "/contacts/bfc881c9b12546458d891e97621982aa"
+					},
+					{
+						"id": "b38722cd2ae14b69b4aa506e819ce041",
+						"displayed_as": "County Golf Supplies (CGS001)",
+						"$path": "/contacts/b38722cd2ae14b69b4aa506e819ce041"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ],
+        "operationId": "getContacts"
+      },
+      "x-sage-pathtitle": "Contact collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Contact",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Contacts",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postContacts"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Contact",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ],
+        "operationId": "postContacts"
+      }
+    },
+    "/contacts/{key}": {
+      "get": {
+        "summary": "Returns a Contact",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access\n* Area: `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Contact (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_balance",
+            "description": "Use this to display the balance for a contact.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "context_date",
+            "description": "Use this to determine the correct tax treatment for a contact on a given date.",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "show_unfinished_recurring_invoices_status",
+            "type": "boolean",
+            "default": true,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Contact (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact",
+            "examples": {
+              "application/json":
+			  {
+				"id": "cced5085c2d24394a758c5d16b38fca1",
+				"displayed_as": "Bobs Building Supplies (BBS001)",
+				"$path": "/contacts/cced5085c2d24394a758c5d16b38fca1",
+				"created_at": "2022-12-30T13:59:24Z",
+				"updated_at": "2023-06-13T10:40:55Z",
+				"links": [
+					{
+						"href": "https://accounts-extra.sageone.com/contacts/customers/130175300",
+						"rel": "alternate",
+						"type": "text/html"
+					}
+				],
+				"contact_types": [
+					{
+						"id": "CUSTOMER",
+						"displayed_as": "Customer",
+						"$path": "/contact_types/CUSTOMER"
+					}
+				],
+				"name": "Bobs Building Supplies",
+				"reference": "BBS001",
+				"default_sales_ledger_account": {
+					"id": "7a5ecfcf884911ed84fa0252b90cda0d",
+					"displayed_as": "Other income (4900)",
+					"$path": "/ledger_accounts/7a5ecfcf884911ed84fa0252b90cda0d"
+				},
+				"default_sales_tax_rate": {
+					"id": "GB_STANDARD",
+					"displayed_as": "Standard 20.00%",
+					"$path": "/tax_rates/GB_STANDARD"
+				},
+				"tax_number": "GB938484382",
+				"notes": "",
+				"locale": "en",
+				"main_address": {
+					"id": "1a3b9bdf20a64df1a8657715788132f6",
+					"displayed_as": "12",
+					"$path": "/addresses/1a3b9bdf20a64df1a8657715788132f6"
+				},
+				"preferred_address": {
+					"id": "1a3b9bdf20a64df1a8657715788132f6",
+					"displayed_as": "12",
+					"$path": "/addresses/1a3b9bdf20a64df1a8657715788132f6"
+				},
+				"delivery_address": null,
+				"main_contact_person": {
+					"id": "da05f391a75241f987eefa1ef227e6ca",
+					"displayed_as": "Main Contact",
+					"$path": "/contact_persons/da05f391a75241f987eefa1ef227e6ca"
+				},
+				"preferred_contact_person": {
+					"id": "da05f391a75241f987eefa1ef227e6ca",
+					"displayed_as": "Main Contact",
+					"$path": "/contact_persons/da05f391a75241f987eefa1ef227e6ca"
+				},
+				"bank_account_details": {
+					"account_name": null,
+					"account_number": null,
+					"sort_code": null,
+					"bic": null,
+					"iban": null
+				},
+				"credit_limit": "2000.0",
+				"credit_days": 30,
+				"credit_terms": null,
+				"credit_terms_and_conditions": "null",
+				"product_sales_price_type": {
+					"id": "26024c3e7357462897edb896cc7084e9",
+					"displayed_as": "Sales Price",
+					"$path": "/product_sales_price_types/26024c3e7357462897edb896cc7084e9"
+				},
+				"source_guid": "5",
+				"currency": {
+					"id": "GBP",
+					"displayed_as": "Pound Sterling (GBP)",
+					"$path": "/currencies/GBP"
+				},
+				"registered_number": null,
+				"deletable": false,
+				"tax_treatment": {
+					"home_tax": true,
+					"eu_tax_registered": false,
+					"eu_not_tax_registered": false,
+					"rest_of_world_tax": false,
+					"is_importer": null
+				},
+				"email": null,
+				"tax_calculation": "",
+				"gdpr_obfuscated": false,
+				"system": false,
+				"has_unfinished_recurring_invoices": false,
+				"cis_registered": false,
+				"ni_based": false,
+				"is_active": true,
+				"gb_based": true,
+				"cis_settings": null,
+				"destination_vat_blocking": false,
+				"mandate_active": false,
+				"send_statements": true,
+				"statement_run": {
+					"id": "statement_delivery_method_print",
+					"name": "By post (PDF Generated)"
+				},
+				"go_cardless_mandate": null
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ],
+        "operationId": "getContactsKey"
+      },
+      "x-sage-pathtitle": "single Contact resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Contact",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "Contacts",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putContacts"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Contact",
+            "schema": {
+              "$ref": "#/definitions/Contact"
+            }
+          }
+        },
+        "tags": [
+          "Contacts"
+        ],
+        "operationId": "putContactsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Contact",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Contact"
+          }
+        },
+        "tags": [
+          "Contacts"
+        ],
+        "operationId": "deleteContactsKey"
+      }
+    },
+    "/contact_types": {
+      "get": {
+        "summary": "Returns all Contact Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Contact Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Contact Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Contact Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact Types",
+            "examples": {
+           "application/json":
+		   {
+			"$total": 2,
+			"$page": 1,
+			"$next": null,
+			"$back": null,
+			"$itemsPerPage": 20,
+			"$items": [
+				{
+					"id": "CUSTOMER",
+					"displayed_as": "Customer",
+					"$path": "/contact_types/CUSTOMER"
+				},
+				{
+					"id": "VENDOR",
+					"displayed_as": "Supplier",
+					"$path": "/contact_types/VENDOR"
+				}
+			]
+		}
+            }
+          }
+        },
+        "tags": [
+          "Contact Types"
+        ],
+        "operationId": "getContactTypes"
+      },
+      "x-sage-pathtitle": "Contact Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/contact_types/{key}": {
+      "get": {
+        "summary": "Returns a Contact Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Contact Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "VENDOR",
+				"displayed_as": "Supplier",
+				"$path": "/contact_types/VENDOR"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Types"
+        ],
+        "operationId": "getContactTypesKey"
+      },
+      "x-sage-pathtitle": "single Contact Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/contact_persons": {
+      "get": {
+        "summary": "Returns all Contact People",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "address_id",
+            "description": "Use this to filter by address id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "updated_or_created_since",
+            "description": "Use this to limit the response to Address Contacts changed since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "deleted_since",
+            "description": "Use this to limit the response to Address Contacts deleted since a given date (format: YYYY-MM-DDT(+|-)hh:mm) or date-time (format: YYYY-MM-DDThh:mm:ss(+|-)hh:mm). Not inclusive of the passed timestamp.",
+            "type": "string",
+            "format": "date-time",
+            "required": false,
+            "example": "2015-10-27T16:24:52Z"
+          },
+          {
+            "in": "query",
+            "name": "contact_id",
+            "description": "Use this to filter by contact id",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Address Contacts per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Address Contacts",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Address Contacts (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact People",
+            "examples": {
+            "application/json":
+			{
+				"$total": 200,
+				"$page": 1,
+				"$next": "/contact_persons?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "bdee2bb9fbc44d0bb1fcf2b52a71d5ec",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/bdee2bb9fbc44d0bb1fcf2b52a71d5ec"
+					},
+					{
+						"id": "2d723f2b6d0c4d1ca8315096d8a30cab",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/2d723f2b6d0c4d1ca8315096d8a30cab"
+					},
+					{
+						"id": "39febacb4a7d469b9210362af6ebb0b3",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/39febacb4a7d469b9210362af6ebb0b3"
+					},
+					{
+						"id": "bc92c6d8c61b484aa7be92e857a74f3d",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/bc92c6d8c61b484aa7be92e857a74f3d"
+					},
+					{
+						"id": "5c70a4b3331148dfb4858726d4bc6b1b",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/5c70a4b3331148dfb4858726d4bc6b1b"
+					},
+					{
+						"id": "141d89e08f324277989443a6023bfdc3",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/141d89e08f324277989443a6023bfdc3"
+					},
+					{
+						"id": "625e487c409e413aa5b7b84a4d2bcc08",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/625e487c409e413aa5b7b84a4d2bcc08"
+					},
+					{
+						"id": "2aa7d3ef5fae4d2cb9e6cea23defb472",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/2aa7d3ef5fae4d2cb9e6cea23defb472"
+					},
+					{
+						"id": "bd6719bacb7e4d69a64f2b286ed02548",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/bd6719bacb7e4d69a64f2b286ed02548"
+					},
+					{
+						"id": "51f2260d22104365a93e404f4ccb4dba",
+						"displayed_as": "Main Contact",
+						"$path": "/contact_persons/51f2260d22104365a93e404f4ccb4dba"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact People"
+        ],
+        "operationId": "getContactPersons"
+      },
+      "x-sage-pathtitle": "Contact Person collection",
+      "x-sage-changelog": [
+
+      ],
+      "post": {
+        "summary": "Creates a Contact Person",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "ContactPersons",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postContactPersons"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a Contact Person",
+            "schema": {
+              "$ref": "#/definitions/ContactPerson"
+            }
+          }
+        },
+        "tags": [
+          "Contact People"
+        ],
+        "operationId": "postContactPersons"
+      }
+    },
+    "/contact_persons/{key}": {
+      "get": {
+        "summary": "Returns a Contact Person",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Read Only, Restricted Access, Full Access\n* Area: `Sales`: Read Only, Restricted Access, Full Access\n* Area: `Purchases`: Read Only, Restricted Access, Full Access\n* Area: `Bank`: Read Only, Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Person Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "nested_attributes",
+            "description": "Specify the attributes that you want to expose for nested entities of the Address Contact (expose all nested attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Address Contact (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Person",
+            "examples": {
+              "application/json":
+			  {
+				"id": "5c70a4b3331148dfb4858726d4bc6b1b",
+				"displayed_as": "Main Contact",
+				"$path": "/contact_persons/5c70a4b3331148dfb4858726d4bc6b1b",
+				"created_at": "2022-12-30T13:58:47Z",
+				"updated_at": "2022-12-30T13:58:47Z",
+				"contact_person_types": [
+					{
+						"id": "ACCOUNTS",
+						"displayed_as": "Accounts",
+						"$path": "/contact_person_types/ACCOUNTS"
+					}
+				],
+				"name": "Main Contact",
+				"job_title": null,
+				"telephone": null,
+				"mobile": null,
+				"email": null,
+				"fax": null,
+				"is_main_contact": true,
+				"address": {
+					"id": "90234c75a8d54a91bc81320ee3ae5d0d",
+					"displayed_as": "United Kingdom",
+					"$path": "/addresses/90234c75a8d54a91bc81320ee3ae5d0d"
+				}
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact People"
+        ],
+        "operationId": "getContactPersonsKey"
+      },
+      "x-sage-pathtitle": "single Contact Person resource",
+      "x-sage-changelog": [
+
+      ],
+      "put": {
+        "summary": "Updates a Contact Person",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Person Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "ContactPersons",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/putContactPersons"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Updates a Contact Person",
+            "schema": {
+              "$ref": "#/definitions/ContactPerson"
+            }
+          }
+        },
+        "tags": [
+          "Contact People"
+        ],
+        "operationId": "putContactPersonsKey"
+      },
+      "delete": {
+        "summary": "Deletes a Contact Person",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Full Access",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Person Key.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deletes a Contact Person"
+          }
+        },
+        "tags": [
+          "Contact People"
+        ],
+        "operationId": "deleteContactPersonsKey"
+      }
+    },
+    "/contact_person_types": {
+      "get": {
+        "summary": "Returns all Contact Person Types",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Contact Types per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Contact Types",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Contact Types (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Contact Person Types",
+            "examples": {
+           "application/json":
+		   {
+			"$total": 3,
+			"$page": 1,
+			"$next": null,
+			"$back": null,
+			"$itemsPerPage": 20,
+			"$items": [
+				{
+					"id": "ACCOUNTS",
+					"displayed_as": "Accounts",
+					"$path": "/contact_person_types/ACCOUNTS"
+				},
+				{
+					"id": "SALES",
+					"displayed_as": "Sales",
+					"$path": "/contact_person_types/SALES"
+				},
+				{
+					"id": "PURCHASING",
+					"displayed_as": "Purchasing",
+					"$path": "/contact_person_types/PURCHASING"
+				}
+			]
+		}
+            }
+          }
+        },
+        "tags": [
+          "Contact Person Types"
+        ],
+        "operationId": "getContactPersonTypes"
+      },
+      "x-sage-pathtitle": "Contact Person Type collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/contact_person_types/{key}": {
+      "get": {
+        "summary": "Returns a Contact Person Type",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Contact Person Type Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Contact Type (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Contact Person Type",
+            "examples": {
+              "application/json":
+			  {
+				"id": "ACCOUNTS",
+				"displayed_as": "Accounts",
+				"$path": "/contact_person_types/ACCOUNTS"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Contact Person Types"
+        ],
+        "operationId": "getContactPersonTypesKey"
+      },
+      "x-sage-pathtitle": "single Contact Person Type resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/countries": {
+      "get": {
+        "summary": "Returns all Countries",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Countries per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Countries",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Countries (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Countries",
+            "examples": {
+            "application/json":
+			{
+				"$total": 209,
+				"$page": 1,
+				"$next": "/countries?page=2&items_per_page=10",
+				"$back": null,
+				"$itemsPerPage": 10,
+				"$items": [
+					{
+						"id": "AF",
+						"displayed_as": "Afghanistan (AF)",
+						"$path": "/countries/AF"
+					},
+					{
+						"id": "AL",
+						"displayed_as": "Albania (AL)",
+						"$path": "/countries/AL"
+					},
+					{
+						"id": "DZ",
+						"displayed_as": "Algeria (DZ)",
+						"$path": "/countries/DZ"
+					},
+					{
+						"id": "AD",
+						"displayed_as": "Andorra (AD)",
+						"$path": "/countries/AD"
+					},
+					{
+						"id": "AO",
+						"displayed_as": "Angola (AO)",
+						"$path": "/countries/AO"
+					},
+					{
+						"id": "AR",
+						"displayed_as": "Argentina (AR)",
+						"$path": "/countries/AR"
+					},
+					{
+						"id": "AM",
+						"displayed_as": "Armenia (AM)",
+						"$path": "/countries/AM"
+					},
+					{
+						"id": "AW",
+						"displayed_as": "Aruba (AW)",
+						"$path": "/countries/AW"
+					},
+					{
+						"id": "AU",
+						"displayed_as": "Australia (AU)",
+						"$path": "/countries/AU"
+					},
+					{
+						"id": "AT",
+						"displayed_as": "Austria (AT)",
+						"$path": "/countries/AT"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Countries"
+        ],
+        "operationId": "getCountries"
+      },
+      "x-sage-pathtitle": "Country collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/countries/{key}": {
+      "get": {
+        "summary": "Returns a Country",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Country Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Country (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Country",
+            "examples": {
+              "application/json":
+			  {
+				"id": "AU",
+				"displayed_as": "Australia (AU)",
+				"$path": "/countries/AU"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Countries"
+        ],
+        "operationId": "getCountriesKey"
+      },
+      "x-sage-pathtitle": "single Country resource",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/country_groups": {
+      "get": {
+        "summary": "Returns all Country Groups",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "items_per_page",
+            "description": "Returns the given number of Country Groups per request.",
+            "type": "integer",
+            "format": "int32",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 200,
+            "required": false,
+            "example": 20
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Go to specific page of Country Groups",
+            "type": "integer",
+            "format": "int32",
+            "default": 1,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Country Groups (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all Country Groups",
+            "examples": {
+            "application/json":
+			{
+				"$total": 5,
+				"$page": 1,
+				"$next": null,
+				"$back": null,
+				"$itemsPerPage": 20,
+				"$items": [
+					{
+						"id": "ALL",
+						"displayed_as": "Other",
+						"$path": "/country_groups/ALL"
+					},
+					{
+						"id": "CA",
+						"displayed_as": "Canada",
+						"$path": "/country_groups/CA"
+					},
+					{
+						"id": "EU",
+						"displayed_as": "Europe",
+						"$path": "/country_groups/EU"
+					},
+					{
+						"id": "GBIE",
+						"displayed_as": "UK & Ireland",
+						"$path": "/country_groups/GBIE"
+					},
+					{
+						"id": "US",
+						"displayed_as": "US",
+						"$path": "/country_groups/US"
+					}
+				]
+			}
+            }
+          }
+        },
+        "tags": [
+          "Country Groups"
+        ],
+        "operationId": "getCountryGroups"
+      },
+      "x-sage-pathtitle": "Country Group collection",
+      "x-sage-changelog": [
+
+      ]
+    },
+    "/country_groups/{key}": {
+      "get": {
+        "summary": "Returns a Country Group",
+        "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "description": "The Country Group Key.",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "attributes",
+            "description": "Specify the attributes that you want to expose for the Country Group (expose all attributes with 'all'). These are in addition to the base attributes (name, path)",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a Country Group",
+            "examples": {
+              "application/json":
+			  {
+				"id": "GBIE",
+				"displayed_as": "UK & Ireland",
+				"$path": "/country_groups/GBIE"
+			}
+            }
+          }
+        },
+        "tags": [
+          "Country Groups"
+        ],
+        "operationId": "getCountryGroupsKey"
+      },
+      "x-sage-pathtitle": "single Country Group resource",
+      "x-sage-changelog": [
+
+      ]
+    }
+  },
+  "definitions": {
+    "Address": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "address_line_1": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The first line of the address"
+        },
+        "address_line_2": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address town/city"
+        },
+        "postal_code": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The address postal code/zipcode"
+        },
+        "country": {
+          "$ref": "#/definitions/Base",
+          "description": "The address country"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "bank_account": {
+          "$ref": "#/definitions/Base",
+          "description": "The related bank account of the address, if the address belongs to a bank account."
+        },
+        "contact": {
+          "$ref": "#/definitions/Base",
+          "description": "The related contact of the address, if the address belongs to a contact."
+        },
+        "address_type": {
+          "$ref": "#/definitions/Base",
+          "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The custom name of the address"
+        },
+        "region": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The address state/province/region"
+        },
+        "country_group": {
+          "$ref": "#/definitions/Base",
+          "description": "Country group allows countries to be filtered for selection.<br>Set it to e.g. EU if the address is within the EEC."
+        },
+        "is_main_address": {
+          "type": "boolean",
+          "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "Base": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "postAddresses": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "object",
+          "properties": {
+            "address_type_id": {
+              "type": "string",
+              "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+            },
+            "name": {
+              "type": "string",
+              "description": "The custom name of the address"
+            },
+            "is_main_address": {
+              "type": "boolean",
+              "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+            },
+            "address_line_1": {
+              "type": "string",
+              "description": "The first line of the address"
+            },
+            "address_line_2": {
+              "type": "string",
+              "description": "The second line of the address"
+            },
+            "city": {
+              "type": "string",
+              "description": "The address town/city"
+            },
+            "postal_code": {
+              "type": "string",
+              "description": "The address postal code/zipcode"
+            },
+            "country_id": {
+              "type": "string",
+              "description": "The ID of the Country."
+            },
+            "bank_account_id": {
+              "type": "string",
+              "description": "The related bank account of the address, if the address belongs to a bank account."
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The related contact of the address, if the address belongs to a contact."
+            },
+            "region": {
+              "type": "string",
+              "description": "The address state/province/region"
+            },
+            "country_group_id": {
+              "type": "string",
+              "description": "The ID of the Country Group."
+            }
+          },
+          "required": [
+            "address_type_id",
+            "name",
+            "is_main_address"
+          ]
+        }
+      },
+      "required": [
+        "address"
+      ],
+      "description": "Creates a Address"
+    },
+    "putAddresses": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "object",
+          "properties": {
+            "address_type_id": {
+              "type": "string",
+              "description": "Defines the nature of the address (Shipping, Billing, Head Office etc.).<br>Start defaults to \"Sales\" for Customers and \"Purchasing\" for Vendors"
+            },
+            "name": {
+              "type": "string",
+              "description": "The custom name of the address"
+            },
+            "is_main_address": {
+              "type": "boolean",
+              "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+            },
+            "address_line_1": {
+              "type": "string",
+              "description": "The first line of the address"
+            },
+            "address_line_2": {
+              "type": "string",
+              "description": "The second line of the address"
+            },
+            "city": {
+              "type": "string",
+              "description": "The address town/city"
+            },
+            "postal_code": {
+              "type": "string",
+              "description": "The address postal code/zipcode"
+            },
+            "country_id": {
+              "type": "string",
+              "description": "The ID of the Country."
+            },
+            "bank_account_id": {
+              "type": "string",
+              "description": "The related bank account of the address, if the address belongs to a bank account."
+            },
+            "contact_id": {
+              "type": "string",
+              "description": "The related contact of the address, if the address belongs to a contact."
+            },
+            "region": {
+              "type": "string",
+              "description": "The address state/province/region"
+            },
+            "country_group_id": {
+              "type": "string",
+              "description": "The ID of the Country Group."
+            }
+          }
+        }
+      },
+      "required": [
+        "address"
+      ],
+      "description": "Updates a Address"
+    },
+    "AddressRegion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "Display text for the item"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 8,
+          "description": "The code of the address region"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the address region"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "Contact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Link"
+          },
+          "description": "Links for the resource"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The contact balance"
+        },
+        "contact_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Base"
+          },
+          "description": "The type of the contact. It has to be either CUSTOMER or VENDOR"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The contact's full name or business name"
+        },
+        "reference": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "Unique reference for the contact"
+        },
+        "default_sales_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default sales ledger account for the contact <br><i>Customers only</i>"
+        },
+        "default_sales_tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default sales tax rate for the contact <br><i>Customers only</i>"
+        },
+        "default_purchase_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The default purchase ledger account for the contact <br><i>Vendors only</i>"
+        },
+        "tax_number": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The VAT registration number of the contact. The format will be validated."
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "The notes for the contact"
+        },
+        "locale": {
+          "type": "string",
+          "maxLength": 10,
+          "description": "The locale for the contact"
+        },
+        "main_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The main address associated with the contact"
+        },
+        "delivery_address": {
+          "$ref": "#/definitions/Address",
+          "description": "The delivery address <br><i>Customers only</i>"
+        },
+        "main_contact_person": {
+          "$ref": "#/definitions/ContactPerson",
+          "description": "The main contact person of the contact."
+        },
+        "bank_account_details": {
+          "$ref": "#/definitions/BankAccountDetails",
+          "description": "The account details for the contact's bank account"
+        },
+        "credit_limit": {
+          "type": "number",
+          "format": "double",
+          "description": "Custom credit limit amount for the contact <br><i>not applicable to Start</i>"
+        },
+        "credit_days": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Custom credit days for the contact.<br>\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_days'/'vendor_credit_days' as default/fallback according\nto your use case.\n"
+        },
+        "credit_terms": {
+          "type": "string",
+          "enum": [
+            "month_end_invoice",
+            "date_from_invoice",
+            "immediate_invoice",
+            "month_end_payment",
+            "date_from_payment",
+            "immediate_payment"
+          ],
+          "description": "Credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice, month_end_payment,\ndate_from_payment, immediate_payment are valid values.\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_terms'/'vendor_credit_terms' as default.\n"
+        },
+        "credit_terms_and_conditions": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Custom terms and conditions for the contact. If set will override global /invoice_settings\ndefault terms and conditions.\n<br><i>Customers only</i>\n"
+        },
+        "product_sales_price_type": {
+          "$ref": "#/definitions/Base",
+          "description": "All default product_sales_price_type defaults.\n<a\n  href=\"https://developer.sage.com/api/accounting/guides/inventory/#product-sales-prices--service-rates\"\n  target=\"_blank\">Learn more about sales price types\n</a>\n<br><i>Customers only, not applicable to Start<i>\n"
+        },
+        "source_guid": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "Used when importing contacts from external sources"
+        },
+        "currency": {
+          "$ref": "#/definitions/Base",
+          "description": "The currency that the contact trades in <br><i>not applicable to Start</i>"
+        },
+        "aux_reference": {
+          "type": "string",
+          "maxLength": 4,
+          "description": "Auxiliary reference. Used for German \"Kreditorennummer\" and \"Debitorennummer\".\n<br>\n<a href=\"https://developer.sage.com/accounting/reference/settings/#tag/Datev-Settings\">\n  See Datev Settings endpoint reference\n</a>\n"
+        },
+        "registered_number": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The registered number of the contact's business. Only used for German businesses and represents the \"Steuernummer\" there (not the \"USt-ID\")."
+        },
+        "deletable": {
+          "type": "boolean",
+          "description": "Indicates whether the contact can be deleted successfully"
+        },
+        "tax_treatment": {
+          "$ref": "#/definitions/ContactTaxTreatment",
+          "description": "The tax treatment - indicates which tax rules to apply for a contact"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address for the given contact"
+        },
+        "tax_calculation": {
+          "type": "string",
+          "description": "<b>France:</b> The tax calculation method used to define tax\ntreatment <i>Vendors only</i>\n<br>\n<b>Spain:</b> Defines if contact is a retailer and tax is subject\nto Recargo de Equivalencia <i>Customers only</i>\n<b>United Kingdom:</b> Defines if contact tax treatment is domestic reverse\ncharge <i>Customers & Suppliers</i>\n"
+        },
+        "auxiliary_account": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "Auxiliary account - used when auxiliary accounting is enabled in business settings.\n<br><i>Available only in Spain and France</i>\n"
+        },
+        "gdpr_obfuscated": {
+          "type": "boolean",
+          "description": "General Data Protection Regulation (GDPR) came into effect on 25th May 2018. It introduces new rules for how business owners manage their contacts' personal data. When this field returns 'true', means that the contact has been requested to be obfuscated and you can not create any artifact (sales invoices, purchase invoices, ...) but you can still check previously created artifacts."
+        },
+        "system": {
+          "type": "boolean",
+          "description": "Identifies a contact as being a system contact used for processing specific transaction types and reserved specifically for those transaction types such as tax return payments/refunds."
+        },
+        "has_unfinished_recurring_invoices": {
+          "type": "boolean",
+          "description": "Indicates whether the contact is associated with any unfinished recurring invoices"
+        },
+        "cis_registered": {
+          "type": "boolean",
+          "description": "Identifies a contact as being registered as CIS.<br><i>only applicable to UK business</i>"
+        },
+        "ni_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Northern Ireland."
+        },
+        "is_active": {
+          "type": "boolean",
+          "description": "Identifies a contact as being active"
+        },
+        "gb_based": {
+          "type": "boolean",
+          "description": "Identifies a contact as being based in Great Britain."
+        },
+        "cis_settings": {
+          "$ref": "#/definitions/ContactCisSettings",
+          "description": "The CIS Settings for the contact"
+        },
+        "destination_vat_blocking": {
+          "type": "boolean",
+          "description": "Identifies a contact should be blocked due to destination vat"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "Link": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "The link path"
+        },
+        "rel": {
+          "type": "string",
+          "description": "The relationship of the link to the resource"
+        },
+        "type": {
+          "type": "string",
+          "description": "The content-type of the link"
+        }
+      }
+    },
+    "LedgerAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "ledger_account_group": {
+          "$ref": "#/definitions/CoaGroupType",
+          "description": "The ledger account group for the account"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The name for the ledger account.\n\nChanges to this field do not propagate to other resources, namely not to the name of the associated\nbank_account (unlike the behaviour of the UI).\n"
+        },
+        "display_name": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "The display name for the ledger account"
+        },
+        "visible_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The visible scopes for the ledger account.\n\nThis indicates in which of the UI's areas the ledger account is displayed and available for user\nselection. Possible entries in this array are `bank`, `sales`, `purchasing`, `other_payment`,\n`other_receipt`, `reporting`, `journals`, `sales_eu`, `sales_row`, `purchasing_eu`, `purchasing_row`\nand `purchasing_hrc`.\n"
+        },
+        "included_in_chart": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is included in the chart of accounts"
+        },
+        "nominal_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The nominal code of the ledger account"
+        },
+        "ledger_account_type": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account type for the ledger account"
+        },
+        "ledger_account_classification": {
+          "$ref": "#/definitions/Base",
+          "description": "The ledger account classification for the ledger account"
+        },
+        "tax_rate": {
+          "$ref": "#/definitions/Base",
+          "description": "The default tax rate for the ledger account"
+        },
+        "fixed_tax_rate": {
+          "type": "boolean",
+          "description": "Indicates whether the default tax rate is fixed or may be changed per transaction"
+        },
+        "visible_in_banking": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the banking area of the application"
+        },
+        "visible_in_expenses": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the purchases area of the application"
+        },
+        "visible_in_journals": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the journals area of the application"
+        },
+        "visible_in_other_payments": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other payments area of the application\n"
+        },
+        "visible_in_other_receipts": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the other receipts area of the application\n"
+        },
+        "visible_in_reporting": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the reporting area of the application"
+        },
+        "visible_in_sales": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is displayed in the sales area of the application"
+        },
+        "balance_details": {
+          "$ref": "#/definitions/LedgerAccountBalanceDetails",
+          "description": "The ledger account balance details for the date range provided"
+        },
+        "is_control_account": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is a control account.\n\nControl accounts cannot be removed. See also `control_name`.\n"
+        },
+        "control_name": {
+          "type": "string",
+          "maxLength": 255,
+          "description": "The control name for the ledger account.\n\nThis is used internally by Accounting to identify the correct ledger account for booking taxes etc.\nYou cannot add ledger accounts with control name and you cannot modify the control name of existing\nledger accounts.\n"
+        },
+        "display_formatted": {
+          "type": "string",
+          "description": "The display name formatted based on coa_list_order in settings"
+        },
+        "tax_recoverable": {
+          "type": "boolean",
+          "description": "Indicates that transactions posted to this ledger account have part recoverable taxes (Canada only)\n"
+        },
+        "recoverable_percentage": {
+          "type": "number",
+          "format": "double",
+          "description": "The partial recoverable tax rate (Canada only)"
+        },
+        "non_recoverable_ledger_account": {
+          "$ref": "#/definitions/LedgerAccount",
+          "description": "The non-recoverable ledger account (Canada Only)"
+        },
+        "cis_materials": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Materials"
+        },
+        "tax_instalment": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for Tax Intalment (Canada only)"
+        },
+        "cis_labour": {
+          "type": "boolean",
+          "description": "Indicates whether the ledger account is flagged for CIS Labour"
+        },
+        "gifi_code": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The GIFI code of the ledger account.\n\nGIFI is short for The General Index of Financial Information and it lets the CRA validate tax information electronically instead of manually.\nInformation from financial statements is categorized under the appropriate 4-digit-long GIFI code and entered on corporate income tax returns.\nGIFI is needed when filing a T2 income tax return.\n\n_Canada only_\n"
+        }
+      }
+    },
+    "CoaGroupType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        }
+      }
+    },
+    "LedgerAccountBalanceDetails": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "format": "double",
+          "description": "The account balance"
+        },
+        "credit_or_debit": {
+          "type": "string",
+          "description": "Is the balance a debit or credit"
+        },
+        "credits": {
+          "type": "number",
+          "format": "double",
+          "description": "The credit balance"
+        },
+        "debits": {
+          "type": "number",
+          "format": "double",
+          "description": "The debit balance"
+        },
+        "from_date": {
+          "type": "string",
+          "description": "The from date filter"
+        },
+        "to_date": {
+          "type": "string",
+          "description": "The to date filter"
+        }
+      }
+    },
+    "ContactPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was last updated"
+        },
+        "deleted_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The datetime when the item was deleted"
+        },
+        "contact_person_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContactPersonType"
+          },
+          "description": "The contact person types for the contact person. Get possible types by retrieving\n<a href=\"https://developer.sage.com/accounting/reference/contacts/#operation/getContactPersonTypes\">\n  all available contact person types\n</a>.\n"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The name of the contact person"
+        },
+        "job_title": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The job title of the contact person"
+        },
+        "telephone": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The telephone number of the contact person"
+        },
+        "mobile": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The mobile number of the contact person"
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "The email address of the contact person"
+        },
+        "fax": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "The fax number of the contact person"
+        },
+        "is_main_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+        },
+        "address": {
+          "$ref": "#/definitions/Base",
+          "description": "The address of the contact person"
+        },
+        "is_preferred_contact": {
+          "type": "boolean",
+          "description": "Indicates whether this contact person is a preferred contact"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪\n\n### Access Control Restrictions\n\nRequires the authenticated user to have any mentioned role in one of the listed areas:\n* Area: `Contacts`: Restricted Access, Full Access",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "ContactPersonType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 15,
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      },
+      "description": "### Endpoint Availability\n\n* Accounting Plus: 🇨🇦, 🇬🇧, 🇮🇪\n* Accounting Standard: 🇬🇧, 🇮🇪\n* Accounting Start: 🇨🇦, 🇬🇧, 🇮🇪",
+      "x-sage-menusection": "Contacts, Addresses & Countries"
+    },
+    "BankAccountDetails": {
+      "type": "object",
+      "properties": {
+        "account_name": {
+          "type": "string",
+          "description": "The account name"
+        },
+        "account_number": {
+          "type": "string",
+          "description": "The account number"
+        },
+        "sort_code": {
+          "type": "string",
+          "description": "The sort code"
+        },
+        "bic": {
+          "type": "string",
+          "description": "The bic"
+        },
+        "iban": {
+          "type": "string",
+          "description": "The iban"
+        }
+      }
+    },
+    "ContactTaxTreatment": {
+      "type": "object",
+      "properties": {
+        "home_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where home country tax rules should be applied"
+        },
+        "eu_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates a contact where EC tax rules should be applied"
+        },
+        "eu_not_tax_registered": {
+          "type": "boolean",
+          "description": "Indicates an EU contact without a tax number - home tax rules should be applied"
+        },
+        "rest_of_world_tax": {
+          "type": "boolean",
+          "description": "Indicates a contact where rest of world tax rules should be applied"
+        },
+        "is_importer": {
+          "type": "boolean",
+          "description": "Indicates a contact where import rules should be appliedOnly used for suppliers and FR, ES, IE and UK businesses"
+        }
+      }
+    },
+    "ContactCisSettings": {
+      "type": "object",
+      "properties": {
+        "registered_cis_name": {
+          "type": "string",
+          "description": "the CIS name for the Contact"
+        },
+        "subcontractor_verification_number": {
+          "type": "string",
+          "description": "The CIS Verification number for the contact"
+        },
+        "deduction_rate": {
+          "$ref": "#/definitions/ContactCisDeductionRate",
+          "description": "The CIS Deduction rate for the contact"
+        }
+      }
+    },
+    "ContactCisDeductionRate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the item"
+        },
+        "displayed_as": {
+          "type": "string",
+          "description": "The name of the resource"
+        },
+        "$path": {
+          "type": "string",
+          "description": "The API path for the resource"
+        }
+      }
+    },
+    "postContacts": {
+      "type": "object",
+      "properties": {
+        "contact": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The contact's full name or business name"
+            },
+            "contact_type_ids": {
+              "type": "array",
+              "description": "The IDs of the Contact Types.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reference": {
+              "type": "string",
+              "description": "Unique reference for the contact"
+            },
+            "default_sales_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Default Sales Ledger Account."
+            },
+            "default_sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Default Sales Tax Rate."
+            },
+            "default_purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Default Purchase Ledger Account."
+            },
+            "tax_number": {
+              "type": "string",
+              "description": "The VAT registration number of the contact. The format will be validated."
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the contact"
+            },
+            "locale": {
+              "type": "string",
+              "description": "The locale for the contact"
+            },
+            "credit_limit": {
+              "type": "number",
+              "format": "double",
+              "description": "Custom credit limit amount for the contact <br><i>not applicable to Start</i>"
+            },
+            "credit_days": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Custom credit days for the contact.<br>\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_days'/'vendor_credit_days' as default/fallback according\nto your use case.\n",
+              "minimum": 0,
+              "maximum": 365
+            },
+            "credit_terms": {
+              "type": "string",
+              "description": "Credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice, month_end_payment,\ndate_from_payment, immediate_payment are valid values.\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_terms'/'vendor_credit_terms' as default.\n",
+              "enum": [
+                "month_end_invoice",
+                "date_from_invoice",
+                "immediate_invoice",
+                "month_end_payment",
+                "date_from_payment",
+                "immediate_payment"
+              ]
+            },
+            "credit_terms_and_conditions": {
+              "type": "string",
+              "description": "Custom terms and conditions for the contact. If set will override global /invoice_settings\ndefault terms and conditions.\n<br><i>Customers only</i>\n"
+            },
+            "product_sales_price_type_id": {
+              "type": "string",
+              "description": "The ID of the Product Sales Price Type."
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing contacts from external sources"
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "aux_reference": {
+              "type": "string",
+              "description": "Auxiliary reference. Used for German \"Kreditorennummer\" and \"Debitorennummer\".\n<br>\n<a href=\"https://developer.sage.com/accounting/reference/settings/#tag/Datev-Settings\">\n  See Datev Settings endpoint reference\n</a>\n"
+            },
+            "registered_number": {
+              "type": "string",
+              "description": "The registered number of the contact's business. Only used for German businesses and represents the \"Steuernummer\" there (not the \"USt-ID\")."
+            },
+            "tax_calculation": {
+              "type": "string",
+              "description": "<b>France:</b> The tax calculation method used to define tax\ntreatment <i>Vendors only</i>\n<br>\n<b>Spain:</b> Defines if contact is a retailer and tax is subject\nto Recargo de Equivalencia <i>Customers only</i>\n<b>United Kingdom:</b> Defines if contact tax treatment is domestic reverse\ncharge <i>Customers & Suppliers</i>\n"
+            },
+            "auxiliary_account": {
+              "type": "string",
+              "description": "Auxiliary account - used when auxiliary accounting is enabled in business settings.\n<br><i>Available only in Spain and France</i>\n"
+            },
+            "destination_vat_blocking": {
+              "type": "boolean",
+              "description": "Identifies a contact should be blocked due to destination vat"
+            },
+            "main_address": {
+              "type": "object",
+              "properties": {
+                "address_line_1": {
+                  "type": "string",
+                  "description": "The first line of the address"
+                },
+                "address_line_2": {
+                  "type": "string",
+                  "description": "The second line of the address"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The address town/city"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "description": "The address postal code/zipcode"
+                },
+                "country_id": {
+                  "type": "string",
+                  "description": "The ID of the Country."
+                },
+                "bank_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Account."
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "address_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Address Type."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The custom name of the address"
+                },
+                "region": {
+                  "type": "string",
+                  "description": "The address state/province/region"
+                },
+                "country_group_id": {
+                  "type": "string",
+                  "description": "The ID of the Country Group."
+                },
+                "is_main_address": {
+                  "type": "boolean",
+                  "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+                }
+              }
+            },
+            "delivery_address": {
+              "type": "object",
+              "properties": {
+                "address_line_1": {
+                  "type": "string",
+                  "description": "The first line of the address"
+                },
+                "address_line_2": {
+                  "type": "string",
+                  "description": "The second line of the address"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The address town/city"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "description": "The address postal code/zipcode"
+                },
+                "country_id": {
+                  "type": "string",
+                  "description": "The ID of the Country."
+                },
+                "bank_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Account."
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "address_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Address Type."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The custom name of the address"
+                },
+                "region": {
+                  "type": "string",
+                  "description": "The address state/province/region"
+                },
+                "country_group_id": {
+                  "type": "string",
+                  "description": "The ID of the Country Group."
+                },
+                "is_main_address": {
+                  "type": "boolean",
+                  "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+                }
+              }
+            },
+            "main_contact_person": {
+              "type": "object",
+              "properties": {
+                "contact_person_type_ids": {
+                  "type": "array",
+                  "description": "The IDs of the Contact Person Types.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the contact person"
+                },
+                "job_title": {
+                  "type": "string",
+                  "description": "The job title of the contact person"
+                },
+                "telephone": {
+                  "type": "string",
+                  "description": "The telephone number of the contact person"
+                },
+                "mobile": {
+                  "type": "string",
+                  "description": "The mobile number of the contact person"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email address of the contact person"
+                },
+                "fax": {
+                  "type": "string",
+                  "description": "The fax number of the contact person"
+                },
+                "is_main_contact": {
+                  "type": "boolean",
+                  "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+                },
+                "address_id": {
+                  "type": "string",
+                  "description": "The ID of the Address."
+                },
+                "is_preferred_contact": {
+                  "type": "boolean",
+                  "description": "Indicates whether this contact person is a preferred contact"
+                }
+              }
+            },
+            "bank_account_details": {
+              "type": "object",
+              "properties": {
+                "account_name": {
+                  "type": "string",
+                  "description": "The account name"
+                },
+                "account_number": {
+                  "type": "string",
+                  "description": "The account number"
+                },
+                "sort_code": {
+                  "type": "string",
+                  "description": "The sort code"
+                },
+                "bic": {
+                  "type": "string",
+                  "description": "The bic"
+                },
+                "iban": {
+                  "type": "string",
+                  "description": "The iban"
+                }
+              }
+            },
+            "tax_treatment": {
+              "type": "object",
+              "properties": {
+                "home_tax": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where home country tax rules should be applied"
+                },
+                "eu_tax_registered": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where EC tax rules should be applied"
+                },
+                "eu_not_tax_registered": {
+                  "type": "boolean",
+                  "description": "Indicates an EU contact without a tax number - home tax rules should be applied"
+                },
+                "rest_of_world_tax": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where rest of world tax rules should be applied"
+                },
+                "is_importer": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where import rules should be appliedOnly used for suppliers and FR, ES, IE and UK businesses"
+                }
+              }
+            }
+          },
+          "required": [
+            "name",
+            "contact_type_ids"
+          ]
+        }
+      },
+      "required": [
+        "contact"
+      ],
+      "description": "Creates a Contact"
+    },
+    "putContacts": {
+      "type": "object",
+      "properties": {
+        "contact": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The contact's full name or business name"
+            },
+            "contact_type_ids": {
+              "type": "array",
+              "description": "The IDs of the Contact Types.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reference": {
+              "type": "string",
+              "description": "Unique reference for the contact"
+            },
+            "default_sales_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Default Sales Ledger Account."
+            },
+            "default_sales_tax_rate_id": {
+              "type": "string",
+              "description": "The ID of the Default Sales Tax Rate."
+            },
+            "default_purchase_ledger_account_id": {
+              "type": "string",
+              "description": "The ID of the Default Purchase Ledger Account."
+            },
+            "tax_number": {
+              "type": "string",
+              "description": "The VAT registration number of the contact. The format will be validated."
+            },
+            "notes": {
+              "type": "string",
+              "description": "The notes for the contact"
+            },
+            "locale": {
+              "type": "string",
+              "description": "The locale for the contact"
+            },
+            "credit_limit": {
+              "type": "number",
+              "format": "double",
+              "description": "Custom credit limit amount for the contact <br><i>not applicable to Start</i>"
+            },
+            "credit_days": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Custom credit days for the contact.<br>\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_days'/'vendor_credit_days' as default/fallback according\nto your use case.\n",
+              "minimum": 0,
+              "maximum": 365
+            },
+            "credit_terms": {
+              "type": "string",
+              "description": "Credit terms options determine how invoice due dates are calculated.\nOptions include: end of next month, a delay of supplier credit_days and immediately.\nOnly: month_end_invoice, date_from_invoice, immediate_invoice, month_end_payment,\ndate_from_payment, immediate_payment are valid values.\nIf returned as null in a GET response, you may want to GET /invoice_settings\nand use 'customer_credit_terms'/'vendor_credit_terms' as default.\n",
+              "enum": [
+                "month_end_invoice",
+                "date_from_invoice",
+                "immediate_invoice",
+                "month_end_payment",
+                "date_from_payment",
+                "immediate_payment"
+              ]
+            },
+            "credit_terms_and_conditions": {
+              "type": "string",
+              "description": "Custom terms and conditions for the contact. If set will override global /invoice_settings\ndefault terms and conditions.\n<br><i>Customers only</i>\n"
+            },
+            "product_sales_price_type_id": {
+              "type": "string",
+              "description": "The ID of the Product Sales Price Type."
+            },
+            "source_guid": {
+              "type": "string",
+              "description": "Used when importing contacts from external sources"
+            },
+            "currency_id": {
+              "type": "string",
+              "description": "The ID of the Currency."
+            },
+            "aux_reference": {
+              "type": "string",
+              "description": "Auxiliary reference. Used for German \"Kreditorennummer\" and \"Debitorennummer\".\n<br>\n<a href=\"https://developer.sage.com/accounting/reference/settings/#tag/Datev-Settings\">\n  See Datev Settings endpoint reference\n</a>\n"
+            },
+            "registered_number": {
+              "type": "string",
+              "description": "The registered number of the contact's business. Only used for German businesses and represents the \"Steuernummer\" there (not the \"USt-ID\")."
+            },
+            "tax_calculation": {
+              "type": "string",
+              "description": "<b>France:</b> The tax calculation method used to define tax\ntreatment <i>Vendors only</i>\n<br>\n<b>Spain:</b> Defines if contact is a retailer and tax is subject\nto Recargo de Equivalencia <i>Customers only</i>\n<b>United Kingdom:</b> Defines if contact tax treatment is domestic reverse\ncharge <i>Customers & Suppliers</i>\n"
+            },
+            "auxiliary_account": {
+              "type": "string",
+              "description": "Auxiliary account - used when auxiliary accounting is enabled in business settings.\n<br><i>Available only in Spain and France</i>\n"
+            },
+            "destination_vat_blocking": {
+              "type": "boolean",
+              "description": "Identifies a contact should be blocked due to destination vat"
+            },
+            "main_address": {
+              "type": "object",
+              "properties": {
+                "address_line_1": {
+                  "type": "string",
+                  "description": "The first line of the address"
+                },
+                "address_line_2": {
+                  "type": "string",
+                  "description": "The second line of the address"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The address town/city"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "description": "The address postal code/zipcode"
+                },
+                "country_id": {
+                  "type": "string",
+                  "description": "The ID of the Country."
+                },
+                "bank_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Account."
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "address_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Address Type."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The custom name of the address"
+                },
+                "region": {
+                  "type": "string",
+                  "description": "The address state/province/region"
+                },
+                "country_group_id": {
+                  "type": "string",
+                  "description": "The ID of the Country Group."
+                },
+                "is_main_address": {
+                  "type": "boolean",
+                  "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+                }
+              }
+            },
+            "delivery_address": {
+              "type": "object",
+              "properties": {
+                "address_line_1": {
+                  "type": "string",
+                  "description": "The first line of the address"
+                },
+                "address_line_2": {
+                  "type": "string",
+                  "description": "The second line of the address"
+                },
+                "city": {
+                  "type": "string",
+                  "description": "The address town/city"
+                },
+                "postal_code": {
+                  "type": "string",
+                  "description": "The address postal code/zipcode"
+                },
+                "country_id": {
+                  "type": "string",
+                  "description": "The ID of the Country."
+                },
+                "bank_account_id": {
+                  "type": "string",
+                  "description": "The ID of the Bank Account."
+                },
+                "contact_id": {
+                  "type": "string",
+                  "description": "The ID of the Contact."
+                },
+                "address_type_id": {
+                  "type": "string",
+                  "description": "The ID of the Address Type."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The custom name of the address"
+                },
+                "region": {
+                  "type": "string",
+                  "description": "The address state/province/region"
+                },
+                "country_group_id": {
+                  "type": "string",
+                  "description": "The ID of the Country Group."
+                },
+                "is_main_address": {
+                  "type": "boolean",
+                  "description": "Specifies the address as the contact's main address. Only a single address can exist for a contact in Start so this is always true when returned by the API but cannot be seen in the UI"
+                }
+              }
+            },
+            "main_contact_person": {
+              "type": "object",
+              "properties": {
+                "contact_person_type_ids": {
+                  "type": "array",
+                  "description": "The IDs of the Contact Person Types.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the contact person"
+                },
+                "job_title": {
+                  "type": "string",
+                  "description": "The job title of the contact person"
+                },
+                "telephone": {
+                  "type": "string",
+                  "description": "The telephone number of the contact person"
+                },
+                "mobile": {
+                  "type": "string",
+                  "description": "The mobile number of the contact person"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email address of the contact person"
+                },
+                "fax": {
+                  "type": "string",
+                  "description": "The fax number of the contact person"
+                },
+                "is_main_contact": {
+                  "type": "boolean",
+                  "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+                },
+                "address_id": {
+                  "type": "string",
+                  "description": "The ID of the Address."
+                },
+                "is_preferred_contact": {
+                  "type": "boolean",
+                  "description": "Indicates whether this contact person is a preferred contact"
+                }
+              }
+            },
+            "bank_account_details": {
+              "type": "object",
+              "properties": {
+                "account_name": {
+                  "type": "string",
+                  "description": "The account name"
+                },
+                "account_number": {
+                  "type": "string",
+                  "description": "The account number"
+                },
+                "sort_code": {
+                  "type": "string",
+                  "description": "The sort code"
+                },
+                "bic": {
+                  "type": "string",
+                  "description": "The bic"
+                },
+                "iban": {
+                  "type": "string",
+                  "description": "The iban"
+                }
+              }
+            },
+            "tax_treatment": {
+              "type": "object",
+              "properties": {
+                "home_tax": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where home country tax rules should be applied"
+                },
+                "eu_tax_registered": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where EC tax rules should be applied"
+                },
+                "eu_not_tax_registered": {
+                  "type": "boolean",
+                  "description": "Indicates an EU contact without a tax number - home tax rules should be applied"
+                },
+                "rest_of_world_tax": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where rest of world tax rules should be applied"
+                },
+                "is_importer": {
+                  "type": "boolean",
+                  "description": "Indicates a contact where import rules should be appliedOnly used for suppliers and FR, ES, IE and UK businesses"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "contact"
+      ],
+      "description": "Updates a Contact"
+    },
+    "postContactPersons": {
+      "type": "object",
+      "properties": {
+        "contact_person": {
+          "type": "object",
+          "properties": {
+            "address_id": {
+              "type": "string",
+              "description": "The address of the contact person"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the contact person"
+            },
+            "contact_person_type_ids": {
+              "type": "array",
+              "description": "The IDs of the Contact Person Types.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "job_title": {
+              "type": "string",
+              "description": "The job title of the contact person"
+            },
+            "telephone": {
+              "type": "string",
+              "description": "The telephone number of the contact person"
+            },
+            "mobile": {
+              "type": "string",
+              "description": "The mobile number of the contact person"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email address of the contact person"
+            },
+            "fax": {
+              "type": "string",
+              "description": "The fax number of the contact person"
+            },
+            "is_main_contact": {
+              "type": "boolean",
+              "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+            },
+            "is_preferred_contact": {
+              "type": "boolean",
+              "description": "Indicates whether this contact person is a preferred contact"
+            }
+          },
+          "required": [
+            "address_id",
+            "name",
+            "contact_person_type_ids"
+          ]
+        }
+      },
+      "required": [
+        "contact_person"
+      ],
+      "description": "Creates a Contact Person"
+    },
+    "putContactPersons": {
+      "type": "object",
+      "properties": {
+        "contact_person": {
+          "type": "object",
+          "properties": {
+            "address_id": {
+              "type": "string",
+              "description": "The address of the contact person"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of the contact person"
+            },
+            "contact_person_type_ids": {
+              "type": "array",
+              "description": "The IDs of the Contact Person Types.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "job_title": {
+              "type": "string",
+              "description": "The job title of the contact person"
+            },
+            "telephone": {
+              "type": "string",
+              "description": "The telephone number of the contact person"
+            },
+            "mobile": {
+              "type": "string",
+              "description": "The mobile number of the contact person"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email address of the contact person"
+            },
+            "fax": {
+              "type": "string",
+              "description": "The fax number of the contact person"
+            },
+            "is_main_contact": {
+              "type": "boolean",
+              "description": "Indicates whether this is the main contact person. Per contact, only one main contact can be selected."
+            },
+            "is_preferred_contact": {
+              "type": "boolean",
+              "description": "Indicates whether this contact person is a preferred contact"
+            }
+          }
+        }
+      },
+      "required": [
+        "contact_person"
+      ],
+      "description": "Updates a Contact Person"
+    }
+  }
+}
